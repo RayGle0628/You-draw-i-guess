@@ -38,9 +38,9 @@ public class ClientListener extends Thread {
 
             Message message;
             try {
-                System.out.println("Listener blocked");
+              //  System.out.println("Listener blocked");
                 message = (Message) input.readObject();
-                System.out.println("Listener unblocked");
+              //  System.out.println("Listener unblocked");
             } catch (Exception e) {
                 System.out.println("Listener failed");
                 e.printStackTrace();
@@ -55,7 +55,8 @@ public class ClientListener extends Thread {
                     System.out.println("Received room names");
                     roomList = message.getRoomNames();
                     break;
-                case TEST:
+                case USERS_IN_ROOM:
+                    client.updateRoomUsers(message.getData());
                     break;
             }
             System.out.println("Message processed");

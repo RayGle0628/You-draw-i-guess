@@ -11,6 +11,8 @@ public enum Command {
     RECEIVE_CHAT_MESSAGE,
     ROOM_LIST,
     TEST,
-    CONFIRM_ROOM_JOIN
+    CONFIRM_ROOM_JOIN,
+    USERS_IN_ROOM,
+    REQUEST_USERS
 
 }

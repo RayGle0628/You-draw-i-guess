@@ -1,22 +1,25 @@
 package client;
 
-import javafx.fxml.FXML;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
 import messaging.Command;
 
 public class GameRoomController {
     public TextArea chatTextArea;
     public TextField inputTextField;
     public Button exitRoomButton;
+    public VBox userList;
     Client client;
 
     public void setClient(Client client) {
         this.client = client;
         client.setRoomController(this);
+        client.sendMessage(Command.REQUEST_USERS);
     }
 
     /**
@@ -36,5 +39,21 @@ public class GameRoomController {
     public void displayNewMessage(String message) {
         System.out.println("Message to display: " + message);
         chatTextArea.appendText(message + "\n");
+    }
+
+    public void updateUsers(String[] users) {
+        for (String user : users) {
+            TextField userName = new TextField();
+            userName.setText(user);
+            userName.setEditable(false);
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    userList.getChildren().add(userName);
+                }
+            });
+
+        }
+        System.out.println("OK");
     }
 }

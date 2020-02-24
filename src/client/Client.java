@@ -97,6 +97,10 @@ public class Client extends Application {
         return (ArrayList<String>) input.readObject();
     }
 
+    public void updateRoomUsers(String [] currentUsers){
+        System.out.println(currentUsers[0]);
+        roomController.updateUsers(currentUsers);
+    }
     public boolean joinRoom(String room) {
         sendMessage(Command.JOIN_ROOM, room);
         try {
