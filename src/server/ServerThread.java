@@ -42,7 +42,8 @@ public class ServerThread extends Thread {
             try {
                 message = (Message) input.readObject();
             } catch (Exception e) {
-                System.out.println(username + " disconnected");
+
+                cleanup();
                 break;
             }
             switch (message.getCommand()) {
@@ -120,6 +121,7 @@ public class ServerThread extends Thread {
 
     public void cleanup() {
         server.getConnectedUsers().remove(this);
+        room.removeUser(this);
         System.out.println(username + " disconnected");
     }
 

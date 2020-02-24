@@ -42,6 +42,14 @@ public class GameRoomController {
     }
 
     public void updateUsers(String[] users) {
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                userList.getChildren().clear();
+            }
+        });
+
         for (String user : users) {
             TextField userName = new TextField();
             userName.setText(user);
