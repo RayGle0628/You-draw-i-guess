@@ -70,7 +70,7 @@ public class ServerThread extends Thread {
     public void login(String[] details) {
         System.out.println("A client has tried to log in as " + details[0] + " " + details[1]);
         try {
-            if (details[0].equals("alex")) {
+            if (details[0].equals("alex") || details[0].equals("mingrui") || details[0].equals("edward") || details[0].equals("lele") || details[0].equals("bowen") || details[0].equals("test")) {
                 outputData.writeBoolean(true);
                 this.username = details[0];
             } else outputData.writeBoolean(false);
@@ -91,13 +91,12 @@ public class ServerThread extends Thread {
         }
     }
 
-
     public void joinRoom(String roomName) {
         room = server.getRoom(roomName);
         System.out.println(room);
         room.addUser(this);
         try {
-            output.writeObject(new Message(Command.CONFIRM_ROOM_JOIN,true));
+            output.writeObject(new Message(Command.CONFIRM_ROOM_JOIN, true));
         } catch (Exception e) {
             System.out.println("Could not return room join status.");
         }
@@ -116,7 +115,6 @@ public class ServerThread extends Thread {
     public void outgoingChatMessage(String text) {
         try {
             output.writeObject(new Message(Command.RECEIVE_CHAT_MESSAGE, text));
-
         } catch (Exception e) {
             System.out.println("unable to send message out");
         }

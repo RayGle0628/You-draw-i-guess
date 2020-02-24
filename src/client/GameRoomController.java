@@ -13,8 +13,6 @@ public class GameRoomController {
     public TextField inputTextField;
     public Button exitRoomButton;
     Client client;
-    @FXML
-
 
     public void setClient(Client client) {
         this.client = client;
@@ -23,16 +21,20 @@ public class GameRoomController {
 
     /**
      * This method handles enter being pressed in the text box to send the message to the server
+     *
      * @param ke
      */
     public void enterPressed(KeyEvent ke) {
         if (ke.getCode().equals(KeyCode.ENTER)) {
-            System.out.println("ENTER PRESSED");
-           client.sendMessage(Command.SEND_CHAT_MESSAGE,inputTextField.getText());
+            if (inputTextField.getText().length() > 0) {
+                client.sendMessage(Command.SEND_CHAT_MESSAGE, inputTextField.getText());
+                inputTextField.clear();
+            }
         }
     }
-    public void displayNewMessage(String message){
-        System.out.println("Message to display: "+message);
-        chatTextArea.appendText(message+"\n");
+
+    public void displayNewMessage(String message) {
+        System.out.println("Message to display: " + message);
+        chatTextArea.appendText(message + "\n");
     }
 }
