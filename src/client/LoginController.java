@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -55,6 +56,10 @@ public class LoginController implements Initializable {
         //This line gets the Stage information
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         stage.setScene(tableViewScene);
+       tableViewScene.getStylesheets().add(getClass().getResource("LoginStyle" +
+               ".css").toExternalForm());
+
+
         stage.show();
     }
 
