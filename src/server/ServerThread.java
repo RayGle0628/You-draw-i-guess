@@ -1,5 +1,6 @@
 package server;
 
+import messaging.Command;
 import messaging.Message;
 
 import java.io.DataInputStream;
@@ -44,7 +45,7 @@ public class ServerThread extends Thread {
                 System.out.println(username + " disconnected");
                 break;
             }
-            switch (message.getCommand()){
+            switch (message.getCommand()) {
                 case LOGIN:
                     login(message.getData());
                     break;
@@ -52,11 +53,12 @@ public class ServerThread extends Thread {
                     getAllRooms();
                     break;
                 case JOIN_ROOM:
-                    joinRoom(message.getData());
+                    joinRoom(message.getData()[0]);
+                    break;
+                case SEND_CHAT_MESSAGE:
+                    incomingChatMessage(message.getData()[0]);
+                    break;
             }
-
-
-
         }
     }
 
@@ -89,18 +91,35 @@ public class ServerThread extends Thread {
         }
     }
 
-public void joinRoom(String[] roomName ){
-        room = server.getRoom(roomName[0]);
-        try{
-        outputData.writeBoolean(true);}
-        catch(Exception e){
+
+    public void joinRoom(String roomName) {
+        room = server.getRoom(roomName);
+        System.out.println(room);
+        room.addUser(this);
+        try {
+            output.writeObject(new Message(Command.CONFIRM_ROOM_JOIN,true));
+        } catch (Exception e) {
             System.out.println("Could not return room join status.");
         }
-}
+    }
 
     public void cleanup() {
         server.getConnectedUsers().remove(this);
         System.out.println(username + " disconnected");
+    }
+
+    public void incomingChatMessage(String text) {
+        text = username + ": " + text;
+        room.disperseMessage(text);
+    }
+
+    public void outgoingChatMessage(String text) {
+        try {
+            output.writeObject(new Message(Command.RECEIVE_CHAT_MESSAGE, text));
+
+        } catch (Exception e) {
+            System.out.println("unable to send message out");
+        }
     }
 }
 

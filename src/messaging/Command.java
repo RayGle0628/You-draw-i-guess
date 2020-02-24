@@ -7,6 +7,10 @@ public enum Command {
     CREATE_ROOM,
     GET_ROOMS,
     JOIN_ROOM,
-    CHAT_MESSAGE
+    SEND_CHAT_MESSAGE,
+    RECEIVE_CHAT_MESSAGE,
+    ROOM_LIST,
+    TEST,
+    CONFIRM_ROOM_JOIN
 
 }

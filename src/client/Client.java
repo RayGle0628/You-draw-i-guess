@@ -28,10 +28,11 @@ public class Client extends Application {
     private DataInputStream inputData;
     private DataOutputStream outputData;
 
+    private GameRoomController roomController;
 
     public Client() {
-        clientListener = new ClientListener();
-        clientListener.start();
+        clientListener = new ClientListener(this);
+//        clientListener.start();
     }
 
     public static void main(String[] args) {
@@ -68,7 +69,7 @@ public class Client extends Application {
         Message message = new Message(command, data);
         try {
             output.writeObject(message);
-            System.out.println("message sent");
+            //      System.out.println("message sent");
         } catch (Exception e) {
         }
     }
@@ -83,7 +84,7 @@ public class Client extends Application {
             outputData = new DataOutputStream(socket.getOutputStream());
             outputData.flush();
             clientListener.setInput(input);
-            clientListener.setInputData(inputData);
+            //   System.out.println("Listener updated");
         } catch (Exception e) {
             System.out.println("Unable to connect to " + HOST + ":" + PORT);
             return false;
@@ -99,11 +100,24 @@ public class Client extends Application {
     public boolean joinRoom(String room) {
         sendMessage(Command.JOIN_ROOM, room);
         try {
-            return inputData.readBoolean();
+            Message roomConfirmed = ((Message) input.readObject());
+            System.out.println(roomConfirmed);
+            if (roomConfirmed.getBool()) {
+                clientListener.start();
+            }
+            return roomConfirmed.getBool();
         } catch (Exception e) {
             System.out.println("Join room did not receive a response");
             return false;
         }
+    }
+
+    public void setRoomController(GameRoomController roomController) {
+        this.roomController = roomController;
+    }
+
+    public void chatToRoom(String message) {
+        roomController.displayNewMessage(message);
     }
 
     @Override

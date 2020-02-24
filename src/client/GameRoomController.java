@@ -6,6 +6,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import messaging.Command;
 
 public class GameRoomController {
     public TextArea chatTextArea;
@@ -17,6 +18,7 @@ public class GameRoomController {
 
     public void setClient(Client client) {
         this.client = client;
+        client.setRoomController(this);
     }
 
     /**
@@ -25,7 +27,12 @@ public class GameRoomController {
      */
     public void enterPressed(KeyEvent ke) {
         if (ke.getCode().equals(KeyCode.ENTER)) {
-            // doSomething();
+            System.out.println("ENTER PRESSED");
+           client.sendMessage(Command.SEND_CHAT_MESSAGE,inputTextField.getText());
         }
+    }
+    public void displayNewMessage(String message){
+        System.out.println("Message to display: "+message);
+        chatTextArea.appendText(message+"\n");
     }
 }
