@@ -19,6 +19,7 @@ public class Client extends Application {
     Socket socket;
     public static final int PORT = 50000;
     public static final String HOST = "127.0.0.1";
+    ClientListener clientListener;
     private String username;
     private String password;
 
@@ -26,9 +27,12 @@ public class Client extends Application {
     private ObjectInputStream input;
     private DataInputStream inputData;
     private DataOutputStream outputData;
-//    public Client() {
-//        userInput = new BufferedReader(new InputStreamReader(System.in));
-//    }
+
+
+    public Client() {
+        clientListener = new ClientListener();
+        clientListener.start();
+    }
 
     public static void main(String[] args) {
         Client client = new Client();
@@ -78,6 +82,8 @@ public class Client extends Application {
             inputData = new DataInputStream(socket.getInputStream());
             outputData = new DataOutputStream(socket.getOutputStream());
             outputData.flush();
+            clientListener.setInput(input);
+            clientListener.setInputData(inputData);
         } catch (Exception e) {
             System.out.println("Unable to connect to " + HOST + ":" + PORT);
             return false;

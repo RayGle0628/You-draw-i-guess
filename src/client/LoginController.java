@@ -20,7 +20,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
-   static Client client;
+    static Client client;
     @FXML
     GridPane gridPane;
     @FXML
@@ -68,8 +68,6 @@ public class LoginController implements Initializable {
         stage.setScene(tableViewScene);
         controller.setClient(client);
         stage.show();
-
-
 //
 //        FXMLLoader loader = new FXMLLoader(getClass().getResource("Home.fxml"));
 //        Parent homeParent= loader.load();
