@@ -42,8 +42,8 @@ public class ClientListener extends Thread {
                 message = (Message) input.readObject();
               //  System.out.println("Listener unblocked");
             } catch (Exception e) {
-                System.out.println("Listener failed");
-                e.printStackTrace();
+                System.out.println("Listener failed/terminated");
+           //     e.printStackTrace();
                 break;
             }
             switch (message.getCommand()) {

@@ -1,6 +1,7 @@
 package client;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -128,6 +129,16 @@ public class Client extends Application {
     public String toString() {
         return "I am a client lol";
     }
+    @Override
+    public void stop(){
+        try{
+       socket.close();}
+        catch(Exception e){
+            System.out.println("Error closing socket");
+        }
+        Platform.exit();
+    }
+
 }
 
 
