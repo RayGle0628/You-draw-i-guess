@@ -20,7 +20,10 @@
   </rowConstraints>
    <children>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Rooms" translateX="35.0" />
-      <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS" GridPane.rowIndex="1">
+      <ScrollPane fx:id="scrollPaneForRooms" hbarPolicy="NEVER"
+                  prefHeight="200.0"
+                  prefWidth="200.0"
+                   vbarPolicy="ALWAYS" GridPane.rowIndex="1">
          <content>
             <VBox fx:id="roomListVBox" spacing="5.0">
                <padding>

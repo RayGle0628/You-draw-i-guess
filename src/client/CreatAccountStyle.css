@@ -2,7 +2,7 @@
 .root {
     -fx-font-family: "微软雅黑";
     -fx-font-size: 16px;
-    -fx-background-image: url("../login.jpg");
+    -fx-background-image: url("../bg_1.jpg");
     -fx-background-size: stretch stretch;
     -fx-background-position: center center;
 }
@@ -114,4 +114,53 @@
     -fx-font-weight: bold;
     -fx-font-size: 14px;
     -fx-padding: 10 20 10 20;
+}
+#scrollPaneForRooms{
+    -fx-font-family: "微软雅黑";
+    -fx-font-size: 16px;
+    -fx-background-image: url("../bg_roomlists.jpg");
+    -fx-background-size: stretch stretch;
+    -fx-background-position: center center;
+}
+#chatTextArea{
+
+    -fx-font-family: Consolas;
+    -fx-highlight-fill: #ff3500;
+    -fx-highlight-text-fill:  #800080;
+    -fx-text-fill: #800080;
+    -fx-background-image: url("../chatfield_bg.jpg");
+}
+#chatTextArea .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+#inputTextField{
+    -fx-font-family: "微软雅黑";
+    -fx-control-inner-background: #ff8b74;
+    -fx-fill: rgba(255, 53, 0, 0.84);
+    -fx-font-size: 16px;
+    -fx-background-image: url("../chatfield_bg.jpg");
+    -fx-background-size: stretch stretch;
+    -fx-background-position: center center;
+}
+#scrollPaneForRooms > .viewport {
+    -fx-background-color: transparent;
+}
+
+#scrollPaneForRooms {
+    -fx-background-color: transparent;
+}
+#roomListVBox{
+    -fx-font-size: 16px;
+    -fx-font-family: "微软雅黑";
+    -fx-fill:  #ffd700;
+    -fx-effect: innershadow( three-pass-box , rgba(94, 104, 255, 0.7), 6, 0.0 , 0 , 2 );
+
+}
+.text-area {
+    -fx-background-color: transparent;
+    -fx-text-box-border: gray;
+}
+
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
 }
