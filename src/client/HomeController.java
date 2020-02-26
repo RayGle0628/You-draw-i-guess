@@ -74,6 +74,9 @@ public class HomeController {
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         stage.setScene(tableViewScene);
         controller.setClient(client);
+        tableViewScene.getStylesheets().add(getClass().getResource(
+                "CreatAccountStyle" +
+                        ".css").toExternalForm());
         stage.show();}
 
 

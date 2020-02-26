@@ -49,6 +49,9 @@ public class Client extends Application {
         controller.setClient(this);
         primaryStage.setTitle("Untitled");
         primaryStage.setScene(new Scene(root));
+        root.getStylesheets().add(getClass().getResource(
+                "CreatAccountStyle" +
+                        ".css").toExternalForm());
         primaryStage.show();
     }
 

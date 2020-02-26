@@ -35,6 +35,8 @@ public class LoginController implements Initializable {
     @FXML
     public Text loginWarning;
 
+
+
     public void login(ActionEvent e) throws IOException {
         String username = usernameField.getText();
         String pass = passwordField.getText();
@@ -43,6 +45,7 @@ public class LoginController implements Initializable {
             homeScene(e);
         } else {
             loginWarning.setText("Could not log in");
+            loginWarning.setId("cannotLogin-text");
         }
     }
 //just show how to use git
@@ -73,6 +76,9 @@ public class LoginController implements Initializable {
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         stage.setScene(tableViewScene);
         controller.setClient(client);
+        tableViewScene.getStylesheets().add(getClass().getResource(
+                "CreatAccountStyle" +
+                        ".css").toExternalForm());
         stage.show();
 //
 //        FXMLLoader loader = new FXMLLoader(getClass().getResource("Home.fxml"));
