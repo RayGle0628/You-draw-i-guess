@@ -45,7 +45,7 @@ public class LoginController implements Initializable {
             loginWarning.setText("Could not log in");
         }
     }
-
+//just show how to use git
     public void setClient(Client client) {
         this.client = client;
     }
