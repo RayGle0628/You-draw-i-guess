@@ -17,34 +17,28 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class Client extends Application {
-    Socket socket;
-    public static Client client;
-    public static Stage stage;
-    public static final int PORT = 50000;
-    public static final String HOST = "127.0.0.1";
-    ClientListener clientListener;
-    private String username;
-    private String password;
-
+    private Socket socket;
+    private static Client client;
+    private static Stage stage;
+    private static final int PORT = 50000;
+    private static final String HOST = "127.0.0.1";
+    private ClientListener clientListener;
     private ObjectOutputStream output;
     private ObjectInputStream input;
     private DataInputStream inputData;
     private DataOutputStream outputData;
     private GameRoomController roomController;
+
     public GameRoomController getRoomController() {
         return roomController;
     }
 
-
-
     public Client() {
         Client.client = this;
         clientListener = new ClientListener(this);
-//        clientListener.start();
     }
 
     public static void main(String[] args) {
-        //Client client = new Client();
         launch(args);
     }
 
@@ -71,8 +65,7 @@ public class Client extends Application {
             sendMessage(Command.LOGIN, username, password);
         }
         try {
-            Boolean t = inputData.readBoolean();
-            return t;
+            return inputData.readBoolean();
         } catch (Exception e) {
             System.out.println("No response from server regarding login status");
         }
@@ -99,7 +92,6 @@ public class Client extends Application {
             outputData = new DataOutputStream(socket.getOutputStream());
             outputData.flush();
             clientListener.setInput(input);
-
             //   System.out.println("Listener updated");
         } catch (Exception e) {
             System.out.println("Unable to connect to " + HOST + ":" + PORT);
@@ -110,11 +102,7 @@ public class Client extends Application {
 
     public ArrayList<String> getRoomsList() throws Exception {
         sendMessage(Command.GET_ROOMS);
-        System.out.println("Sent request for rooms");
-        System.out.println(input.available());
-      Object list=   input.readObject();
-        System.out.println(list);
-        return (ArrayList<String>)list;
+        return (ArrayList<String>) input.readObject();
     }
 
     public void updateRoomUsers(String[] currentUsers) {
@@ -161,14 +149,10 @@ public class Client extends Application {
     }
 
     public void killThread() throws Exception {
-
-
         clientListener = new ClientListener(this);
-clientListener.setInput(input);
+        clientListener.setInput(input);
         System.out.println("listener killed and reset");
     }
-
-
 }
 
 
