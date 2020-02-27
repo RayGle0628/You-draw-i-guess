@@ -18,6 +18,8 @@ import java.util.ArrayList;
 
 public class Client extends Application {
     Socket socket;
+    public static Client client;
+    public static Stage stage;
     public static final int PORT = 50000;
     public static final String HOST = "127.0.0.1";
     ClientListener clientListener;
@@ -32,27 +34,31 @@ public class Client extends Application {
     private GameRoomController roomController;
 
     public Client() {
+       Client.client = this;
         clientListener = new ClientListener(this);
 //        clientListener.start();
     }
 
     public static void main(String[] args) {
-        Client client = new Client();
+        //Client client = new Client();
         launch(args);
     }
 
+    public static Client getClient() {
+        return client;
+    }
+    public static Stage getStage(){
+        return stage;
+    }
+
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
-        Parent root = loader.load();
-        LoginController controller = loader.getController();
-        controller.setClient(this);
-        primaryStage.setTitle("Untitled");
-        primaryStage.setScene(new Scene(root));
-        root.getStylesheets().add(getClass().getResource(
-                "CreatAccountStyle" +
-                        ".css").toExternalForm());
-        primaryStage.show();
+    public void start(Stage stage) throws Exception {
+        Client.stage = stage;
+        Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
+        stage.setTitle("Untitled");
+        stage.setScene(new Scene(root));
+        root.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
+        stage.show();
     }
 
     public boolean login(String username, String password) {
@@ -66,7 +72,7 @@ public class Client extends Application {
             System.out.println("No response from server regarding login status");
         }
         System.out.println("return not received");
-        return true;
+        return false;
     }
 
     public void sendMessage(Command command, String... data) {
@@ -101,10 +107,11 @@ public class Client extends Application {
         return (ArrayList<String>) input.readObject();
     }
 
-    public void updateRoomUsers(String [] currentUsers){
+    public void updateRoomUsers(String[] currentUsers) {
         System.out.println(currentUsers[0]);
         roomController.updateUsers(currentUsers);
     }
+
     public boolean joinRoom(String room) {
         sendMessage(Command.JOIN_ROOM, room);
         try {
@@ -132,16 +139,16 @@ public class Client extends Application {
     public String toString() {
         return "I am a client lol";
     }
+
     @Override
-    public void stop(){
-        try{
-       socket.close();}
-        catch(Exception e){
+    public void stop() {
+        try {
+            socket.close();
+        } catch (Exception e) {
             System.out.println("Error closing socket");
         }
         Platform.exit();
     }
-
 }
 
 

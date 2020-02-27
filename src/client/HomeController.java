@@ -19,9 +19,12 @@ import java.util.HashMap;
 public class HomeController {
     private HashMap<Text, String> textRoom;
     private Client client;
+    private Stage stage;
 
     public HomeController() {
         textRoom = new HashMap<>();
+        client = Client.getClient();
+        stage = Client.getStage();
     }
 
     @FXML
@@ -38,46 +41,33 @@ public class HomeController {
             textRoom.put(roomText, room);
             roomText.setOnMouseClicked(e -> {
                 joinRoom(textRoom.get(roomText));
-                try{
-                roomScene(e);}
-                catch(Exception ex){}
+                try {
+                    roomScene();
+                } catch (Exception ex) {
+                }
             });
             roomText.setText(room.toString());
             roomListVBox.getChildren().add(roomText);
         }
     }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
+//    public void setClient(Client client) {
+//        this.client = client;
+//    }
 
     public void joinRoom(String room) {
         System.out.println("Clicked " + room);
         if (client.joinRoom(room)) { // TRANSITION TO ROOM VIEW IF JOINED
             System.out.println("SUCCESS");
-
         } else {
             System.out.println("FAILURE");
         }
     }
 
-
-
-
-    public void roomScene(MouseEvent e) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("GameRoom.fxml"));
-        Parent createAccountView = loader.load();
-        GameRoomController controller = loader.getController();
-        Scene tableViewScene = new Scene(createAccountView);
-        //This line gets the Stage information
-
-        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        stage.setScene(tableViewScene);
-        controller.setClient(client);
-        tableViewScene.getStylesheets().add(getClass().getResource(
-                "CreatAccountStyle" +
-                        ".css").toExternalForm());
-        stage.show();}
-
-
+    public void roomScene() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("GameRoom.fxml"));
+        Scene roomScene = new Scene(root);
+        stage.setScene(roomScene);
+        roomScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
+        stage.show();
+    }
 }

@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import messaging.Command;
 
 public class GameRoomController {
@@ -15,9 +16,11 @@ public class GameRoomController {
     public Button exitRoomButton;
     public VBox userList;
     Client client;
+    Stage stage;
 
-    public void setClient(Client client) {
-        this.client = client;
+    public GameRoomController() {
+        client = Client.getClient();
+        stage = Client.getStage();
         client.setRoomController(this);
         client.sendMessage(Command.REQUEST_USERS);
     }
@@ -42,26 +45,21 @@ public class GameRoomController {
     }
 
     public void updateUsers(String[] users) {
-
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 userList.getChildren().clear();
             }
         });
-
         for (String user : users) {
             TextField userName = new TextField();
             userName.setText(user);
             userName.setEditable(false);
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    userList.getChildren().add(userName);
-                }
-            });
-
+            Platform.runLater(() -> userList.getChildren().add(userName));
         }
         System.out.println("OK");
+    }
+
+    public void exitRoom() {
     }
 }
