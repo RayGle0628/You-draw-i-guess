@@ -30,8 +30,12 @@ public class Client extends Application {
     private ObjectInputStream input;
     private DataInputStream inputData;
     private DataOutputStream outputData;
-
     private GameRoomController roomController;
+    public GameRoomController getRoomController() {
+        return roomController;
+    }
+
+
 
     public Client() {
         Client.client = this;
@@ -163,6 +167,7 @@ public class Client extends Application {
 clientListener.setInput(input);
         System.out.println("listener killed and reset");
     }
+
 
 }
 

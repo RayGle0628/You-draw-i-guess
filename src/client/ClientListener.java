@@ -66,6 +66,9 @@ if (endFlag)break;
                     System.out.println("Listener ended by server");
                     endFlag=true;
                     break;
+                case START_DRAWING:
+                    client.getRoomController().unlockDrawing();
+                    break;
             }
             System.out.println("Message processed");
         }

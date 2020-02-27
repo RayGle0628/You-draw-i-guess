@@ -64,6 +64,7 @@ public class ServerThread extends Thread {
                 case EXIT_ROOM:
                     exitRoom();
                     break;
+
             }
         }
     }
@@ -137,13 +138,20 @@ public class ServerThread extends Thread {
     }
 
     public void incomingChatMessage(String text) {
-        text = username + ": " + text;
-        room.disperseMessage(text);
+        room.disperseMessage(username, text);
     }
 
     public void outgoingChatMessage(String text) {
         try {
             output.writeObject(new Message(Command.RECEIVE_CHAT_MESSAGE, text));
+        } catch (Exception e) {
+            System.out.println("unable to send message out");
+        }
+    }
+
+    public void startDrawing() {
+        try {
+            output.writeObject(new Message(Command.START_DRAWING));
         } catch (Exception e) {
             System.out.println("unable to send message out");
         }

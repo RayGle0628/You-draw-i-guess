@@ -15,6 +15,7 @@ public enum Command {
     USERS_IN_ROOM,
     REQUEST_USERS,
     EXIT_ROOM,
-    CONFIRM_EXIT
+    CONFIRM_EXIT,
+    START_DRAWING
 
 }
