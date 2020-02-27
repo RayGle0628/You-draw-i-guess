@@ -45,12 +45,7 @@ public class GameRoomController {
     }
 
     public void updateUsers(String[] users) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                userList.getChildren().clear();
-            }
-        });
+        Platform.runLater(() -> userList.getChildren().clear());
         for (String user : users) {
             TextField userName = new TextField();
             userName.setText(user);
@@ -61,5 +56,6 @@ public class GameRoomController {
     }
 
     public void exitRoom() {
+        client.sendMessage(Command.EXIT_ROOM);
     }
 }
