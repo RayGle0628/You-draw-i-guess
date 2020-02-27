@@ -14,6 +14,7 @@ public enum Command {
     CONFIRM_ROOM_JOIN,
     USERS_IN_ROOM,
     REQUEST_USERS,
-    EXIT_ROOM
+    EXIT_ROOM,
+    CONFIRM_EXIT
 
 }

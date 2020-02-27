@@ -1,6 +1,9 @@
 package client;
 
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -10,6 +13,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import messaging.Command;
+
+import java.io.IOException;
 
 public class GameRoomController {
     public TextArea chatTextArea;
@@ -56,7 +61,25 @@ public class GameRoomController {
         System.out.println("OK");
     }
 
-    public void exitRoom() {
+    public void exitRoom() throws Exception{
         client.sendMessage(Command.EXIT_ROOM);
+        System.out.println("Trying to exit");
+        client.killThread();
+//        try {
+            homeScene();
+//        } catch (Exception e) {
+//            System.out.println("FUCK");
+//        }
+
+    }
+
+    public void homeScene() {
+        try{
+        Parent root = FXMLLoader.load(getClass().getResource("Home.fxml"));
+        Scene homeScene = new Scene(root);
+        stage.setScene(homeScene);
+        homeScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
+        stage.show();}
+        catch(Exception e){}
     }
 }

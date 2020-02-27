@@ -34,7 +34,7 @@ public class Client extends Application {
     private GameRoomController roomController;
 
     public Client() {
-       Client.client = this;
+        Client.client = this;
         clientListener = new ClientListener(this);
 //        clientListener.start();
     }
@@ -47,7 +47,8 @@ public class Client extends Application {
     public static Client getClient() {
         return client;
     }
-    public static Stage getStage(){
+
+    public static Stage getStage() {
         return stage;
     }
 
@@ -94,6 +95,7 @@ public class Client extends Application {
             outputData = new DataOutputStream(socket.getOutputStream());
             outputData.flush();
             clientListener.setInput(input);
+
             //   System.out.println("Listener updated");
         } catch (Exception e) {
             System.out.println("Unable to connect to " + HOST + ":" + PORT);
@@ -104,7 +106,11 @@ public class Client extends Application {
 
     public ArrayList<String> getRoomsList() throws Exception {
         sendMessage(Command.GET_ROOMS);
-        return (ArrayList<String>) input.readObject();
+        System.out.println("Sent request for rooms");
+        System.out.println(input.available());
+      Object list=   input.readObject();
+        System.out.println(list);
+        return (ArrayList<String>)list;
     }
 
     public void updateRoomUsers(String[] currentUsers) {
@@ -149,6 +155,15 @@ public class Client extends Application {
         }
         Platform.exit();
     }
+
+    public void killThread() throws Exception {
+
+
+        clientListener = new ClientListener(this);
+clientListener.setInput(input);
+        System.out.println("listener killed and reset");
+    }
+
 }
 
 

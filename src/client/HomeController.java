@@ -3,6 +3,7 @@ package client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,10 +14,12 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
-public class HomeController {
+public class HomeController implements Initializable {
     private HashMap<Text, String> textRoom;
     private Client client;
     private Stage stage;
@@ -34,8 +37,11 @@ public class HomeController {
     VBox roomListVBox;
 
     public void getRooms() throws Exception {
+        roomListVBox.getChildren().clear();
+        System.out.println("GEt rooms pressed");
         System.out.println(client);
-        ArrayList<String> rooms = client.getRoomsList();
+        ArrayList<String> rooms = client.getRoomsList(); // EXCEPTION
+        System.out.println("room list retrieved");
         for (String room : rooms) {
             Text roomText = new Text();
             textRoom.put(roomText, room);
@@ -69,5 +75,12 @@ public class HomeController {
         stage.setScene(roomScene);
         roomScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
         stage.show();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        try{
+        getRooms();}
+        catch(Exception e){}
     }
 }

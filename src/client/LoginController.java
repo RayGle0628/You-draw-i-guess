@@ -21,8 +21,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
-    Client client;
-    Stage stage;
+    private Client client;
+    private Stage stage;
     @FXML
     GridPane gridPane;
     @FXML
@@ -52,7 +52,6 @@ public class LoginController implements Initializable {
             loginWarning.setId("cannotLogin-text");
         }
     }
-
 
     public void createAccountScene(ActionEvent e) throws IOException {
         Parent createAccountView = FXMLLoader.load(getClass().getResource("CreateAccount.fxml"));
