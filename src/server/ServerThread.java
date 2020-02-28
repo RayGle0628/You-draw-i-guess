@@ -59,7 +59,7 @@ public class ServerThread extends Thread {
                     break;
                 case SEND_CHAT_MESSAGE:
 //                    incomingChatMessage(message.getData()[0]);
-                    room.disperseMessage(username, message.getData()[0]);
+                    room.disperseMessage(username+ ": "+ message.getData()[0]);
                     break;
                 case REQUEST_USERS:
                     room.currentUserList();
@@ -145,9 +145,9 @@ public class ServerThread extends Thread {
         System.out.println(username + " disconnected");
     }
 
-    public void incomingChatMessage(String text) {
-        room.disperseMessage(username, text);
-    }
+//    public void incomingChatMessage(String text) {
+//        room.disperseMessage(username, text);
+//    }
 
     public void outgoingChatMessage(String text) {
         try {

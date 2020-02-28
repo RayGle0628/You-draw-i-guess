@@ -61,19 +61,43 @@ public class GameRoomController implements Initializable {
         gc.setStroke(colour);
         gc.setLineWidth(brushSize);
         gc.setLineCap(StrokeLineCap.ROUND);
-        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+        enableDraw();
+    //    disableDraw();
+    }
+
+    public void enableDraw() {
+//        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+//            path = new ArrayList<>();
+//            path.add(new Coordinate(event.getX(), event.getY()));
+//        });
+//        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, event -> {
+//            path.add(new Coordinate(event.getX(), event.getY()));
+//            draw(path);
+//        });
+//        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
+//            this.draw(path);
+//            client.sendMessagePath(Command.DRAW_PATH, brushSize, colour.toString(), path);
+//            System.out.println("sending path");
+//        });
+        canvas.setOnMousePressed(event -> {
             path = new ArrayList<>();
             path.add(new Coordinate(event.getX(), event.getY()));
         });
-        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, event -> {
+        canvas.setOnMouseDragged(event -> {
             path.add(new Coordinate(event.getX(), event.getY()));
             draw(path);
         });
-        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
+        canvas.setOnMouseReleased(event -> {
             this.draw(path);
             client.sendMessagePath(Command.DRAW_PATH, brushSize, colour.toString(), path);
             System.out.println("sending path");
         });
+    }
+
+    public void disableDraw() {
+        canvas.setOnMousePressed(null);
+        canvas.setOnMouseDragged(null);
+        canvas.setOnMouseReleased(null);
     }
 
     public void draw(ArrayList<Coordinate> path) {

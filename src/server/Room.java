@@ -15,7 +15,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     public void beginGame() {
         currentDrawer = users.get(0);
         if (users.size() > 0) {
-            disperseMessage("roomName" + " Room", "Game beginning");
+            disperseMessage("A game is starting!");
         }
         currentDrawer.startDrawing();
     }
@@ -44,11 +44,12 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         currentUserList();
     }
 
-    public void disperseMessage(String username, String text) {
-        if (text.equals("!start")) beginGame();
+    public void disperseMessage(String text) {
+
         for (ServerThread user : users) {
-            user.outgoingChatMessage(username + " : " + text);
+            user.outgoingChatMessage( text);
         }
+        if (text.contains("!start")) beginGame();
     }
 
     public void disperseStroke(int size, String colour, ArrayList<Coordinate> coordinates) {
