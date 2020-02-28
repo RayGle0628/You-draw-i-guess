@@ -18,6 +18,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import messaging.Command;
 import messaging.Coordinate;
@@ -27,11 +29,12 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class GameRoomController implements Initializable {
-    private Boolean canDraw;
+    public TextFlow chatTextFlow;
+    private boolean canDraw;
     private int brushSize;
     private Color colour;
-    @FXML
-    public TextArea chatTextArea;
+//    @FXML
+//    public TextArea chatTextArea;
     @FXML
     public TextField inputTextField;
     @FXML
@@ -62,7 +65,7 @@ public class GameRoomController implements Initializable {
         gc.setLineWidth(brushSize);
         gc.setLineCap(StrokeLineCap.ROUND);
         enableDraw();
-    //    disableDraw();
+        //    disableDraw();
     }
 
     public void enableDraw() {
@@ -101,7 +104,6 @@ public class GameRoomController implements Initializable {
     }
 
     public void draw(ArrayList<Coordinate> path) {
-//        System.out.println(path.size());
         if (path.size() == 1) {
             gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
         } else {
@@ -126,7 +128,13 @@ public class GameRoomController implements Initializable {
 
     public void displayNewMessage(String message) {
         System.out.println("Message to display: " + message);
-        chatTextArea.appendText(message + "\n");
+        Text text=new Text();
+        text.setText(message+"\n");
+        Platform.runLater(() -> chatTextFlow.getChildren().add(text));
+//TODO
+// fix css, was textarea now textflow
+
+//        chatTextArea.appendText(message + "\n");
     }
 
     public void updateUsers(String[] users) {
@@ -134,21 +142,15 @@ public class GameRoomController implements Initializable {
         for (String user : users) {
             Label userName = new Label();
             userName.setText(user);
-            //userName.setEditable(false);
             Platform.runLater(() -> userList.getChildren().add(userName));
         }
-        System.out.println("OK");
     }
 
-    public void exitRoom() throws Exception {
+    public void exitRoom()  {
         client.sendMessage(Command.EXIT_ROOM);
-        System.out.println("Trying to exit");
         client.killThread();
-//        try {
         homeScene();
-//        } catch (Exception e) {
-//            System.out.println("FUCK");
-//        }
+
     }
 
     public void homeScene() {
@@ -159,11 +161,9 @@ public class GameRoomController implements Initializable {
             homeScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
             stage.show();
         } catch (Exception e) {
+            System.out.println("Couldn't move back to home scene");
+            e.printStackTrace();
         }
-    }
-
-    public void unlockDrawing() {
-        canDraw = true;
     }
 
     public void drawFromMessage(int size, String colour, ArrayList<Coordinate> path) {

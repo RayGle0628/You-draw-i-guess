@@ -62,7 +62,7 @@ if (endFlag)break;
                     endFlag=true;
                     break;
                 case START_DRAWING:
-                    client.getRoomController().unlockDrawing();
+//                    client.getRoomController().unlockDrawing();
                     break;
                 case INCOMING_PATH:
                     System.out.println("Path returned");

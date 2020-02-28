@@ -5,7 +5,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import messaging.Command;
 import messaging.Coordinate;
@@ -29,7 +28,7 @@ public class Client extends Application {
     private ObjectInputStream input;
     private DataInputStream inputData;
     private DataOutputStream outputData;
-   private GameRoomController roomController;
+    private GameRoomController roomController;
 
     public GameRoomController getRoomController() {
         return roomController;
@@ -83,8 +82,9 @@ public class Client extends Application {
         } catch (Exception e) {
         }
     }
-    public void sendMessagePath( Command command, int size, String colour,ArrayList<Coordinate>coordinates) {
-        Message message = new Message(command,size,colour, coordinates);
+
+    public void sendMessagePath(Command command, int size, String colour, ArrayList<Coordinate> coordinates) {
+        Message message = new Message(command, size, colour, coordinates);
         System.out.println("entered method for path");
         try {
             output.writeObject(message);
@@ -127,7 +127,7 @@ public class Client extends Application {
         sendMessage(Command.JOIN_ROOM, room);
         try {
             //  Message roomConfirmed = ((Message) input.readObject());
-            Boolean confirmation = inputData.readBoolean();
+            boolean confirmation = inputData.readBoolean();
             if (confirmation) {
                 clientListener.start();
             }
@@ -160,7 +160,7 @@ public class Client extends Application {
         Platform.exit();
     }
 
-    public void killThread() throws Exception {
+    public void killThread() {
         clientListener = new ClientListener(this);
         clientListener.setInput(input);
         System.out.println("listener killed and reset");
