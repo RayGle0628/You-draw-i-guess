@@ -17,42 +17,47 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class Client extends Application {
-    Socket socket;
-    public static final int PORT = 50000;
-    public static final String HOST = "127.0.0.1";
-    ClientListener clientListener;
-    private String username;
-    private String password;
-
+    private Socket socket;
+    private static Client client;
+    private static Stage stage;
+    private static final int PORT = 50000;
+    private static final String HOST = "127.0.0.1";
+    private ClientListener clientListener;
     private ObjectOutputStream output;
     private ObjectInputStream input;
     private DataInputStream inputData;
     private DataOutputStream outputData;
-
     private GameRoomController roomController;
 
+    public GameRoomController getRoomController() {
+        return roomController;
+    }
+
     public Client() {
+        Client.client = this;
         clientListener = new ClientListener(this);
-//        clientListener.start();
     }
 
     public static void main(String[] args) {
-        Client client = new Client();
         launch(args);
     }
 
+    public static Client getClient() {
+        return client;
+    }
+
+    public static Stage getStage() {
+        return stage;
+    }
+
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
-        Parent root = loader.load();
-        LoginController controller = loader.getController();
-        controller.setClient(this);
-        primaryStage.setTitle("Untitled");
-        primaryStage.setScene(new Scene(root));
-        root.getStylesheets().add(getClass().getResource(
-                "CreatAccountStyle" +
-                        ".css").toExternalForm());
-        primaryStage.show();
+    public void start(Stage stage) throws Exception {
+        Client.stage = stage;
+        Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
+        stage.setTitle("Untitled");
+        stage.setScene(new Scene(root));
+        root.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
+        stage.show();
     }
 
     public boolean login(String username, String password) {
@@ -60,13 +65,12 @@ public class Client extends Application {
             sendMessage(Command.LOGIN, username, password);
         }
         try {
-            Boolean t = inputData.readBoolean();
-            return t;
+            return inputData.readBoolean();
         } catch (Exception e) {
             System.out.println("No response from server regarding login status");
         }
         System.out.println("return not received");
-        return true;
+        return false;
     }
 
     public void sendMessage(Command command, String... data) {
@@ -101,10 +105,11 @@ public class Client extends Application {
         return (ArrayList<String>) input.readObject();
     }
 
-    public void updateRoomUsers(String [] currentUsers){
+    public void updateRoomUsers(String[] currentUsers) {
         System.out.println(currentUsers[0]);
         roomController.updateUsers(currentUsers);
     }
+
     public boolean joinRoom(String room) {
         sendMessage(Command.JOIN_ROOM, room);
         try {
@@ -132,16 +137,22 @@ public class Client extends Application {
     public String toString() {
         return "I am a client lol";
     }
+
     @Override
-    public void stop(){
-        try{
-       socket.close();}
-        catch(Exception e){
+    public void stop() {
+        try {
+            socket.close();
+        } catch (Exception e) {
             System.out.println("Error closing socket");
         }
         Platform.exit();
     }
 
+    public void killThread() throws Exception {
+        clientListener = new ClientListener(this);
+        clientListener.setInput(input);
+        System.out.println("listener killed and reset");
+    }
 }
 
 

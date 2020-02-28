@@ -21,7 +21,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
-    static Client client;
+    private Client client;
+    private Stage stage;
     @FXML
     GridPane gridPane;
     @FXML
@@ -35,61 +36,37 @@ public class LoginController implements Initializable {
     @FXML
     public Text loginWarning;
 
+    public LoginController() {
+        this.client = Client.getClient();
+        this.stage = Client.getStage();
+    }
 
-
-    public void login(ActionEvent e) throws IOException {
+    public void login() throws IOException {
         String username = usernameField.getText();
         String pass = passwordField.getText();
         Boolean success = client.login(username, pass);
         if (success) {
-            homeScene(e);
+            homeScene();
         } else {
             loginWarning.setText("Could not log in");
             loginWarning.setId("cannotLogin-text");
         }
     }
-//just show how to use git
-    public void setClient(Client client) {
-        this.client = client;
-    }
 
     public void createAccountScene(ActionEvent e) throws IOException {
         Parent createAccountView = FXMLLoader.load(getClass().getResource("CreateAccount.fxml"));
         Scene tableViewScene = new Scene(createAccountView);
-        //This line gets the Stage information
-        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         stage.setScene(tableViewScene);
-       tableViewScene.getStylesheets().add(getClass().getResource(
-               "CreatAccountStyle" +
-               ".css").toExternalForm());
-
-
+        tableViewScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
         stage.show();
     }
 
-    public void homeScene(ActionEvent e) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Home.fxml"));
-        Parent createAccountView = loader.load();
-        HomeController controller = loader.getController();
-        Scene tableViewScene = new Scene(createAccountView);
-        //This line gets the Stage information
-        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        stage.setScene(tableViewScene);
-        controller.setClient(client);
-        tableViewScene.getStylesheets().add(getClass().getResource(
-                "CreatAccountStyle" +
-                        ".css").toExternalForm());
+    public void homeScene() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("Home.fxml"));
+        Scene homeScene = new Scene(root);
+        stage.setScene(homeScene);
+        homeScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
         stage.show();
-//
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("Home.fxml"));
-//        Parent homeParent= loader.load();
-//        Scene homeScene = new Scene(homeParent);
-//        HomeController controller = loader.getController();
-//        controller.setClient(this.client);
-//        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-//
-//        stage.setScene(new Scene(homeParent));
-//       stage.show();
     }
 
     @Override

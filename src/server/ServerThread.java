@@ -42,7 +42,6 @@ public class ServerThread extends Thread {
             try {
                 message = (Message) input.readObject();
             } catch (Exception e) {
-
                 cleanup();
                 break;
             }
@@ -62,8 +61,21 @@ public class ServerThread extends Thread {
                 case REQUEST_USERS:
                     room.currentUserList();
                     break;
+                case EXIT_ROOM:
+                    exitRoom();
+                    break;
 
             }
+        }
+    }
+
+    public void exitRoom() {
+        room.removeUser(this);
+        this.room = null;
+        try {
+            output.writeObject(new Message(Command.CONFIRM_EXIT));
+        } catch (Exception e) {
+            System.out.println("unable to send message out");
         }
     }
 
@@ -91,6 +103,7 @@ public class ServerThread extends Thread {
     public void getAllRooms() {
         try {
             output.writeObject(server.getAllRooms());
+            System.out.println("ROOMS SENT");
         } catch (Exception e) {
             System.out.println("User requested a list of rooms but it failed.");
         }
@@ -102,11 +115,9 @@ public class ServerThread extends Thread {
         room.addUser(this);
         try {
             output.writeObject(new Message(Command.CONFIRM_ROOM_JOIN, true));
-
         } catch (Exception e) {
             System.out.println("Could not return room join status.");
         }
-
     }
 
     public void pushNames(String[] playersInRoom) {
@@ -117,7 +128,8 @@ public class ServerThread extends Thread {
         }
     }
 
-    public void requestNames(){}
+    public void requestNames() {
+    }
 
     public void cleanup() {
         server.getConnectedUsers().remove(this);
@@ -126,13 +138,20 @@ public class ServerThread extends Thread {
     }
 
     public void incomingChatMessage(String text) {
-        text = username + ": " + text;
-        room.disperseMessage(text);
+        room.disperseMessage(username, text);
     }
 
     public void outgoingChatMessage(String text) {
         try {
             output.writeObject(new Message(Command.RECEIVE_CHAT_MESSAGE, text));
+        } catch (Exception e) {
+            System.out.println("unable to send message out");
+        }
+    }
+
+    public void startDrawing() {
+        try {
+            output.writeObject(new Message(Command.START_DRAWING));
         } catch (Exception e) {
             System.out.println("unable to send message out");
         }

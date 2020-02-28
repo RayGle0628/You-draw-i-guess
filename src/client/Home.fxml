@@ -20,10 +20,7 @@
   </rowConstraints>
    <children>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Rooms" translateX="35.0" />
-      <ScrollPane fx:id="scrollPaneForRooms" hbarPolicy="NEVER"
-                  prefHeight="200.0"
-                  prefWidth="200.0"
-                   vbarPolicy="ALWAYS" GridPane.rowIndex="1">
+      <ScrollPane fx:id="scrollPaneForRooms" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS" GridPane.rowIndex="1">
          <content>
             <VBox fx:id="roomListVBox" spacing="5.0">
                <padding>
@@ -31,6 +28,6 @@
                </padding></VBox>
          </content>
       </ScrollPane>
-      <Button fx:id="getRoomsButton" mnemonicParsing="false" onAction="#getRooms" text="Get Rooms" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Button fx:id="getRoomsButton" mnemonicParsing="false" onAction="#getRooms" text="Refresh Rooms" GridPane.columnIndex="1" GridPane.rowIndex="1" />
    </children>
 </GridPane>

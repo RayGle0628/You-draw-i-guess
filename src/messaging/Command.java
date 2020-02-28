@@ -13,6 +13,9 @@ public enum Command {
     TEST,
     CONFIRM_ROOM_JOIN,
     USERS_IN_ROOM,
-    REQUEST_USERS
+    REQUEST_USERS,
+    EXIT_ROOM,
+    CONFIRM_EXIT,
+    START_DRAWING
 
 }
