@@ -53,11 +53,6 @@ if (endFlag)break;
                 case RECEIVE_CHAT_MESSAGE:
                     System.out.println("Receive returned message");
                     client.chatToRoom(message.getData()[0]);
-
-                    break;
-                case ROOM_LIST:
-                    System.out.println("Received room names");
-                    roomList = message.getRoomNames();
                     break;
                 case USERS_IN_ROOM:
                     client.updateRoomUsers(message.getData());
@@ -68,6 +63,9 @@ if (endFlag)break;
                     break;
                 case START_DRAWING:
                     client.getRoomController().unlockDrawing();
+                    break;
+                case INCOMING_PATH:
+                    System.out.println("Path returned");
                     break;
             }
             System.out.println("Message processed");

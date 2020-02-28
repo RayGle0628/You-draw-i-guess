@@ -1,6 +1,7 @@
 package server;
 
 import messaging.Command;
+import messaging.Coordinate;
 import messaging.Message;
 
 import java.io.DataInputStream;
@@ -8,6 +9,7 @@ import java.io.DataOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ServerThread extends Thread {
     String username;
@@ -56,7 +58,8 @@ public class ServerThread extends Thread {
                     joinRoom(message.getData()[0]);
                     break;
                 case SEND_CHAT_MESSAGE:
-                    incomingChatMessage(message.getData()[0]);
+//                    incomingChatMessage(message.getData()[0]);
+                    room.disperseMessage(username, message.getData()[0]);
                     break;
                 case REQUEST_USERS:
                     room.currentUserList();
@@ -64,7 +67,11 @@ public class ServerThread extends Thread {
                 case EXIT_ROOM:
                     exitRoom();
                     break;
-
+                case DRAW_PATH:
+                    System.out.println(message.getColour().substring(2, 8));
+                    System.out.println("PATH RECEIVED");
+                    room.disperseStroke(message.getSize(),message.getColour(),message.getCoordinates());
+                break;
             }
         }
     }
@@ -114,7 +121,8 @@ public class ServerThread extends Thread {
         System.out.println(room);
         room.addUser(this);
         try {
-            output.writeObject(new Message(Command.CONFIRM_ROOM_JOIN, true));
+            //output.writeObject(new Message(Command.CONFIRM_ROOM_JOIN, true));
+            outputData.writeBoolean(true);
         } catch (Exception e) {
             System.out.println("Could not return room join status.");
         }
@@ -133,7 +141,7 @@ public class ServerThread extends Thread {
 
     public void cleanup() {
         server.getConnectedUsers().remove(this);
-        room.removeUser(this);
+        room.removeUser(this); // THROWS EXCEPTION IF USER QUITS MANUALLY
         System.out.println(username + " disconnected");
     }
 
@@ -148,6 +156,13 @@ public class ServerThread extends Thread {
             System.out.println("unable to send message out");
         }
     }
+
+   public void outgoingStroke(int size, String colour, ArrayList<Coordinate> coordinates){
+        try{
+        output.writeObject(new Message(Command.INCOMING_PATH,size,colour,coordinates));}
+        catch(Exception e){}
+       //System.out.println("Returning draw path");
+   }
 
     public void startDrawing() {
         try {

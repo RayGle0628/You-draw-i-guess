@@ -16,6 +16,8 @@ public enum Command {
     REQUEST_USERS,
     EXIT_ROOM,
     CONFIRM_EXIT,
-    START_DRAWING
+    START_DRAWING,
+    DRAW_PATH,
+    INCOMING_PATH
 
 }

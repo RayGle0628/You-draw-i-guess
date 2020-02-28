@@ -5,8 +5,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import messaging.Command;
+import messaging.Coordinate;
 import messaging.Message;
 
 import java.io.DataInputStream;
@@ -81,6 +83,17 @@ public class Client extends Application {
         } catch (Exception e) {
         }
     }
+    public void sendMessagePath( Command command, int size, String colour,ArrayList<Coordinate>coordinates) {
+        Message message = new Message(command,size,colour, coordinates);
+        System.out.println("entered method for path");
+        try {
+            output.writeObject(message);
+            System.out.println("Sent path to server successfully");
+        } catch (Exception e) {
+            System.out.println("Could not sent message");
+            e.printStackTrace();
+        }
+    }
 
     public boolean connect() {
         try {
@@ -113,14 +126,13 @@ public class Client extends Application {
     public boolean joinRoom(String room) {
         sendMessage(Command.JOIN_ROOM, room);
         try {
-            Message roomConfirmed = ((Message) input.readObject());
-            System.out.println(roomConfirmed);
-            if (roomConfirmed.getBool()) {
+            //  Message roomConfirmed = ((Message) input.readObject());
+            Boolean confirmation = inputData.readBoolean();
+            if (confirmation) {
                 clientListener.start();
             }
-            return roomConfirmed.getBool();
+            return confirmation;
         } catch (Exception e) {
-            System.out.println("Join room did not receive a response");
             return false;
         }
     }

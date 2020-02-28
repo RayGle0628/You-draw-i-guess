@@ -28,6 +28,8 @@ import java.util.ResourceBundle;
 
 public class GameRoomController implements Initializable {
     private Boolean canDraw;
+    private int brushSize;
+    private Color colour;
     @FXML
     public TextArea chatTextArea;
     @FXML
@@ -44,17 +46,20 @@ public class GameRoomController implements Initializable {
     private ArrayList<Coordinate> path;
 
     public GameRoomController() {
+        colour = Color.web("35d946");
+        brushSize = 10;
         canDraw = false;
         client = Client.getClient();
         stage = Client.getStage();
         client.setRoomController(this);
         client.sendMessage(Command.REQUEST_USERS);
     }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
-        gc.setStroke(Color.RED);
-        gc.setLineWidth(10);
+        gc.setStroke(colour);
+        gc.setLineWidth(brushSize);
         gc.setLineCap(StrokeLineCap.ROUND);
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
             path = new ArrayList<>();
@@ -65,9 +70,9 @@ public class GameRoomController implements Initializable {
             draw(path);
         });
         canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
-
             this.draw(path);
-
+            client.sendMessagePath(Command.DRAW_PATH, brushSize, colour.toString(), path);
+            System.out.println("sending path");
         });
     }
 
@@ -80,6 +85,7 @@ public class GameRoomController implements Initializable {
                     path.get(path.size() - 2).getX(), path.get(path.size() - 2).getY());
         }
     }
+
     /**
      * This method handles enter being pressed in the text box to send the message to the server
      *

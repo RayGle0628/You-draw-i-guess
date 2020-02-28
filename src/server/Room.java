@@ -1,5 +1,7 @@
 package server;
 
+import messaging.Coordinate;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -13,7 +15,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     public void beginGame() {
         currentDrawer = users.get(0);
         if (users.size() > 0) {
-            disperseMessage("roomName"+" Room","Game beginning");
+            disperseMessage("roomName" + " Room", "Game beginning");
         }
         currentDrawer.startDrawing();
     }
@@ -47,6 +49,11 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         for (ServerThread user : users) {
             user.outgoingChatMessage(username + " : " + text);
         }
+    }
+
+    public void disperseStroke(int size, String colour, ArrayList<Coordinate> coordinates) {
+        for (ServerThread user:users)
+        {user.outgoingStroke(size,colour,coordinates);}
     }
 
     /**
