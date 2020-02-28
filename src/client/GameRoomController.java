@@ -141,4 +141,17 @@ public class GameRoomController implements Initializable {
     public void unlockDrawing() {
         canDraw = true;
     }
+
+    public void drawFromMessage(int size, String colour, ArrayList<Coordinate> path) {
+        System.out.println("Drawing received");
+        gc.setLineWidth(size);
+        gc.setStroke(Color.web(colour));
+        if (path.size() == 1) {
+            gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
+        } else {
+            for (int i = 0; i < path.size() - 1; i++) {
+                gc.strokeLine(path.get(i).getX(), path.get(i).getY(), path.get(i + 1).getX(), path.get(i + 1).getY());
+            }
+        }
+    }
 }

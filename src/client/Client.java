@@ -29,7 +29,7 @@ public class Client extends Application {
     private ObjectInputStream input;
     private DataInputStream inputData;
     private DataOutputStream outputData;
-    private GameRoomController roomController;
+   private GameRoomController roomController;
 
     public GameRoomController getRoomController() {
         return roomController;

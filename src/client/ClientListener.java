@@ -66,6 +66,7 @@ if (endFlag)break;
                     break;
                 case INCOMING_PATH:
                     System.out.println("Path returned");
+                    client.getRoomController().drawFromMessage(message.getSize(),message.getColour(),message.getCoordinates());
                     break;
             }
             System.out.println("Message processed");
