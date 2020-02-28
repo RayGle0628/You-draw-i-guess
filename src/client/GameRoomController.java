@@ -64,8 +64,8 @@ public class GameRoomController implements Initializable {
         gc.setStroke(colour);
         gc.setLineWidth(brushSize);
         gc.setLineCap(StrokeLineCap.ROUND);
-        enableDraw();
-        //    disableDraw();
+//        enableDraw();
+            disableDraw();
     }
 
     public void enableDraw() {
