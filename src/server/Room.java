@@ -14,7 +14,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     private ArrayList<ServerThread> users;
 
     private ServerThread currentDrawer;
-    private String currentWord = "Dog";
+    private String currentWord;
     Timer t = new Timer("Timer");
     int round;
 
@@ -23,12 +23,10 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         disperseMessage(null, "A game is starting in 5 seconds!");
         TimerTask task = new TimerTask() {
             public void run() {
-
                 startRound();
             }
         };
         t.schedule(task, 5000);
-
     }
 
     public void startRound() {
@@ -53,15 +51,17 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         currentDrawer = null;
         currentWord = null;
         System.out.println(round);
-        if (round<=5){
-        TimerTask task = new TimerTask() {
-            public void run() {
-                disperseMessage(null, "The next round starts in 5 seconds!");
-                startRound();
-            }
-        };
-        t.schedule(task, 5000);}
-        else {disperseMessage(null, "10 rounds completed, game over!");}
+        if (round <= 5) {
+            TimerTask task = new TimerTask() {
+                public void run() {
+                    startRound();
+                }
+            };
+            disperseMessage(null, "The next round starts in 5 seconds!");
+            t.schedule(task, 5000);
+        } else {
+            disperseMessage(null, "10 rounds completed, game over!");
+        }
     }
 
     public void selectNextDrawer() {
@@ -92,14 +92,45 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         users.remove(user);
         System.out.println("Removed " + user);
         currentUserList();
+        if (users.size() == 0) {
+            t.cancel();
+            round = 0;
+            System.out.println("Not enough players, ending game.");
+        }
     }
 
     public synchronized void disperseMessage(ServerThread fromUser, String text) {
-        if (fromUser != null) text = fromUser.getUsername() + ": " + text;
-        for (ServerThread user : users) {
-            user.outgoingChatMessage(text);
+        if (fromUser != null) {
+            if (parseGuess(text)) {
+                disperseMessage(null, fromUser.username + " has guessed correctly.");
+                t.cancel();
+                t = new Timer("Timer");
+                endRound();
+            } else {
+                text = fromUser.getUsername() + ": " + text;
+                for (ServerThread user : users) {
+                    user.outgoingChatMessage(text);
+                }
+            }
         }
-        if (text.contains("!start")) beginGame();
+        if (fromUser == null) {
+            for (ServerThread user : users) {
+                user.outgoingChatMessage(text);
+            }
+        }
+        if (text.contains("!start")) {
+            beginGame();
+            System.out.println("Begining game");
+        }
+    }
+
+    public boolean parseGuess(String text) {
+        if (currentWord != null) {
+            if (text.toLowerCase().contains(currentWord.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public synchronized void disperseStroke(ServerThread fromUser, int size, String colour,

@@ -8,10 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -29,11 +26,16 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class GameRoomController implements Initializable {
-    public TextFlow chatTextFlow;
+//    @FXML
+//    public TextFlow chatTextFlow;
+    @FXML
+    public ScrollPane chatScrollPane;
+    public TextArea chatTextArea;
+
     private boolean canDraw;
     private int brushSize;
     private Color colour;
-//    @FXML
+    //    @FXML
 //    public TextArea chatTextArea;
     @FXML
     public TextField inputTextField;
@@ -65,7 +67,7 @@ public class GameRoomController implements Initializable {
         gc.setLineWidth(brushSize);
         gc.setLineCap(StrokeLineCap.ROUND);
 //        enableDraw();
-            disableDraw();
+        disableDraw();
     }
 
     public void enableDraw() {
@@ -90,13 +92,14 @@ public class GameRoomController implements Initializable {
             path.add(new Coordinate(event.getX(), event.getY()));
             draw(path);
             //TESTING
-            client.sendMessagePath(Command.DRAW_PATH, brushSize, colour.toString(), new ArrayList<>(path.subList(path.size()-2,path.size())));
-       //     System.out.println("Sent path of size "+path.size());
+            client.sendMessagePath(Command.DRAW_PATH, brushSize, colour.toString(),
+                    new ArrayList<>(path.subList(path.size() - 2, path.size())));
+            //     System.out.println("Sent path of size "+path.size());
         });
         canvas.setOnMouseReleased(event -> {
             this.draw(path);
             client.sendMessagePath(Command.DRAW_PATH, brushSize, colour.toString(), path);
-         //   System.out.println("sending path");
+            //   System.out.println("sending path");
         });
     }
 
@@ -130,13 +133,17 @@ public class GameRoomController implements Initializable {
     }
 
     public void displayNewMessage(String message) {
-        System.out.println("Message to display: " + message);
-        Text text=new Text();
-        text.setText(message+"\n");
-        Platform.runLater(() -> chatTextFlow.getChildren().add(text));
+        chatTextArea.appendText(message+"\n");
+//        Text text = new Text();
+//        text.setText(message + "\n");
+//        Platform.runLater(() -> {
+//            chatTextFlow.getChildren().add(text);
+//            chatScrollPane.setVvalue(1.0);
+//        });
+
+
 //TODO
 // fix css, was textarea now textflow
-
 //        chatTextArea.appendText(message + "\n");
     }
 
@@ -149,11 +156,10 @@ public class GameRoomController implements Initializable {
         }
     }
 
-    public void exitRoom()  {
+    public void exitRoom() {
         client.sendMessage(Command.EXIT_ROOM);
         client.killThread();
         homeScene();
-
     }
 
     public void homeScene() {
@@ -170,17 +176,16 @@ public class GameRoomController implements Initializable {
     }
 
     public void drawFromMessage(int size, String colour, ArrayList<Coordinate> path) {
-   //     System.out.println("Drawing received");
+        //     System.out.println("Drawing received");
         gc.setLineWidth(size);
         gc.setStroke(Color.web(colour));
-     //   System.out.println("Drawing path of size "+ path.size());
+        //   System.out.println("Drawing path of size "+ path.size());
         if (path.size() == 1) {
             gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
         } else {
-
             //TESTING
             gc.strokeLine(path.get(path.size() - 2).getX(), path.get(path.size() - 2).getY(),
-                    path.get(path.size()-1).getX(), path.get(path.size()-1).getY());
+                    path.get(path.size() - 1).getX(), path.get(path.size() - 1).getY());
 //            for (int i = 0; i < path.size() - 1; i++) {
 //                gc.strokeLine(path.get(i).getX(), path.get(i).getY(), path.get(i + 1).getX(), path.get(i + 1).getY());
 //            }
