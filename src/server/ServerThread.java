@@ -179,5 +179,14 @@ public class ServerThread extends Thread {
             System.out.println("unable to send message out");
         }
     }
+
+
+    public void clearCanvas(){
+        try {
+            output.writeObject(new Message(Command.CLEAR_CANVAS));
+        } catch (Exception e) {
+            System.out.println("unable to send message out");
+        }
+    }
 }
 

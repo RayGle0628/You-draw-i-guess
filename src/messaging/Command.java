@@ -19,6 +19,7 @@ public enum Command {
     START_DRAWING,
     DRAW_PATH,
     INCOMING_PATH,
-    STOP_DRAWING
+    STOP_DRAWING,
+    CLEAR_CANVAS
 
 }

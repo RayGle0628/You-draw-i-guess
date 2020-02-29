@@ -12,11 +12,10 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
 
     private String roomName;
     private ArrayList<ServerThread> users;
-
     private ServerThread currentDrawer;
     private String currentWord;
-    Timer t = new Timer("Timer");
-    int round;
+    private Timer t = new Timer("Timer");
+    private int round;
 
     public void beginGame() {
         round = 1;
@@ -32,7 +31,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     public void startRound() {
         selectNextWord();
         selectNextDrawer();
-        disperseMessage(null, currentDrawer.getUsername() + " is the now drawing for 10 seconds!");
+        disperseMessage(null, currentDrawer.getUsername() + " is the now drawing for 100 seconds!");
         currentDrawer.startDrawing();
         //AFTER 10 SECS STOP DRAWING
         TimerTask task = new TimerTask() {
@@ -41,7 +40,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
                 endRound();
             }
         };
-        t.schedule(task, 10000);
+        t.schedule(task, 100000);
     }
 
     public void endRound() {
@@ -54,6 +53,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         if (round <= 5) {
             TimerTask task = new TimerTask() {
                 public void run() {
+                    clearCanvas();
                     startRound();
                 }
             };
@@ -62,6 +62,9 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         } else {
             disperseMessage(null, "10 rounds completed, game over!");
         }
+    }
+    public void clearCanvas(){
+        for (ServerThread user:users){user.clearCanvas();}
     }
 
     public void selectNextDrawer() {
@@ -94,6 +97,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         currentUserList();
         if (users.size() == 0) {
             t.cancel();
+            t = new Timer("Timer");
             round = 0;
             System.out.println("Not enough players, ending game.");
         }

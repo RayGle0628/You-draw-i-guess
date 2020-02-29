@@ -56,6 +56,9 @@ public class ClientListener extends Thread {
                     client.getRoomController().drawFromMessage(message.getSize(), message.getColour(),
                             message.getCoordinates());
                     break;
+                case CLEAR_CANVAS:
+                    client.getRoomController().clearCanvas();
+                    break;
             }
             //   System.out.println("Message processed");
         }
