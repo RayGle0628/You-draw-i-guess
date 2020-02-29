@@ -90,8 +90,8 @@ public class GameRoomController implements Initializable {
             path.add(new Coordinate(event.getX(), event.getY()));
             draw(path);
             //TESTING
-            client.sendMessagePath(Command.DRAW_PATH, brushSize, colour.toString(), path);
-            System.out.println("Sent path of size "+path.size());
+            client.sendMessagePath(Command.DRAW_PATH, brushSize, colour.toString(), new ArrayList<>(path.subList(path.size()-2,path.size())));
+       //     System.out.println("Sent path of size "+path.size());
         });
         canvas.setOnMouseReleased(event -> {
             this.draw(path);
@@ -173,7 +173,7 @@ public class GameRoomController implements Initializable {
    //     System.out.println("Drawing received");
         gc.setLineWidth(size);
         gc.setStroke(Color.web(colour));
-        System.out.println("Drawing path of size "+ path.size());
+     //   System.out.println("Drawing path of size "+ path.size());
         if (path.size() == 1) {
             gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
         } else {

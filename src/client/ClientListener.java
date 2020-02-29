@@ -43,7 +43,7 @@ if (endFlag)break;
                 message = (Message) input.readObject();
               //  System.out.println("Listener unblocked");
             } catch (Exception e) {
-                System.out.println("Listener failed/terminated");
+                System.out.println("Listener failed due to server closure");
            //     e.printStackTrace();
                 break;
             }
