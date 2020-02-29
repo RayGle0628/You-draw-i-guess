@@ -5,6 +5,8 @@ import messaging.Coordinate;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Room extends Thread implements Serializable, Comparable<Room> {
 
@@ -12,17 +14,64 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     private ArrayList<ServerThread> users;
 
     private ServerThread currentDrawer;
+    private String currentWord = "Dog";
+    Timer t = new Timer("Timer");
+    int round;
 
     public void beginGame() {
+        round = 1;
+        disperseMessage(null, "A game is starting in 5 seconds!");
+        TimerTask task = new TimerTask() {
+            public void run() {
+
+                startRound();
+            }
+        };
+        t.schedule(task, 5000);
+
+    }
+
+    public void startRound() {
+        selectNextWord();
+        selectNextDrawer();
+        disperseMessage(null, currentDrawer.getUsername() + " is the now drawing for 10 seconds!");
+        currentDrawer.startDrawing();
+        //AFTER 10 SECS STOP DRAWING
+        TimerTask task = new TimerTask() {
+            public void run() {
+                System.out.println("Here is the timer every 10 seconds");
+                endRound();
+            }
+        };
+        t.schedule(task, 10000);
+    }
+
+    public void endRound() {
+        disperseMessage(null, "The round has ended!");
+        round++;
+        currentDrawer.stopDrawing();
+        currentDrawer = null;
+        currentWord = null;
+        System.out.println(round);
+        if (round<=5){
+        TimerTask task = new TimerTask() {
+            public void run() {
+                disperseMessage(null, "The next round starts in 5 seconds!");
+                startRound();
+            }
+        };
+        t.schedule(task, 5000);}
+        else {disperseMessage(null, "10 rounds completed, game over!");}
+    }
+
+    public void selectNextDrawer() {
         Random random = new Random();
         int rand = random.nextInt(users.size());
         currentDrawer = users.get(rand);
-        if (users.size() > 0) {
-            disperseMessage("A game is starting!");
-            disperseMessage(currentDrawer.getUsername() + " is the next to draw!");
-            currentDrawer.startDrawing();
-        }
-        currentDrawer.startDrawing();
+    }
+
+    public void selectNextWord() {
+        currentWord = "Dog";
     }
 
     public Room(String name) {
@@ -45,18 +94,20 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         currentUserList();
     }
 
-    public synchronized void disperseMessage(String text) {
+    public synchronized void disperseMessage(ServerThread fromUser, String text) {
+        if (fromUser != null) text = fromUser.getUsername() + ": " + text;
         for (ServerThread user : users) {
             user.outgoingChatMessage(text);
         }
         if (text.contains("!start")) beginGame();
     }
 
-    public synchronized void disperseStroke(int size, String colour, ArrayList<Coordinate> coordinates) {
-        // TODO lock to drawer only
-    //    System.out.println("Sending path back of size "+coordinates.size());
-        for (ServerThread user : users) {
-            user.outgoingStroke(size, colour, coordinates);
+    public synchronized void disperseStroke(ServerThread fromUser, int size, String colour,
+                                            ArrayList<Coordinate> coordinates) {
+        if (currentDrawer.equals(fromUser)) { // prevents other clients sending draw data out of turn.
+            for (ServerThread user : users) {
+                user.outgoingStroke(size, colour, coordinates);
+            }
         }
     }
 

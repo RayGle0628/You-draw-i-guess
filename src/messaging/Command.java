@@ -18,6 +18,7 @@ public enum Command {
     CONFIRM_EXIT,
     START_DRAWING,
     DRAW_PATH,
-    INCOMING_PATH
+    INCOMING_PATH,
+    STOP_DRAWING
 
 }

@@ -59,7 +59,7 @@ public class ServerThread extends Thread {
                     break;
                 case SEND_CHAT_MESSAGE:
 //                    incomingChatMessage(message.getData()[0]);
-                    room.disperseMessage(username+ ": "+ message.getData()[0]);
+                    room.disperseMessage(this, message.getData()[0]);
                     break;
                 case REQUEST_USERS:
                     room.currentUserList();
@@ -71,7 +71,7 @@ public class ServerThread extends Thread {
                     System.out.println(message.getColour().substring(2, 8));
                     System.out.println("PATH RECEIVED SIZE "+ message.getCoordinates().size());
                     System.out.println(message.toString());
-                    room.disperseStroke(message.getSize(),message.getColour(),message.getCoordinates());
+                    room.disperseStroke(this, message.getSize(),message.getColour(),message.getCoordinates());
                 break;
             }
         }
@@ -168,6 +168,13 @@ public class ServerThread extends Thread {
     public void startDrawing() {
         try {
             output.writeObject(new Message(Command.START_DRAWING));
+        } catch (Exception e) {
+            System.out.println("unable to send message out");
+        }
+    }
+    public void stopDrawing() {
+        try {
+            output.writeObject(new Message(Command.STOP_DRAWING));
         } catch (Exception e) {
             System.out.println("unable to send message out");
         }
