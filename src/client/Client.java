@@ -85,10 +85,11 @@ public class Client extends Application {
 
     public void sendMessagePath(Command command, int size, String colour, ArrayList<Coordinate> coordinates) {
         Message message = new Message(command, size, colour, coordinates);
-        System.out.println("entered method for path");
+//        System.out.println("SENDING MESSAGE TO SERVER SIZE " + coordinates.size());
         try {
+            output.reset();
             output.writeObject(message);
-            System.out.println("Sent path to server successfully");
+            //   System.out.println("Sent path to server successfully");
         } catch (Exception e) {
             System.out.println("Could not sent message");
             e.printStackTrace();

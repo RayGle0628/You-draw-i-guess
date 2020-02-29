@@ -69,7 +69,8 @@ public class ServerThread extends Thread {
                     break;
                 case DRAW_PATH:
                     System.out.println(message.getColour().substring(2, 8));
-                    System.out.println("PATH RECEIVED");
+                    System.out.println("PATH RECEIVED SIZE "+ message.getCoordinates().size());
+                    System.out.println(message.toString());
                     room.disperseStroke(message.getSize(),message.getColour(),message.getCoordinates());
                 break;
             }

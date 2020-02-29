@@ -65,11 +65,12 @@ if (endFlag)break;
                     client.getRoomController().enableDraw();
                     break;
                 case INCOMING_PATH:
-                    System.out.println("Path returned");
+                  //  System.out.println("Path returned");
+                    System.out.println(message.getCoordinates().size());
                     client.getRoomController().drawFromMessage(message.getSize(),message.getColour(),message.getCoordinates());
                     break;
             }
-            System.out.println("Message processed");
+         //   System.out.println("Message processed");
         }
         System.out.println("LISTENER ENDED");
     }

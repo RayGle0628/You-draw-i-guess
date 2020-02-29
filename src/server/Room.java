@@ -53,6 +53,8 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     }
 
     public synchronized void disperseStroke(int size, String colour, ArrayList<Coordinate> coordinates) {
+        // TODO lock to drawer only
+    //    System.out.println("Sending path back of size "+coordinates.size());
         for (ServerThread user : users) {
             user.outgoingStroke(size, colour, coordinates);
         }

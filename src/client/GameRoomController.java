@@ -89,11 +89,14 @@ public class GameRoomController implements Initializable {
         canvas.setOnMouseDragged(event -> {
             path.add(new Coordinate(event.getX(), event.getY()));
             draw(path);
+            //TESTING
+            client.sendMessagePath(Command.DRAW_PATH, brushSize, colour.toString(), path);
+            System.out.println("Sent path of size "+path.size());
         });
         canvas.setOnMouseReleased(event -> {
             this.draw(path);
             client.sendMessagePath(Command.DRAW_PATH, brushSize, colour.toString(), path);
-            System.out.println("sending path");
+         //   System.out.println("sending path");
         });
     }
 
@@ -167,15 +170,20 @@ public class GameRoomController implements Initializable {
     }
 
     public void drawFromMessage(int size, String colour, ArrayList<Coordinate> path) {
-        System.out.println("Drawing received");
+   //     System.out.println("Drawing received");
         gc.setLineWidth(size);
         gc.setStroke(Color.web(colour));
+        System.out.println("Drawing path of size "+ path.size());
         if (path.size() == 1) {
             gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
         } else {
-            for (int i = 0; i < path.size() - 1; i++) {
-                gc.strokeLine(path.get(i).getX(), path.get(i).getY(), path.get(i + 1).getX(), path.get(i + 1).getY());
-            }
+
+            //TESTING
+            gc.strokeLine(path.get(path.size() - 2).getX(), path.get(path.size() - 2).getY(),
+                    path.get(path.size()-1).getX(), path.get(path.size()-1).getY());
+//            for (int i = 0; i < path.size() - 1; i++) {
+//                gc.strokeLine(path.get(i).getX(), path.get(i).getY(), path.get(i + 1).getX(), path.get(i + 1).getY());
+//            }
         }
     }
 }

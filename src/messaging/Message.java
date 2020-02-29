@@ -59,8 +59,8 @@ public class Message implements Serializable {
         return data;
     }
 
-    @Override
-    public String toString() {
-        return "This message is a " + command;
-    }
+//    @Override
+//    public String toString() {
+//        return "This message is a " + command;
+//    }
 }
