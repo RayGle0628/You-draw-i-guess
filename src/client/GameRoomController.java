@@ -2,7 +2,7 @@ package client;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,13 +13,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+
 import javafx.stage.Stage;
 import messaging.Command;
 import messaging.Coordinate;
@@ -30,16 +29,17 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class GameRoomController implements Initializable {
-
+    @FXML
     public TextArea chatTextArea;
+    @FXML
     public ColorPicker colourPicker;
+    @FXML
     public Slider sizeSlider;
+    @FXML
     public Circle guideCircle;
-
     private boolean canDraw;
     private int brushSize;
     private Color colour;
-
     @FXML
     public TextField inputTextField;
     @FXML
@@ -62,7 +62,8 @@ public class GameRoomController implements Initializable {
         client.setRoomController(this);
         client.sendMessage(Command.REQUEST_USERS);
     }
-//TODO fix guide sizing
+
+    //TODO fix guide sizing
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
@@ -78,27 +79,14 @@ public class GameRoomController implements Initializable {
         sizeSlider.valueProperty().addListener((ChangeListener) (arg0, arg1, arg2) -> {
             guideCircle.setRadius(sizeSlider.getValue());
             gc.setLineWidth(sizeSlider.getValue());
-            brushSize=(int)sizeSlider.getValue();
+            brushSize = (int) sizeSlider.getValue();
         });
     }
 
     public void enableDraw() {
         guideCircle.setFill(colourPicker.getValue());
         gc.setStroke(colourPicker.getValue());
-        colour=colourPicker.getValue();
-//        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-//            path = new ArrayList<>();
-//            path.add(new Coordinate(event.getX(), event.getY()));
-//        });
-//        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, event -> {
-//            path.add(new Coordinate(event.getX(), event.getY()));
-//            draw(path);
-//        });
-//        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
-//            this.draw(path);
-//            client.sendMessagePath(Command.DRAW_PATH, brushSize, colour.toString(), path);
-//            System.out.println("sending path");
-//        });
+        colour = colourPicker.getValue();
         canvas.setOnMousePressed(event -> {
             path = new ArrayList<>();
             path.add(new Coordinate(event.getX(), event.getY()));
@@ -149,15 +137,6 @@ public class GameRoomController implements Initializable {
 
     public void displayNewMessage(String message) {
         chatTextArea.appendText(message + "\n");
-//        Text text = new Text();
-//        text.setText(message + "\n");
-//        Platform.runLater(() -> {
-//            chatTextFlow.getChildren().add(text);
-//            chatScrollPane.setVvalue(1.0);
-//        });
-//TODO
-// fix css, was textarea now textflow
-//        chatTextArea.appendText(message + "\n");
     }
 
     public void updateUsers(String[] users) {
@@ -189,19 +168,13 @@ public class GameRoomController implements Initializable {
     }
 
     public void drawFromMessage(int size, String colour, ArrayList<Coordinate> path) {
-        //     System.out.println("Drawing received");
         gc.setLineWidth(size);
         gc.setStroke(Color.web(colour));
-        //   System.out.println("Drawing path of size "+ path.size());
         if (path.size() == 1) {
             gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
         } else {
-            //TESTING
             gc.strokeLine(path.get(path.size() - 2).getX(), path.get(path.size() - 2).getY(),
                     path.get(path.size() - 1).getX(), path.get(path.size() - 1).getY());
-//            for (int i = 0; i < path.size() - 1; i++) {
-//                gc.strokeLine(path.get(i).getX(), path.get(i).getY(), path.get(i + 1).getX(), path.get(i + 1).getY());
-//            }
         }
     }
 
@@ -213,8 +186,6 @@ public class GameRoomController implements Initializable {
         System.out.println("Changing colour");
         guideCircle.setFill(colourPicker.getValue());
         gc.setStroke(colourPicker.getValue());
-        colour=colourPicker.getValue();
+        colour = colourPicker.getValue();
     }
-
-
 }
