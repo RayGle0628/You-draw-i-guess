@@ -53,6 +53,9 @@ public class GameRoomController implements Initializable {
     private GraphicsContext gc;
     private ArrayList<Coordinate> path;
 
+    @FXML
+    private Button clear;
+
     public GameRoomController() {
         colour = Color.web("35d946");
         brushSize = 10;
@@ -70,8 +73,8 @@ public class GameRoomController implements Initializable {
         gc.setStroke(colour);
         gc.setLineWidth(brushSize);
         gc.setLineCap(StrokeLineCap.ROUND);
-//        enableDraw();
-        disableDraw();
+        enableDraw();
+//        disableDraw();
         colourPicker.setValue(colour);
         guideCircle.setFill(colour);
         guideCircle.setStroke(Color.TRANSPARENT);
@@ -80,6 +83,9 @@ public class GameRoomController implements Initializable {
             guideCircle.setRadius(sizeSlider.getValue());
             gc.setLineWidth(sizeSlider.getValue());
             brushSize = (int) sizeSlider.getValue();
+        });
+        clear.setOnAction(e->{
+        	clearCanvas();
         });
     }
 
