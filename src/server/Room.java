@@ -63,8 +63,11 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
             disperseMessage(null, "10 rounds completed, game over!");
         }
     }
-    public void clearCanvas(){
-        for (ServerThread user:users){user.clearCanvas();}
+
+    public void clearCanvas() {
+        for (ServerThread user : users) {
+            user.clearCanvas();
+        }
     }
 
     public void selectNextDrawer() {
@@ -139,9 +142,11 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
 
     public synchronized void disperseStroke(ServerThread fromUser, int size, String colour,
                                             ArrayList<Coordinate> coordinates) {
-        if (currentDrawer.equals(fromUser)) { // prevents other clients sending draw data out of turn.
-            for (ServerThread user : users) {
-                user.outgoingStroke(size, colour, coordinates);
+        if (currentDrawer != null) {
+            if (currentDrawer.equals(fromUser)) { // prevents other clients sending draw data out of turn.
+                for (ServerThread user : users) {
+                    user.outgoingStroke(size, colour, coordinates);
+                }
             }
         }
     }
