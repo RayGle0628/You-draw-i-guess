@@ -73,6 +73,9 @@ public class ServerThread extends Thread {
                     System.out.println(message.toString());
                     room.disperseStroke(this, message.getSize(),message.getColour(),message.getCoordinates());
                 break;
+                case CLEAR_CANVAS:
+                    room.clearCanvas();
+                    break;
             }
         }
     }

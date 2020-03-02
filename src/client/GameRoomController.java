@@ -100,6 +100,7 @@ public class GameRoomController implements Initializable {
             clearCanvas();
         });
         clearCanvas();
+        client.sendMessage(Command.CLEAR_CANVAS);
     }
 
     /**
