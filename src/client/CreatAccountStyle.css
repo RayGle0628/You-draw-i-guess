@@ -31,8 +31,8 @@
     -fx-text-fill: darkslategray;
 }
 #cannotLogin-text {
-    -fx-font-size: 22px;
-    -fx-font-family: "微软雅黑";
+    -fx-font-size: 20px;
+    -fx-font-family: "华文隶书";
     -fx-fill: #ff4500;
     -fx-effect: innershadow( three-pass-box , rgba(198, 7, 16, 0.7), 6, 0.0 , 0 , 2 );
 }
