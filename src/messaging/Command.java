@@ -3,7 +3,7 @@ package messaging;
 public enum Command {
 
     LOGIN,
-    LOGOUT,
+    CREATE_ACCOUNT,
     CREATE_ROOM,
     GET_ROOMS,
     JOIN_ROOM,

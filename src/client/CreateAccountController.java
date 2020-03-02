@@ -1,11 +1,9 @@
 package client;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,16 +11,15 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import messaging.Command;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class CreateAccountController implements Initializable {
-
     private Client client;
     private Stage stage;
-
     @FXML
     GridPane gridPane;
     @FXML
@@ -53,5 +50,20 @@ public class CreateAccountController implements Initializable {
         Scene tableViewScene = new Scene(createAccountView);
         stage.setScene(tableViewScene);
         stage.show();
+    }
+
+    public void createAccount() {
+        if (!passwordField.equals(repeatPasswordField)) {
+            //TODO add text warnings here
+            return;
+        }
+        client.sendMessageString(Command.CREATE_ACCOUNT, usernameField.getText(), passwordField.getText(),
+                emailField.getText());
+        try {
+            if (client.getInputData().readBoolean()) {//confirm acc creation
+            } else { // rejected by server
+            }
+        } catch (Exception e) { // Data could not be read rejection
+        }
     }
 }

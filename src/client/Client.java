@@ -8,10 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import messaging.*;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -65,8 +62,9 @@ public class Client extends Application {
         }
         try {
             return inputData.readBoolean();
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("No response from server regarding login status");
+            e.printStackTrace();
         }
         System.out.println("return not received");
         return false;
@@ -76,26 +74,26 @@ public class Client extends Application {
         Message message = new Message(command);
         try {
             output.writeObject(message);
-        } catch (Exception e) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
     public void sendMessageString(Command command, String... data) {
         MessageString message = new MessageString(command, data);
         try {
             output.writeObject(message);
-        } catch (Exception e) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     public void sendMessagePath(Command command, int size, String colour, ArrayList<Coordinate> coordinates) {
         MessagePath message = new MessagePath(command, size, colour, coordinates);
-
         try {
             output.reset();
             output.writeObject(message);
-
-        } catch (Exception e) {
-            System.out.println("Could not sent message");
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -123,6 +121,10 @@ public class Client extends Application {
         return (ArrayList<String>) input.readObject();
     }
 
+    public DataInputStream getInputData() {
+        return inputData;
+    }
+
     public void updateRoomUsers(String[] currentUsers) {
         System.out.println(currentUsers[0]);
         roomController.updateUsers(currentUsers);
@@ -131,7 +133,6 @@ public class Client extends Application {
     public boolean joinRoom(String room) {
         sendMessageString(Command.JOIN_ROOM, room);
         try {
-            //  Message roomConfirmed = ((Message) input.readObject());
             boolean confirmation = inputData.readBoolean();
             if (confirmation) {
                 clientListener.start();

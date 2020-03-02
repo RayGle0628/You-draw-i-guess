@@ -45,8 +45,7 @@ public class LoginController implements Initializable {
     public void login()  {
         String username = usernameField.getText();
         String pass = passwordField.getText();
-        Boolean success = client.login(username, pass);
-        if (true) {
+         if (client.login(username, pass)) {
             homeScene();
         } else {
             loginWarning.setText("Could not log in");
