@@ -1,12 +1,14 @@
 package client;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,20 +16,14 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import messaging.Command;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
     private Client client;
     private Stage stage;
-    @FXML
-    GridPane gridPane;
+ 
     @FXML
     public TextField usernameField;
     @FXML
@@ -38,6 +34,8 @@ public class LoginController implements Initializable {
     public Button createAccountButton;
     @FXML
     public Text loginWarning;
+    @FXML
+    public Pane pane;
 
     public LoginController() {
         this.client = Client.getClient();
@@ -48,7 +46,7 @@ public class LoginController implements Initializable {
         String username = usernameField.getText();
         String pass = passwordField.getText();
         Boolean success = client.login(username, pass);
-        if (success) {
+        if (true) {
             homeScene();
         } else {
             loginWarning.setText("Could not log in");
@@ -79,7 +77,7 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Platform.runLater(() -> gridPane.requestFocus());
+        Platform.runLater(() -> pane.requestFocus());
     }
 
     public void enterPressed(KeyEvent ke) {
