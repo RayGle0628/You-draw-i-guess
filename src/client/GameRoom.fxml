@@ -39,7 +39,7 @@
                             <children>
                                 <ColorPicker fx:id="colourPicker" onAction="#pickColour" prefWidth="169.0" />
                                 <Slider fx:id="sizeSlider" blockIncrement="1.0" majorTickUnit="9.0" max="20.0" min="1.0" minorTickCount="10" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="1" />
-                              <Button fx:id="clear" mnemonicParsing="false" prefWidth="80.0" text="Clear" GridPane.rowIndex="1" />
+                              <Button fx:id="clearButton" mnemonicParsing="false" prefWidth="80.0" text="Clear" GridPane.rowIndex="1" />
                             </children>
                         </GridPane>
                         <Circle fx:id="guideCircle" fill="WHITE" radius="10.0" stroke="TRANSPARENT" strokeType="INSIDE">

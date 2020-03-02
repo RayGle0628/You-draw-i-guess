@@ -1,7 +1,6 @@
 package client;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -51,7 +50,7 @@ public class GameRoomController implements Initializable {
     private GraphicsContext gc;
     private ArrayList<Coordinate> path;
     @FXML
-    private Button clear;
+    private Button clearButton;
 
     /**
      * Constrictor for GameRoomController.
@@ -84,8 +83,8 @@ public class GameRoomController implements Initializable {
         GaussianBlur blur = new GaussianBlur();
         blur.setRadius(2);
         gc.setEffect(blur);
-        enableDraw();
-//        disableDraw();
+//        enableDraw();
+        disableDraw();
         colourPicker.setValue(colour);
         sizeSlider.setValue(brushSize);
         guideCircle.setFill(colour);
@@ -96,11 +95,11 @@ public class GameRoomController implements Initializable {
             gc.setLineWidth(sizeSlider.getValue());
             brushSize = (int) sizeSlider.getValue();
         });
-        clear.setOnAction(e -> { //TODO make this so it clears for everyone
+        clearButton.setOnAction(e -> { //TODO make this so it clears for everyone
             clearCanvas();
+            client.sendMessage(Command.CLEAR_CANVAS);
         });
         clearCanvas();
-        client.sendMessage(Command.CLEAR_CANVAS);
     }
 
     /**
@@ -124,6 +123,14 @@ public class GameRoomController implements Initializable {
             this.draw(path);
             client.sendMessagePath(Command.DRAW_PATH, brushSize, colour.toString(), path);
         });
+        inputTextField.setEditable(false);
+        inputTextField.setVisible(false);
+        colourPicker.setEditable(true);
+        colourPicker.setVisible(true);
+        sizeSlider.setVisible(true);
+        guideCircle.setVisible(true);
+        clearButton.setVisible(true);
+        Platform.runLater(() -> canvas.requestFocus());
     }
 
     /**
@@ -133,6 +140,13 @@ public class GameRoomController implements Initializable {
         canvas.setOnMousePressed(null);
         canvas.setOnMouseDragged(null);
         canvas.setOnMouseReleased(null);
+        inputTextField.setEditable(true);
+        inputTextField.setVisible(true);
+        colourPicker.setEditable(false);
+        colourPicker.setVisible(false);
+        sizeSlider.setVisible(false);
+        guideCircle.setVisible(false);
+        clearButton.setVisible(false);
     }
 
     /**
@@ -229,7 +243,7 @@ public class GameRoomController implements Initializable {
      * drawing.
      */
     public void clearCanvas() {
-  //      gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        //      gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
