@@ -12,9 +12,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import messaging.Command;
 
 import java.io.IOException;
 import java.net.URL;
@@ -41,7 +44,7 @@ public class LoginController implements Initializable {
         this.stage = Client.getStage();
     }
 
-    public void login() throws IOException {
+    public void login()  {
         String username = usernameField.getText();
         String pass = passwordField.getText();
         Boolean success = client.login(username, pass);
@@ -61,8 +64,13 @@ public class LoginController implements Initializable {
         stage.show();
     }
 
-    public void homeScene() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("Home.fxml"));
+    public void homeScene()  {
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource("Home.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Scene homeScene = new Scene(root);
         stage.setScene(homeScene);
         homeScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
@@ -72,5 +80,13 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Platform.runLater(() -> gridPane.requestFocus());
+    }
+
+    public void enterPressed(KeyEvent ke) {
+        if (ke.getCode().equals(KeyCode.ENTER)) {
+            if (usernameField.getText().length() > 0) {
+                login();
+            }
+        }
     }
 }

@@ -141,7 +141,10 @@ public class ServerThread extends Thread {
 
     public void cleanup() {
         server.getConnectedUsers().remove(this);
-        room.removeUser(this); // THROWS EXCEPTION IF USER QUITS MANUALLY
+        try {
+            room.removeUser(this);
+        } catch (Exception e) {
+        }
         System.out.println(username + " disconnected");
     }
 //    public void incomingChatMessage(String text) {
