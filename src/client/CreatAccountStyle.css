@@ -9,7 +9,7 @@
 #gridPane {
     -fx-font-family: "微软雅黑";
     -fx-font-size: 16px;
-    -fx-background-image: url("../login2.jpg");
+    -fx-background-image: url("../Bg-creatAccount.png");
     -fx-background-size: stretch stretch;
     -fx-background-position: center center;
 }
@@ -117,6 +117,13 @@
 #chatTextArea .scroll-pane .content{
     -fx-background-color: transparent;
 }
+/*#canvas{*/
+/*    -fx-font-family: Consolas;*/
+/*    -fx-highlight-fill: #ff3500;*/
+/*    -fx-highlight-text-fill:  #800080;*/
+/*    -fx-text-fill: #800080;*/
+/*    -fx-background-image: url("../chatfield_bg.jpg");*/
+/*}*/
 #inputTextField{
     -fx-font-family: "微软雅黑";
     -fx-control-inner-background: #ff8b74;
