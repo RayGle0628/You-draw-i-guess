@@ -6,9 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import messaging.Command;
-import messaging.Coordinate;
-import messaging.Message;
+import messaging.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -63,7 +61,7 @@ public class Client extends Application {
 
     public boolean login(String username, String password) {
         if (connect()) {
-            sendMessage(Command.LOGIN, username, password);
+            sendMessageString(Command.LOGIN, username, password);
         }
         try {
             return inputData.readBoolean();
@@ -74,17 +72,23 @@ public class Client extends Application {
         return false;
     }
 
-    public void sendMessage(Command command, String... data) {
-        Message message = new Message(command, data);
+    public void sendMessage(Command command) {
+        Message message = new Message(command);
         try {
             output.writeObject(message);
-            //      System.out.println("message sent");
+        } catch (Exception e) {
+        }
+    }
+    public void sendMessageString(Command command, String... data) {
+        MessageString message = new MessageString(command, data);
+        try {
+            output.writeObject(message);
         } catch (Exception e) {
         }
     }
 
     public void sendMessagePath(Command command, int size, String colour, ArrayList<Coordinate> coordinates) {
-        Message message = new Message(command, size, colour, coordinates);
+        MessagePath message = new MessagePath(command, size, colour, coordinates);
 
         try {
             output.reset();
@@ -125,7 +129,7 @@ public class Client extends Application {
     }
 
     public boolean joinRoom(String room) {
-        sendMessage(Command.JOIN_ROOM, room);
+        sendMessageString(Command.JOIN_ROOM, room);
         try {
             //  Message roomConfirmed = ((Message) input.readObject());
             boolean confirmation = inputData.readBoolean();

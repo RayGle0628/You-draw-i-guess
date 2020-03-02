@@ -95,7 +95,7 @@ public class GameRoomController implements Initializable {
             gc.setLineWidth(sizeSlider.getValue());
             brushSize = (int) sizeSlider.getValue();
         });
-        clearButton.setOnAction(e -> { //TODO make this so it clears for everyone
+        clearButton.setOnAction(e -> {
             clearCanvas();
             client.sendMessage(Command.CLEAR_CANVAS);
         });
@@ -171,7 +171,7 @@ public class GameRoomController implements Initializable {
     public void enterPressed(KeyEvent ke) {
         if (ke.getCode().equals(KeyCode.ENTER)) {
             if (inputTextField.getText().length() > 0) {
-                client.sendMessage(Command.SEND_CHAT_MESSAGE, inputTextField.getText());
+                client.sendMessageString(Command.SEND_CHAT_MESSAGE, inputTextField.getText());
                 inputTextField.clear();
             }
         }

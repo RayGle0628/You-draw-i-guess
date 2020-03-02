@@ -1,8 +1,6 @@
 package server;
 
-import messaging.Command;
-import messaging.Coordinate;
-import messaging.Message;
+import messaging.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -49,17 +47,17 @@ public class ServerThread extends Thread {
             }
             switch (message.getCommand()) {
                 case LOGIN:
-                    login(message.getData());
+                    login(((MessageString) message).getData());
                     break;
                 case GET_ROOMS:
                     getAllRooms();
                     break;
                 case JOIN_ROOM:
-                    joinRoom(message.getData()[0]);
+                    joinRoom(((MessageString) message).getData()[0]);
                     break;
                 case SEND_CHAT_MESSAGE:
 //                    incomingChatMessage(message.getData()[0]);
-                    room.disperseMessage(this, message.getData()[0]);
+                    room.disperseMessage(this, ((MessageString) message).getData()[0]);
                     break;
                 case REQUEST_USERS:
                     room.currentUserList();
@@ -68,11 +66,9 @@ public class ServerThread extends Thread {
                     exitRoom();
                     break;
                 case DRAW_PATH:
-                    System.out.println(message.getColour().substring(2, 8));
-                    System.out.println("PATH RECEIVED SIZE "+ message.getCoordinates().size());
-                    System.out.println(message.toString());
-                    room.disperseStroke(this, message.getSize(),message.getColour(),message.getCoordinates());
-                break;
+                    room.disperseStroke(this, ((MessagePath) message).getSize(), ((MessagePath) message).getColour(),
+                            ((MessagePath) message).getCoordinates());
+                    break;
                 case CLEAR_CANVAS:
                     room.clearCanvas();
                     break;
@@ -134,7 +130,7 @@ public class ServerThread extends Thread {
 
     public void pushNames(String[] playersInRoom) {
         try {
-            output.writeObject(new Message(Command.USERS_IN_ROOM, playersInRoom));
+            output.writeObject(new MessageString(Command.USERS_IN_ROOM, playersInRoom));
         } catch (Exception e) {
             System.out.println("unable to send message out");
         }
@@ -148,25 +144,25 @@ public class ServerThread extends Thread {
         room.removeUser(this); // THROWS EXCEPTION IF USER QUITS MANUALLY
         System.out.println(username + " disconnected");
     }
-
 //    public void incomingChatMessage(String text) {
 //        room.disperseMessage(username, text);
 //    }
 
     public void outgoingChatMessage(String text) {
         try {
-            output.writeObject(new Message(Command.RECEIVE_CHAT_MESSAGE, text));
+            output.writeObject(new MessageString(Command.RECEIVE_CHAT_MESSAGE, text));
         } catch (Exception e) {
             System.out.println("unable to send message out");
         }
     }
 
-   public void outgoingStroke(int size, String colour, ArrayList<Coordinate> coordinates){
-        try{
-        output.writeObject(new Message(Command.INCOMING_PATH,size,colour,coordinates));}
-        catch(Exception e){}
-       //System.out.println("Returning draw path");
-   }
+    public void outgoingStroke(int size, String colour, ArrayList<Coordinate> coordinates) {
+        try {
+            output.writeObject(new MessagePath(Command.INCOMING_PATH, size, colour, coordinates));
+        } catch (Exception e) {
+        }
+        //System.out.println("Returning draw path");
+    }
 
     public void startDrawing() {
         try {
@@ -175,6 +171,7 @@ public class ServerThread extends Thread {
             System.out.println("unable to send message out");
         }
     }
+
     public void stopDrawing() {
         try {
             output.writeObject(new Message(Command.STOP_DRAWING));
@@ -183,8 +180,7 @@ public class ServerThread extends Thread {
         }
     }
 
-
-    public void clearCanvas(){
+    public void clearCanvas() {
         try {
             output.writeObject(new Message(Command.CLEAR_CANVAS));
         } catch (Exception e) {
