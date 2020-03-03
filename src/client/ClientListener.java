@@ -11,14 +11,8 @@ import java.util.ArrayList;
  */
 public class ClientListener extends Thread {
     private ObjectInputStream input;
-    Client client;
+    private Client client;
     public boolean endFlag = false;
-
-    public ArrayList<String> getRoomList() {
-        return roomList;
-    }
-
-    ArrayList<String> roomList;
 
     public ClientListener(Client client) {
         this.client = client;
@@ -47,7 +41,6 @@ public class ClientListener extends Thread {
                     endFlag = true;
                     break;
                 case START_DRAWING:
-
                     client.getRoomController().enableDraw(message.getData()[0]);
                     break;
                 case STOP_DRAWING:
@@ -66,6 +59,7 @@ public class ClientListener extends Thread {
         System.out.println("LISTENER ENDED");
     }
 
+    //TODO implement into constructor
     public void setInput(ObjectInputStream input) {
         this.input = input;
     }

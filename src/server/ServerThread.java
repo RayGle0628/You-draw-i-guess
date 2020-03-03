@@ -102,10 +102,16 @@ public class ServerThread extends Thread {
         }
     }
 
+    /**
+     * Gets the username of the client associated with this ServerThread.
+     *
+     * @return
+     */
     public String getUsername() {
         return username;
     }
 
+    //TODO can be moved into switch case.
     public void getAllRooms() {
         try {
             output.writeObject(server.getAllRooms());
@@ -115,6 +121,7 @@ public class ServerThread extends Thread {
         }
     }
 
+    //TODO room rejections
     public void joinRoom(String roomName) {
         room = server.getRoom(roomName);
         System.out.println(room);
@@ -127,6 +134,11 @@ public class ServerThread extends Thread {
         }
     }
 
+    /**
+     * Sends a list of names of users in the same game room as the client.
+     *
+     * @param playersInRoom is a list of names from the room to be sent to the client.
+     */
     public void pushNames(String[] playersInRoom) {
         try {
             output.writeObject(new Message(Command.USERS_IN_ROOM, playersInRoom));
@@ -135,9 +147,9 @@ public class ServerThread extends Thread {
         }
     }
 
-    public void requestNames() {
-    }
-
+    /**
+     * Removes this client from any rooms they are active in and from the list of online users.
+     */
     public void cleanup() {
         server.getConnectedUsers().remove(this);
         try {
@@ -146,10 +158,12 @@ public class ServerThread extends Thread {
         }
         System.out.println(username + " disconnected");
     }
-//    public void incomingChatMessage(String text) {
-//        room.disperseMessage(username, text);
-//    }
 
+    /**
+     * Sends a text message to the chat pane of the client that a room has received.
+     *
+     * @param text is the text to be displayed to the client.
+     */
     public void outgoingChatMessage(String text) {
         try {
             output.writeObject(new Message(Command.RECEIVE_CHAT_MESSAGE, text));
@@ -158,14 +172,25 @@ public class ServerThread extends Thread {
         }
     }
 
+    /**
+     * Sends part of the drawing to the canvas of the user that the room has received from another user.
+     *
+     * @param size        is the size of the path to be drawn in pixels.
+     * @param colour      is the colour of the path to be drawn.
+     * @param coordinates is the location of the path to be drawn on the canvas.
+     */
     public void outgoingStroke(int size, String colour, ArrayList<Coordinate> coordinates) {
         try {
             output.writeObject(new MessagePath(Command.INCOMING_PATH, size, colour, coordinates));
         } catch (Exception e) {
         }
-        //System.out.println("Returning draw path");
     }
 
+    /**
+     * Tells the client that it is their turn to draw and unlocks the related features in the GameRoomController.
+     *
+     * @param word is the picture that is to be drawn.
+     */
     public void startDrawing(String word) {
         try {
             output.writeObject(new Message(Command.START_DRAWING, word));
@@ -174,6 +199,9 @@ public class ServerThread extends Thread {
         }
     }
 
+    /**
+     * Tells the client that their turn to draw has ended and locks the related features in the GameRoomController.
+     */
     public void stopDrawing() {
         try {
             output.writeObject(new Message(Command.STOP_DRAWING));
@@ -182,6 +210,9 @@ public class ServerThread extends Thread {
         }
     }
 
+    /**
+     * Tells the client to clear their canvas in between rounds.
+     */
     public void clearCanvas() {
         try {
             output.writeObject(new Message(Command.CLEAR_CANVAS));

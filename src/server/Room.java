@@ -10,10 +10,24 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     private ArrayList<ServerThread> users;
     private ServerThread currentDrawer;
     private String currentWord;
-    private Timer t = new Timer("Timer");
+    private Timer timer;
     private int round;
     private ArrayList<String> words;
+//TODO score tracking sysstem.
+    /**
+     * The constructor of the Room class.
+     *
+     * @param name is the name of the room being created.
+     */
+    public Room(String name) {
+        roomName = name;
+        users = new ArrayList<>();
+        timer = new Timer("Timer");
+    }
 
+    /**
+     * Creates a list of 10 words randomly selected from the WordList file to be used in a game.
+     */
     public void wordList() {
         words = new ArrayList<>();
         File wordList = new File("WordList");
@@ -30,8 +44,10 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         words = new ArrayList<>(words.subList(0, 10));
     }
 
+    /**
+     * Starts a new game.
+     */
     public void beginGame() {
-
         round = 1;
         wordList();
         disperseMessage(null, "A game is starting in 5 seconds!");
@@ -41,9 +57,12 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
                 startRound();
             }
         };
-        t.schedule(task, 5000);
+        timer.schedule(task, 5000);
     }
 
+    /**
+     * Starts a round of a game.
+     */
     public void startRound() {
         currentWord = words.get(round - 1);
         selectNextDrawer();
@@ -55,17 +74,20 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
                 endRound();
             }
         };
-        t.schedule(task, 60000);
+        timer.schedule(task, 60000);
     }
 
+    /**
+     * Ends the current round and prepares for the next round.
+     */
     public void endRound() {
-        disperseMessage(null, "Round "+round+" has ended!");
+        disperseMessage(null, "Round " + round + " has ended!");
         round++;
         currentDrawer.stopDrawing();
         currentDrawer = null;
         currentWord = null;
         System.out.println(round);
-        if (round <11) {
+        if (round < 11) {
             TimerTask task = new TimerTask() {
                 public void run() {
                     clearCanvas();
@@ -73,60 +95,78 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
                 }
             };
             disperseMessage(null, "The next round starts in 5 seconds!");
-            t.schedule(task, 5000);
+            timer.schedule(task, 5000);
         } else {
             disperseMessage(null, "10 rounds completed, game over!");
         }
     }
 
+    /**
+     * Tells all users in the room to clear their canvas.
+     */
     public void clearCanvas() {
         for (ServerThread user : users) {
             user.clearCanvas();
         }
     }
 
+    //TODO implement a better method to pick user list.
     public void selectNextDrawer() {
         Random random = new Random();
         int rand = random.nextInt(users.size());
         currentDrawer = users.get(rand);
     }
 
-    public void selectNextWord() {
-        currentWord = "Dog";
-    }
-
-    public Room(String name) {
-        roomName = name;
-        users = new ArrayList<>();
-    }
-
+    /**
+     * Returns the name of this room.
+     *
+     * @return the name of the room.
+     */
     public String getRoomName() {
         return roomName;
     }
 
+    /**
+     * Adds a new user to the game room when they join.
+     *
+     * @param user is the user to be added to the room.
+     */
     public synchronized void addUser(ServerThread user) {
         users.add(user);
         System.out.println("There are " + users.size() + " users present");
     }
 
+    /**
+     * Removes a user from the room when they leave.
+     *
+     * @param user is the user to be removed.
+     */
     public synchronized void removeUser(ServerThread user) {
         users.remove(user);
         System.out.println("Removed " + user);
         currentUserList();
         if (users.size() == 0) {
-            t.cancel();
-            t = new Timer("Timer");
+            timer.cancel();
+            timer = new Timer("Timer");
             round = 0;
             System.out.println("Not enough players, ending game.");
         }
     }
 
+    /**
+     * Sends a message to all users in a room that is to be displayed on their screen. Doesn't send in the case a
+     * guess has been correctly made.
+     *
+     * @param fromUser the user the message originated from. Null if it is from the room directly.
+     * @param text     the text that is to be sent.
+     */
+    //TODO implement a cooldown period after a guess has been made.
     public synchronized void disperseMessage(ServerThread fromUser, String text) {
         if (fromUser != null) {
             if (parseGuess(text)) {
                 disperseMessage(null, fromUser.username + " has guessed correctly.");
-                t.cancel();
-                t = new Timer("Timer");
+                timer.cancel();
+                timer = new Timer("Timer");
                 endRound();
             } else {
                 text = fromUser.getUsername() + ": " + text;
@@ -146,6 +186,12 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         }
     }
 
+    /**
+     * Checks if a guess is correct or not before it is displayed to users.
+     *
+     * @param text is the text being checked.
+     * @return true if the text contains a correct guess, otherwise false.
+     */
     public boolean parseGuess(String text) {
         if (currentWord != null) {
             if (text.toLowerCase().contains(currentWord.toLowerCase())) {
@@ -155,6 +201,15 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         return false;
     }
 
+    /**
+     * Takes an incoming path being drawn and sends it to all other users. This will not send the path if the origin
+     * is not the current allowed drawer and will not send it back to the drawer.
+     *
+     * @param fromUser    is the origin of the drawing.
+     * @param size        of the brush used in pixels.
+     * @param colour      of the path used.
+     * @param coordinates is the location of the path to be drawn on the canvas.
+     */
     public synchronized void disperseStroke(ServerThread fromUser, int size, String colour,
                                             ArrayList<Coordinate> coordinates) {
         if (currentDrawer != null) {
@@ -180,11 +235,18 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         }
     }
 
+    //TODO deprecate?
     @Override
     public String toString() {
         return roomName;
     }
 
+    /**
+     * Compares rooms based on their names so that they are listed alphabetically.
+     *
+     * @param otherRoom is the room being compared to.
+     * @return the ordering of the rooms for sorting.
+     */
     @Override
     public int compareTo(Room otherRoom) {
         return roomName.compareTo(otherRoom.roomName);

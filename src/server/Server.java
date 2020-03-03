@@ -7,20 +7,18 @@ import java.util.TreeMap;
 
 public class Server {
     public static final int PORT = 50000;
-
     private ArrayList<ServerThread> connectedUsers;
-
-    private TreeMap<String,Room> rooms;
+    private TreeMap<String, Room> rooms;
 
     public Server() {
         connectedUsers = new ArrayList<ServerThread>();
         rooms = new TreeMap<>();
         Room r = new Room("Default");
         r.start();
-        rooms.put(r.getRoomName(),r);
+        rooms.put(r.getRoomName(), r);
         r = new Room("Default2");
         r.start();
-        rooms.put(r.getRoomName(),r);
+        rooms.put(r.getRoomName(), r);
     }
 
     public static void main(String[] args) {
@@ -28,6 +26,10 @@ public class Server {
         server.start();
     }
 
+    /**
+     * Creates the ServerSocket for the server then enters a loop to accept client connections. Each client is given
+     * it's own ServerThread instance.
+     */
     public void start() {
         try {
             ServerSocket serverSocket = new ServerSocket(PORT);
@@ -43,10 +45,20 @@ public class Server {
         }
     }
 
+    /**
+     * Returns a list of active ServerThreads that are being used by client son the server.
+     *
+     * @return a list of active ServerThread instances.
+     */
     public ArrayList<ServerThread> getConnectedUsers() {
         return connectedUsers;
     }
 
+    /**
+     * Returns a list of rooms currently open on the server.
+     *
+     * @return a list of the name of the available rooms.
+     */
     public ArrayList<String> getAllRooms() {
         ArrayList<String> roomsList = new ArrayList<>();
         for (String room : rooms.keySet()) {
@@ -54,8 +66,14 @@ public class Server {
         }
         return roomsList;
     }
-    public Room getRoom(String roomName){
 
+    /**
+     * Gets a reference to a room when given the name of said room.
+     *
+     * @param roomName the name of the room required.
+     * @return a reference to the room requested.
+     */
+    public Room getRoom(String roomName) {
         return rooms.get(roomName);
     }
 }

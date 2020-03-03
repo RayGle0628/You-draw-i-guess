@@ -50,13 +50,14 @@ public class Client extends Application {
     public void start(Stage stage) throws Exception {
         Client.stage = stage;
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
-        stage.setTitle("Untitled");
+        stage.setTitle("Sketcher");
         stage.setScene(new Scene(root));
         root.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
         stage.show();
     }
 
     public boolean login(String username, String password) {
+        //TODO close socket on failure.
         if (connect()) {
             sendMessage(Command.LOGIN, username, password);
         }
