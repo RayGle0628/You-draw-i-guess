@@ -2,26 +2,42 @@ package server;
 
 import messaging.Coordinate;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.io.*;
+import java.util.*;
 
 public class Room extends Thread implements Serializable, Comparable<Room> {
-
     private String roomName;
     private ArrayList<ServerThread> users;
     private ServerThread currentDrawer;
     private String currentWord;
     private Timer t = new Timer("Timer");
     private int round;
+    private ArrayList<String> words;
+
+    public void wordList() {
+        words = new ArrayList<>();
+        File wordList = new File("WordList");
+        try {
+            BufferedReader in = new BufferedReader(new FileReader(wordList));
+            String word;
+            while ((word = in.readLine()) != null) {
+                words.add(word);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Collections.shuffle(words);
+        words = new ArrayList<>(words.subList(0, 10));
+    }
 
     public void beginGame() {
+
         round = 1;
+        wordList();
         disperseMessage(null, "A game is starting in 5 seconds!");
         TimerTask task = new TimerTask() {
             public void run() {
+                clearCanvas();
                 startRound();
             }
         };
@@ -29,28 +45,27 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     }
 
     public void startRound() {
-        selectNextWord();
+        currentWord = words.get(round - 1);
         selectNextDrawer();
-        disperseMessage(null, currentDrawer.getUsername() + " is the now drawing for 100 seconds!");
+        disperseMessage(null, currentDrawer.getUsername() + " is now drawing for 60 seconds!");
         currentDrawer.startDrawing(currentWord);
         //AFTER 10 SECS STOP DRAWING
         TimerTask task = new TimerTask() {
             public void run() {
-                System.out.println("Here is the timer every 10 seconds");
                 endRound();
             }
         };
-        t.schedule(task, 100000);
+        t.schedule(task, 60000);
     }
 
     public void endRound() {
-        disperseMessage(null, "The round has ended!");
+        disperseMessage(null, "Round "+round+" has ended!");
         round++;
         currentDrawer.stopDrawing();
         currentDrawer = null;
         currentWord = null;
         System.out.println(round);
-        if (round <= 5) {
+        if (round <11) {
             TimerTask task = new TimerTask() {
                 public void run() {
                     clearCanvas();
@@ -145,6 +160,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         if (currentDrawer != null) {
             if (currentDrawer.equals(fromUser)) { // prevents other clients sending draw data out of turn.
                 for (ServerThread user : users) {
+                    if (user.equals(fromUser)) continue;
                     user.outgoingStroke(size, colour, coordinates);
                 }
             }
