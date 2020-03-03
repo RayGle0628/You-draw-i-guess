@@ -1,9 +1,7 @@
 package client;
 
-import messaging.Command;
 import messaging.Message;
 import messaging.MessagePath;
-import messaging.MessageString;
 
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -39,17 +37,18 @@ public class ClientListener extends Thread {
             }
             switch (message.getCommand()) {
                 case RECEIVE_CHAT_MESSAGE:
-                    client.chatToRoom(((MessageString) message).getData()[0]);
+                    client.chatToRoom(message.getData()[0]);
                     break;
                 case USERS_IN_ROOM:
-                    client.updateRoomUsers(((MessageString) message).getData());
+                    client.updateRoomUsers(message.getData());
                     break;
                 case CONFIRM_EXIT:
                     System.out.println("Listener ended by server");
                     endFlag = true;
                     break;
                 case START_DRAWING:
-                    client.getRoomController().enableDraw();
+
+                    client.getRoomController().enableDraw(message.getData()[0]);
                     break;
                 case STOP_DRAWING:
                     client.getRoomController().disableDraw();

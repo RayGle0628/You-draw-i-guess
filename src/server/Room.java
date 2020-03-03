@@ -32,7 +32,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         selectNextWord();
         selectNextDrawer();
         disperseMessage(null, currentDrawer.getUsername() + " is the now drawing for 100 seconds!");
-        currentDrawer.startDrawing();
+        currentDrawer.startDrawing(currentWord);
         //AFTER 10 SECS STOP DRAWING
         TimerTask task = new TimerTask() {
             public void run() {

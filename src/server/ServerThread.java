@@ -47,17 +47,16 @@ public class ServerThread extends Thread {
             }
             switch (message.getCommand()) {
                 case LOGIN:
-                    login(((MessageString) message).getData());
+                    login(message.getData());
                     break;
                 case GET_ROOMS:
                     getAllRooms();
                     break;
                 case JOIN_ROOM:
-                    joinRoom(((MessageString) message).getData()[0]);
+                    joinRoom(message.getData()[0]);
                     break;
                 case SEND_CHAT_MESSAGE:
-//                    incomingChatMessage(message.getData()[0]);
-                    room.disperseMessage(this, ((MessageString) message).getData()[0]);
+                    room.disperseMessage(this, message.getData()[0]);
                     break;
                 case REQUEST_USERS:
                     room.currentUserList();
@@ -130,7 +129,7 @@ public class ServerThread extends Thread {
 
     public void pushNames(String[] playersInRoom) {
         try {
-            output.writeObject(new MessageString(Command.USERS_IN_ROOM, playersInRoom));
+            output.writeObject(new Message(Command.USERS_IN_ROOM, playersInRoom));
         } catch (Exception e) {
             System.out.println("unable to send message out");
         }
@@ -153,7 +152,7 @@ public class ServerThread extends Thread {
 
     public void outgoingChatMessage(String text) {
         try {
-            output.writeObject(new MessageString(Command.RECEIVE_CHAT_MESSAGE, text));
+            output.writeObject(new Message(Command.RECEIVE_CHAT_MESSAGE, text));
         } catch (Exception e) {
             System.out.println("unable to send message out");
         }
@@ -167,9 +166,9 @@ public class ServerThread extends Thread {
         //System.out.println("Returning draw path");
     }
 
-    public void startDrawing() {
+    public void startDrawing(String word) {
         try {
-            output.writeObject(new Message(Command.START_DRAWING));
+            output.writeObject(new Message(Command.START_DRAWING, word));
         } catch (Exception e) {
             System.out.println("unable to send message out");
         }

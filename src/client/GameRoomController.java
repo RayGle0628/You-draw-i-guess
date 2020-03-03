@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import messaging.Command;
 import messaging.Coordinate;
@@ -51,6 +52,8 @@ public class GameRoomController implements Initializable {
     private ArrayList<Coordinate> path;
     @FXML
     private Button clearButton;
+    @FXML
+    private Text wordToDraw;
 
     /**
      * Constrictor for GameRoomController.
@@ -105,7 +108,9 @@ public class GameRoomController implements Initializable {
     /**
      * Enables users to draw on the canvas and send that drawing information to the server during their turn.
      */
-    public void enableDraw() {
+    public void enableDraw(String word) {
+        wordToDraw.setText(word);
+        wordToDraw.setVisible(true);
         guideCircle.setFill(colourPicker.getValue());
         gc.setStroke(colourPicker.getValue());
         colour = colourPicker.getValue();
@@ -137,6 +142,8 @@ public class GameRoomController implements Initializable {
      * Stops the user from being able to draw when it is not their turn.
      */
     public void disableDraw() {
+        wordToDraw.setVisible(false);
+        wordToDraw.setText("");
         canvas.setOnMousePressed(null);
         canvas.setOnMouseDragged(null);
         canvas.setOnMouseReleased(null);
@@ -171,7 +178,7 @@ public class GameRoomController implements Initializable {
     public void enterPressed(KeyEvent ke) {
         if (ke.getCode().equals(KeyCode.ENTER)) {
             if (inputTextField.getText().length() > 0) {
-                client.sendMessageString(Command.SEND_CHAT_MESSAGE, inputTextField.getText());
+                client.sendMessage(Command.SEND_CHAT_MESSAGE, inputTextField.getText());
                 inputTextField.clear();
             }
         }

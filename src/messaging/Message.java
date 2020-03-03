@@ -1,8 +1,8 @@
 package messaging;
 
 import java.io.Serializable;
-
 //TODO
+
 /**
  * Messages are used to send information between clients and data that is more complex than single data types. The
  * Command enum defined the type of message and data is a series of strings to go with the command.
@@ -11,12 +11,18 @@ import java.io.Serializable;
  */
 public class Message implements Serializable {
     Command command;
+    String[] data;
 
-    public Message(Command command) {
+    public Message(Command command, String... data) {
         this.command = command;
+        this.data = data;
     }
 
     public Command getCommand() {
         return command;
+    }
+
+    public String[] getData() {
+        return data;
     }
 }

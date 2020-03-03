@@ -58,7 +58,7 @@ public class Client extends Application {
 
     public boolean login(String username, String password) {
         if (connect()) {
-            sendMessageString(Command.LOGIN, username, password);
+            sendMessage(Command.LOGIN, username, password);
         }
         try {
             return inputData.readBoolean();
@@ -70,17 +70,10 @@ public class Client extends Application {
         return false;
     }
 
-    public void sendMessage(Command command) {
-        Message message = new Message(command);
-        try {
-            output.writeObject(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public void sendMessageString(Command command, String... data) {
-        MessageString message = new MessageString(command, data);
+
+    public void sendMessage(Command command, String... data) {
+        Message message = new Message(command, data);
         try {
             output.writeObject(message);
         } catch (IOException e) {
@@ -131,7 +124,7 @@ public class Client extends Application {
     }
 
     public boolean joinRoom(String room) {
-        sendMessageString(Command.JOIN_ROOM, room);
+        sendMessage(Command.JOIN_ROOM, room);
         try {
             boolean confirmation = inputData.readBoolean();
             if (confirmation) {

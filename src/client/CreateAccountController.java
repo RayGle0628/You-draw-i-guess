@@ -57,7 +57,7 @@ public class CreateAccountController implements Initializable {
             //TODO add text warnings here
             return;
         }
-        client.sendMessageString(Command.CREATE_ACCOUNT, usernameField.getText(), passwordField.getText(),
+        client.sendMessage(Command.CREATE_ACCOUNT, usernameField.getText(), passwordField.getText(),
                 emailField.getText());
         try {
             if (client.getInputData().readBoolean()) {//confirm acc creation

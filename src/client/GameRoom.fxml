@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Text?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.GameRoomController">
     <children>
@@ -27,7 +28,7 @@
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
                <children>
-                        <GridPane prefHeight="76.0" prefWidth="266.0">
+                        <GridPane alignment="CENTER" prefHeight="76.0" prefWidth="266.0">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -39,7 +40,8 @@
                             <children>
                                 <ColorPicker fx:id="colourPicker" onAction="#pickColour" prefWidth="169.0" />
                                 <Slider fx:id="sizeSlider" blockIncrement="1.0" majorTickUnit="9.0" max="20.0" min="1.0" minorTickCount="10" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" GridPane.columnIndex="1" />
-                              <Button fx:id="clearButton" mnemonicParsing="false" prefWidth="80.0" text="Clear" GridPane.rowIndex="1" />
+                              <Button fx:id="clearButton" alignment="CENTER" mnemonicParsing="false" prefWidth="80.0" text="Clear" GridPane.rowIndex="1" />
+                        <Text fx:id="wordToDraw" strokeType="OUTSIDE" strokeWidth="0.0" text="Word To Draw" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                             </children>
                         </GridPane>
                         <Circle fx:id="guideCircle" fill="WHITE" radius="10.0" stroke="TRANSPARENT" strokeType="INSIDE">
