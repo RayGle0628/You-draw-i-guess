@@ -13,7 +13,28 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     private Timer timer;
     private int round;
     private ArrayList<String> words;
-//TODO score tracking sysstem.
+    private HashMap<String, Integer> scores;
+
+    public void resetScores() {
+        for (ServerThread user : users) {
+            scores.put(user.getUsername(), 0);
+        }
+    }
+
+    public void finalScores() {
+        disperseMessage(null, "The final scores are:");
+        while (!scores.isEmpty()) {
+            int score = Collections.max(scores.values());
+            for (String key : scores.keySet()) {
+                if (scores.get(key) == score) {
+                    disperseMessage(null, key + " : " + score);
+                    scores.remove(key);
+                    break;
+                }
+            }
+        }
+    }
+
     /**
      * The constructor of the Room class.
      *
@@ -23,6 +44,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         roomName = name;
         users = new ArrayList<>();
         timer = new Timer("Timer");
+        scores = new HashMap<>();
     }
 
     /**
@@ -48,6 +70,8 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
      * Starts a new game.
      */
     public void beginGame() {
+        scores = new HashMap<>();
+        resetScores();
         round = 1;
         wordList();
         disperseMessage(null, "A game is starting in 5 seconds!");
@@ -98,6 +122,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
             timer.schedule(task, 5000);
         } else {
             disperseMessage(null, "10 rounds completed, game over!");
+            finalScores();
         }
     }
 
@@ -110,11 +135,12 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         }
     }
 
-    //TODO implement a better method to pick user list.
     public void selectNextDrawer() {
-        Random random = new Random();
-        int rand = random.nextInt(users.size());
-        currentDrawer = users.get(rand);
+//        Random random = new Random();
+//        int rand = random.nextInt(users.size());
+//        currentDrawer = users.get(rand);
+        currentDrawer = users.get((round - 1) % users.size());//Iterates through users in room in order that they
+        // joined, repeating until game over.
     }
 
     /**
@@ -133,7 +159,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
      */
     public synchronized void addUser(ServerThread user) {
         users.add(user);
-        System.out.println("There are " + users.size() + " users present");
+        scores.putIfAbsent(user.getUsername(), 0);
     }
 
     /**
@@ -165,6 +191,8 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         if (fromUser != null) {
             if (parseGuess(text)) {
                 disperseMessage(null, fromUser.username + " has guessed correctly.");
+                scores.merge(fromUser.getUsername(), 1, Integer::sum);
+                scores.merge(currentDrawer.getUsername(), 1, Integer::sum);
                 timer.cancel();
                 timer = new Timer("Timer");
                 endRound();
