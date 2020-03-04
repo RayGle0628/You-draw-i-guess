@@ -14,7 +14,8 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     private int round;
     private ArrayList<String> words;
     private HashMap<String, Integer> scores;
-
+    private boolean wordGuessed = false;
+    private ArrayList<ServerThread> correctlyGuessed=new ArrayList<>();
     /**
      * Resets all the scores to zero at the start of a new game.
      */
@@ -76,6 +77,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
      * Starts a new game.
      */
     public void beginGame() {
+        correctlyGuessed=new ArrayList<>();
         scores = new HashMap<>();
         resetScores();
         round = 1;
@@ -94,6 +96,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
      * Starts a round of a game.
      */
     public void startRound() {
+
         currentWord = words.get(round - 1);
         selectNextDrawer();
         disperseMessage(null, currentDrawer.getUsername() + " is now drawing for 60 seconds!");
@@ -111,13 +114,15 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
      * Ends the current round and prepares for the next round.
      */
     public void endRound() {
-        disperseMessage(null, "Round " + round + " has ended!");
+        disperseMessage(null, "Round " + round + " has ended, the word was " + currentWord + "!");
         round++;
         currentDrawer.stopDrawing();
         currentDrawer = null;
         currentWord = null;
+        wordGuessed = false;
         System.out.println(round);
-        if (round < 11) {
+        correctlyGuessed=new ArrayList<>();
+        if (round < 3) {
             TimerTask task = new TimerTask() {
                 public void run() {
                     clearCanvas();
@@ -194,14 +199,29 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
      */
     //TODO implement a cooldown period after a guess has been made.
     public synchronized void disperseMessage(ServerThread fromUser, String text) {
+        if (correctlyGuessed.contains(fromUser)) return; // Skip chat from guesser
         if (fromUser != null) {
             if (parseGuess(text)) {
+                correctlyGuessed.add(fromUser);
                 disperseMessage(null, fromUser.username + " has guessed correctly.");
+                TimerTask task;
+                if (!wordGuessed) {
+                    disperseMessage(null, "You have 10 seconds to make any final guesses.");
+                    timer.cancel();
+                    timer = new Timer("Timer");
+                    task = new TimerTask() {
+                        public void run() {
+                            endRound();
+                        }
+                    };
+                    timer.schedule(task, 10000);
+                }
+                wordGuessed = true;
                 scores.merge(fromUser.getUsername(), 1, Integer::sum);
                 scores.merge(currentDrawer.getUsername(), 1, Integer::sum);
-                timer.cancel();
-                timer = new Timer("Timer");
-                endRound();
+//                timer.cancel();
+//                timer = new Timer("Timer");
+//                endRound();
             } else {
                 text = fromUser.getUsername() + ": " + text;
                 for (ServerThread user : users) {

@@ -59,7 +59,6 @@ public class ClientListener extends Thread {
         System.out.println("LISTENER ENDED");
     }
 
-    //TODO implement into constructor
     public void setInput(ObjectInputStream input) {
         this.input = input;
     }

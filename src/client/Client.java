@@ -57,7 +57,7 @@ public class Client extends Application {
     }
 
     public boolean login(String username, String password) {
-        //TODO close socket on failure.
+
         if (connect()) {
             sendMessage(Command.LOGIN, username, password);
         }
@@ -68,6 +68,11 @@ public class Client extends Application {
             e.printStackTrace();
         }
         System.out.println("return not received");
+        try {
+            socket.close();
+        } catch (Exception e) {
+            System.out.println("Error closing socket");
+        }
         return false;
     }
 
