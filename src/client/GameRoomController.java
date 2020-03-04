@@ -66,7 +66,6 @@ public class GameRoomController implements Initializable {
         client.setRoomController(this);
         client.sendMessage(Command.REQUEST_USERS);
     }
-    //TODO fix guide sizing
 
     /**
      * initialize is automatically run after the GameRoomController has been instantiated.
@@ -135,6 +134,9 @@ public class GameRoomController implements Initializable {
         sizeSlider.setVisible(true);
         guideCircle.setVisible(true);
         clearButton.setVisible(true);
+//        brushSize = (int)sizeSlider.getValue();
+//        colour=colourPicker.getValue();
+gc.setLineWidth(brushSize);
         Platform.runLater(() -> canvas.requestFocus());
     }
 
@@ -162,6 +164,7 @@ public class GameRoomController implements Initializable {
      * @param path
      */
     public void draw(ArrayList<Coordinate> path) {
+        System.out.println(brushSize);
         if (path.size() == 1) {
             gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
         } else {

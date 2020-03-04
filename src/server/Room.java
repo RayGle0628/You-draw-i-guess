@@ -15,12 +15,18 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     private ArrayList<String> words;
     private HashMap<String, Integer> scores;
 
+    /**
+     * Resets all the scores to zero at the start of a new game.
+     */
     public void resetScores() {
         for (ServerThread user : users) {
             scores.put(user.getUsername(), 0);
         }
     }
 
+    /**
+     * Displays the final scores at the end of the game in the users chat areas.
+     */
     public void finalScores() {
         disperseMessage(null, "The final scores are:");
         while (!scores.isEmpty()) {

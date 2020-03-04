@@ -1,14 +1,13 @@
 package messaging;
 
 import java.io.Serializable;
-//TODO
-
 /**
- * Messages are used to send information between clients and data that is more complex than single data types. The
- * Command enum defined the type of message and data is a series of strings to go with the command.
- * For example A message could be LOGIN command with the username and password as data.
- * Commands are defined in the Command Enum
+ * Message is a class used for the communication protocol between clients and the server. Messages are made up of two
+ * main components. First is the Command enum type. This acts as a header that tells the client/server what to do.
+ * Secondly is contains data in the form of strings. This is used to transport additional information required for an
+ * operation specified in the message.
  */
+
 public class Message implements Serializable {
     Command command;
     String[] data;

@@ -1,7 +1,5 @@
 package messaging;
 
-import javafx.scene.paint.Color;
-
 import java.io.Serializable;
 
 public class Coordinate implements Serializable {
