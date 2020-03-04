@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 public class Server {
-    public static final int PORT = 50000;
+    public static final int PORT = 5000;
     private ArrayList<ServerThread> connectedUsers;
     private TreeMap<String, Room> rooms;
 

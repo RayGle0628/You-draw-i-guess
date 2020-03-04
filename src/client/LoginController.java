@@ -70,6 +70,7 @@ public class LoginController implements Initializable {
         }
         Scene homeScene = new Scene(root);
         stage.setScene(homeScene);
+        stage.setResizable(true);
         homeScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
         stage.show();
     }

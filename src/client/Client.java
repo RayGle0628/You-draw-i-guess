@@ -16,7 +16,7 @@ public class Client extends Application {
     private Socket socket;
     private static Client client;
     private static Stage stage;
-    private static final int PORT = 50000;
+    private static final int PORT = 5000;
     private static final String HOST = "127.0.0.1";
     private ClientListener clientListener;
     private ObjectOutputStream output;
@@ -51,6 +51,7 @@ public class Client extends Application {
         Client.stage = stage;
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         stage.setTitle("Sketcher");
+        stage.setResizable(false);
         stage.setScene(new Scene(root));
         root.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
         stage.show();

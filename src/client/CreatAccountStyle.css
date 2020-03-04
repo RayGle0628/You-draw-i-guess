@@ -1,8 +1,9 @@
 /*root类选择器给所有的元素设置样式*/
+
 .root {
     -fx-font-family: "微软雅黑";
     -fx-font-size: 16px;
-    -fx-background-image: url("../bg_1.jpg");
+    /*-fx-background-image: url("../bg_1.jpg");*/
     -fx-background-size: stretch stretch;
     -fx-background-position: center center;
 }
@@ -70,6 +71,16 @@
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 #exitRoomButton{
+    -fx-background-color:
+            linear-gradient(#f2f2f2, #d6d6d6),
+            linear-gradient(#fcfcfc 0%, #d9d9d9 20%, #d6d6d6 100%),
+            linear-gradient(#dddddd 0%, #f6f6f6 50%);
+    -fx-background-radius: 8,7,6;
+    -fx-background-insets: 0,1,2;
+    -fx-text-fill: black;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+#clearButton{
     -fx-background-color:
             linear-gradient(#f2f2f2, #d6d6d6),
             linear-gradient(#fcfcfc 0%, #d9d9d9 20%, #d6d6d6 100%),

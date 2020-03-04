@@ -149,13 +149,13 @@ gc.setLineWidth(brushSize);
         canvas.setOnMousePressed(null);
         canvas.setOnMouseDragged(null);
         canvas.setOnMouseReleased(null);
-        inputTextField.setEditable(true);
-        inputTextField.setVisible(true);
-        colourPicker.setEditable(false);
-        colourPicker.setVisible(false);
-        sizeSlider.setVisible(false);
-        guideCircle.setVisible(false);
-        clearButton.setVisible(false);
+//        inputTextField.setEditable(true);
+//        inputTextField.setVisible(true);
+//        colourPicker.setEditable(false);
+//        colourPicker.setVisible(false);
+//        sizeSlider.setVisible(false);
+//        guideCircle.setVisible(false);
+//        clearButton.setVisible(false);
     }
 
     /**
