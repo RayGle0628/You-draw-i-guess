@@ -139,7 +139,8 @@ public class Client extends Application {
                 clientListener.start();
             }
             return confirmation;
-        } catch (Exception e) {
+        } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
     }

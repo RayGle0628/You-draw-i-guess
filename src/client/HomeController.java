@@ -31,19 +31,17 @@ public class HomeController implements Initializable {
     }
 
     @FXML
-    Button getRoomsButton;
-    @FXML
     VBox roomListVBox;
 
     public void getRooms() {
         roomListVBox.getChildren().clear();
         ArrayList<String> rooms = client.getRoomsList(); // EXCEPTION
         for (String room : rooms) {
+            if (room.matches("[1-9][0-9][/]")) continue;
             Text roomText = new Text();
             textRoom.put(roomText, room);
             roomText.setOnMouseClicked(e -> {
                 joinRoom(textRoom.get(roomText));
-                roomScene();
             });
             roomText.setText(room);
             roomListVBox.getChildren().add(roomText);
@@ -51,8 +49,9 @@ public class HomeController implements Initializable {
     }
 
     public void joinRoom(String room) {
+        room=room.replaceAll("\\([0-9\\/]*\\)","").trim();
         if (client.joinRoom(room)) { // TRANSITION TO ROOM VIEW IF JOINED
-            System.out.println("SUCCESS");
+            roomScene();
         } else {
             System.out.println("FAILURE");
         }

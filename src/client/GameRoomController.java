@@ -36,8 +36,6 @@ public class GameRoomController implements Initializable {
     public Slider sizeSlider;
     @FXML
     public Circle guideCircle;
-    private int brushSize;
-    private Color colour;
     @FXML
     public TextField inputTextField;
     @FXML
@@ -46,14 +44,16 @@ public class GameRoomController implements Initializable {
     public VBox userList;
     @FXML
     public Canvas canvas;
-    private Client client;
-    private Stage stage;
-    private GraphicsContext gc;
-    private ArrayList<Coordinate> path;
     @FXML
     private Button clearButton;
     @FXML
     private Text wordToDraw;
+    private Client client;
+    private Stage stage;
+    private GraphicsContext gc;
+    private ArrayList<Coordinate> path;
+    private int brushSize;
+    private Color colour;
 
     /**
      * Constrictor for GameRoomController.
@@ -136,7 +136,7 @@ public class GameRoomController implements Initializable {
         clearButton.setVisible(true);
 //        brushSize = (int)sizeSlider.getValue();
 //        colour=colourPicker.getValue();
-gc.setLineWidth(brushSize);
+        gc.setLineWidth(brushSize);
         Platform.runLater(() -> canvas.requestFocus());
     }
 
@@ -164,7 +164,6 @@ gc.setLineWidth(brushSize);
      * @param path
      */
     public void draw(ArrayList<Coordinate> path) {
-
         if (path.size() == 1) {
             gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
         } else {
@@ -261,7 +260,6 @@ gc.setLineWidth(brushSize);
      * Allows the user to pick the current colour of their drawing.
      */
     public void pickColour() {
-
         guideCircle.setFill(colourPicker.getValue());
         gc.setStroke(colourPicker.getValue());
         colour = colourPicker.getValue();

@@ -15,7 +15,8 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     private ArrayList<String> words;
     private HashMap<String, Integer> scores;
     private boolean wordGuessed = false;
-    private ArrayList<ServerThread> correctlyGuessed=new ArrayList<>();
+    private ArrayList<ServerThread> correctlyGuessed = new ArrayList<>();
+
     /**
      * Resets all the scores to zero at the start of a new game.
      */
@@ -77,7 +78,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
      * Starts a new game.
      */
     public void beginGame() {
-        correctlyGuessed=new ArrayList<>();
+        correctlyGuessed = new ArrayList<>();
         scores = new HashMap<>();
         resetScores();
         round = 1;
@@ -96,7 +97,6 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
      * Starts a round of a game.
      */
     public void startRound() {
-
         currentWord = words.get(round - 1);
         selectNextDrawer();
         disperseMessage(null, currentDrawer.getUsername() + " is now drawing for 60 seconds!");
@@ -121,7 +121,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         currentWord = null;
         wordGuessed = false;
         System.out.println(round);
-        correctlyGuessed=new ArrayList<>();
+        correctlyGuessed = new ArrayList<>();
         if (round < 3) {
             TimerTask task = new TimerTask() {
                 public void run() {
@@ -304,5 +304,9 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     @Override
     public int compareTo(Room otherRoom) {
         return roomName.compareTo(otherRoom.roomName);
+    }
+
+    public int getPopulation() {
+        return users.size();
     }
 }

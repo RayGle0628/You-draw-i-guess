@@ -124,10 +124,17 @@ public class ServerThread extends Thread {
     //TODO room rejections
     public void joinRoom(String roomName) {
         room = server.getRoom(roomName);
-        System.out.println(room);
+        if (room.getPopulation() >= 10) {
+            room = null;
+            try {
+                outputData.writeBoolean(false);
+            } catch (Exception e) {
+                System.out.println("Could not return room join status.");
+            }
+            return;
+        }
         room.addUser(this);
         try {
-            //output.writeObject(new Message(Command.CONFIRM_ROOM_JOIN, true));
             outputData.writeBoolean(true);
         } catch (Exception e) {
             System.out.println("Could not return room join status.");

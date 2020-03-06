@@ -11,9 +11,9 @@ public class Server {
     private TreeMap<String, Room> rooms;
 
     public Server() {
-        connectedUsers = new ArrayList<ServerThread>();
+        connectedUsers = new ArrayList<>();
         rooms = new TreeMap<>();
-createRoom("Room 1");
+        createRoom("Room 1");
         createRoom("Room 2");
         createRoom("Room 3");
         createRoom("Room 4");
@@ -61,7 +61,7 @@ createRoom("Room 1");
     public ArrayList<String> getAllRooms() {
         ArrayList<String> roomsList = new ArrayList<>();
         for (String room : rooms.keySet()) {
-            roomsList.add(room);
+            roomsList.add(room+ " ("+rooms.get(room).getPopulation()+"/10)");
         }
         return roomsList;
     }
@@ -75,11 +75,11 @@ createRoom("Room 1");
     public Room getRoom(String roomName) {
         return rooms.get(roomName);
     }
-    public void createRoom(String name){
+
+    public void createRoom(String name) {
         Room r = new Room(name);
         r.start();
         rooms.put(r.getRoomName(), r);
-
     }
 }
 
