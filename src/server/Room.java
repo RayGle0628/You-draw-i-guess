@@ -1,6 +1,7 @@
 package server;
 
 import messaging.Coordinate;
+import messaging.Path;
 
 import java.io.*;
 import java.util.*;
@@ -16,6 +17,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     private HashMap<String, Integer> scores;
     private boolean wordGuessed = false;
     private ArrayList<ServerThread> correctlyGuessed = new ArrayList<>();
+    ArrayList<Path> currentImage;
 
     /**
      * Resets all the scores to zero at the start of a new game.
@@ -97,6 +99,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
      * Starts a round of a game.
      */
     public void startRound() {
+        currentImage = new ArrayList<>();
         currentWord = words.get(round - 1);
         selectNextDrawer();
         disperseMessage(null, currentDrawer.getUsername() + " is now drawing for 60 seconds!");
@@ -181,7 +184,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     public synchronized void removeUser(ServerThread user) {
         users.remove(user);
         System.out.println("Removed " + user);
-        currentUserList();
+        currentUserList(null);
         if (users.size() == 0) {
             timer.cancel();
             timer = new Timer("Timer");
@@ -197,7 +200,6 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
      * @param fromUser the user the message originated from. Null if it is from the room directly.
      * @param text     the text that is to be sent.
      */
-    //TODO implement a cooldown period after a guess has been made.
     public synchronized void disperseMessage(ServerThread fromUser, String text) {
         if (correctlyGuessed.contains(fromUser)) return; // Skip chat from guesser
         if (fromUser != null) {
@@ -259,18 +261,28 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
      * Takes an incoming path being drawn and sends it to all other users. This will not send the path if the origin
      * is not the current allowed drawer and will not send it back to the drawer.
      *
-     * @param fromUser    is the origin of the drawing.
-     * @param size        of the brush used in pixels.
-     * @param colour      of the path used.
-     * @param coordinates is the location of the path to be drawn on the canvas.
+     * @param fromUser is the origin of the drawing.
      */
-    public synchronized void disperseStroke(ServerThread fromUser, int size, String colour,
-                                            ArrayList<Coordinate> coordinates) {
+//    public synchronized void disperseStroke(ServerThread fromUser, int size, String colour,
+//                                            ArrayList<Coordinate> coordinates) {
+//        if (currentDrawer != null) {
+//            if (currentDrawer.equals(fromUser)) { // prevents other clients sending draw data out of turn.
+//                for (ServerThread user : users) {
+//                    if (user.equals(fromUser)) continue;
+//                    user.outgoingStroke(size, colour, coordinates);
+//                }
+//            }
+//        }
+//    }
+    public synchronized void disperseStroke(ServerThread fromUser, Path path) {
+        if (currentImage != null) {
+            currentImage.add(path);
+        }
         if (currentDrawer != null) {
             if (currentDrawer.equals(fromUser)) { // prevents other clients sending draw data out of turn.
                 for (ServerThread user : users) {
                     if (user.equals(fromUser)) continue;
-                    user.outgoingStroke(size, colour, coordinates);
+                    user.outgoingStroke(path);
                 }
             }
         }
@@ -279,7 +291,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     /**
      * Gets the names of all the users in this room and sends it to each client to see who is currently present.
      */
-    public void currentUserList() {
+    public void currentUserList(ServerThread userImage) {
         String[] playersInRoom = new String[users.size()];
         for (int i = 0; i < users.size(); i++) {
             playersInRoom[i] = users.get(i).getUsername();
@@ -287,12 +299,11 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         for (ServerThread user : users) {
             user.pushNames(playersInRoom);
         }
-    }
-
-    //TODO deprecate?
-    @Override
-    public String toString() {
-        return roomName;
+        if (currentImage != null && userImage != null) {
+            for (Path path : currentImage) {
+                userImage.outgoingStroke(path);
+            }
+        }
     }
 
     /**

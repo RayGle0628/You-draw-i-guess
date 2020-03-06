@@ -13,9 +13,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 //TODO
 //SFX
-//Room Size
 //Data base
 //Server Select
+// Drawing for mid joiners
 
 public class Client extends Application {
     private Socket socket;
@@ -91,7 +91,14 @@ public class Client extends Application {
     }
 
     public void sendMessagePath(Command command, int size, String colour, ArrayList<Coordinate> coordinates) {
-        MessagePath message = new MessagePath(command, size, colour, coordinates);
+//        MessagePath message = new MessagePath(command, size, colour, coordinates);
+//        try {
+//            output.reset();
+//            output.writeObject(message);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        MessagePath message = new MessagePath(command, new Path(coordinates,size,colour));
         try {
             output.reset();
             output.writeObject(message);

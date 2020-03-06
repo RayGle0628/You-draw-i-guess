@@ -47,8 +47,21 @@ public class ClientListener extends Thread {
                     client.getRoomController().disableDraw();
                     break;
                 case INCOMING_PATH:
-                    client.getRoomController().drawFromMessage(((MessagePath) message).getSize(),
-                            ((MessagePath) message).getColour(), ((MessagePath) message).getCoordinates());
+//                    client.getRoomController().drawFromMessage(((MessagePath) message).getSize(),
+//                            ((MessagePath) message).getColour(), ((MessagePath) message).getCoordinates());
+                    System.out.println("RECEIVING PATH");
+                    System.out.println(message);
+                    System.out.println(((MessagePath)message).getPath());
+                    System.out.println(client.getRoomController());
+                    client.getRoomController().drawFromMessage(
+
+                   ((MessagePath) message).getPath().getSize(),
+                            ((MessagePath) message).getPath().getColour(),
+                            ((MessagePath) message).getPath().getCoordinates());
+
+
+
+
                     break;
                 case CLEAR_CANVAS:
                     client.getRoomController().clearCanvas();

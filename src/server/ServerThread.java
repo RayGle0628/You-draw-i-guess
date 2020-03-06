@@ -59,14 +59,19 @@ public class ServerThread extends Thread {
                     room.disperseMessage(this, message.getData()[0]);
                     break;
                 case REQUEST_USERS:
-                    room.currentUserList();
+                    room.currentUserList(this);
                     break;
                 case EXIT_ROOM:
                     exitRoom();
                     break;
                 case DRAW_PATH:
-                    room.disperseStroke(this, ((MessagePath) message).getSize(), ((MessagePath) message).getColour(),
-                            ((MessagePath) message).getCoordinates());
+//                    room.disperseStroke(this, ((MessagePath) message).getSize(), ((MessagePath) message).getColour(),
+//                            ((MessagePath) message).getCoordinates());
+//                    room.disperseStroke(this, ((MessagePath) message).getPath().getSize(),
+//                            ((MessagePath) message).getPath().getColour(),
+//                            ((MessagePath) message).getPath().getCoordinates());
+
+                    room.disperseStroke(this,((MessagePath) message).getPath());
                     break;
                 case CLEAR_CANVAS:
                     room.clearCanvas();
@@ -111,7 +116,9 @@ public class ServerThread extends Thread {
         return username;
     }
 
-    //TODO can be moved into switch case.
+    /**
+     * Gets a list of rooms and sends to the client.
+     */
     public void getAllRooms() {
         try {
             output.writeObject(server.getAllRooms());
@@ -121,7 +128,11 @@ public class ServerThread extends Thread {
         }
     }
 
-    //TODO room rejections
+    /**
+     * Will attempt to join a room and will tell the client whether successful or not.
+     *
+     * @param roomName
+     */
     public void joinRoom(String roomName) {
         room = server.getRoom(roomName);
         if (room.getPopulation() >= 10) {
@@ -133,12 +144,12 @@ public class ServerThread extends Thread {
             }
             return;
         }
-        room.addUser(this);
+
         try {
             outputData.writeBoolean(true);
         } catch (Exception e) {
             System.out.println("Could not return room join status.");
-        }
+        } room.addUser(this);
     }
 
     /**
@@ -182,13 +193,13 @@ public class ServerThread extends Thread {
     /**
      * Sends part of the drawing to the canvas of the user that the room has received from another user.
      *
-     * @param size        is the size of the path to be drawn in pixels.
-     * @param colour      is the colour of the path to be drawn.
-     * @param coordinates is the location of the path to be drawn on the canvas.
+
      */
-    public void outgoingStroke(int size, String colour, ArrayList<Coordinate> coordinates) {
+    public void outgoingStroke(Path path) {
         try {
-            output.writeObject(new MessagePath(Command.INCOMING_PATH, size, colour, coordinates));
+//            output.writeObject(new MessagePath(Command.INCOMING_PATH, size, colour, coordinates));
+            output.reset();
+            output.writeObject(new MessagePath(Command.INCOMING_PATH,path));
         } catch (Exception e) {
         }
     }

@@ -9,15 +9,16 @@ import java.util.ArrayList;
  * the location of a drawn path alongside its size and colour.
  */
 public class MessagePath extends Message {
-    ArrayList<Coordinate> coordinates;
-    int size;
-    String colour;
-
-    public MessagePath(Command command, int size, String colour, ArrayList<Coordinate> coordinates) {
+   private ArrayList<Coordinate> coordinates;
+  private  int size;
+   private String colour;
+private Path path;
+    public MessagePath(Command command, Path path) {
         super(command);
-        this.size = size;
-        this.colour = colour;
-        this.coordinates = coordinates;
+//        this.size = size;
+//        this.colour = colour;
+//        this.coordinates = coordinates;
+        this.path=path;
     }
 
     public ArrayList<Coordinate> getCoordinates() {
@@ -30,5 +31,9 @@ public class MessagePath extends Message {
 
     public String getColour() {
         return colour;
+    }
+
+    public Path getPath() {
+        return path;
     }
 }

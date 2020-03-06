@@ -64,7 +64,8 @@ public class GameRoomController implements Initializable {
         client = Client.getClient();
         stage = Client.getStage();
         client.setRoomController(this);
-        client.sendMessage(Command.REQUEST_USERS);
+
+
     }
 
     /**
@@ -102,6 +103,7 @@ public class GameRoomController implements Initializable {
             client.sendMessage(Command.CLEAR_CANVAS);
         });
         clearCanvas();
+        client.sendMessage(Command.REQUEST_USERS);
     }
 
     /**
@@ -237,8 +239,13 @@ public class GameRoomController implements Initializable {
      * @param path
      */
     public void drawFromMessage(int size, String colour, ArrayList<Coordinate> path) {
+        System.out.println("GC ready"+gc);
+        System.out.println("Path has length: "+path.size());
+        System.out.println("Path has colour: "+colour);
+        System.out.println("Path has size: "+size);
         gc.setLineWidth(size);
         gc.setStroke(Color.web(colour));
+
         if (path.size() == 1) {
             gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
         } else {
