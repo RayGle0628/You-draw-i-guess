@@ -15,7 +15,6 @@ import java.util.ArrayList;
 //SFX
 //Data base
 //Server Select
-// Drawing for mid joiners
 
 public class Client extends Application {
     private Socket socket;
