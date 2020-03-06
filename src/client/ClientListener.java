@@ -4,7 +4,6 @@ import messaging.Message;
 import messaging.MessagePath;
 
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
 
 /**
  * ClientListener listens for messages from the server and executes them as required.
@@ -12,10 +11,11 @@ import java.util.ArrayList;
 public class ClientListener extends Thread {
     private ObjectInputStream input;
     private Client client;
-    public boolean endFlag = false;
+    private boolean endFlag;
 
     public ClientListener(Client client) {
         this.client = client;
+        endFlag = false;
     }
 
     @Override
@@ -31,10 +31,10 @@ public class ClientListener extends Thread {
             }
             switch (message.getCommand()) {
                 case RECEIVE_CHAT_MESSAGE:
-                    client.chatToRoom(message.getData()[0]);
+                    client.getRoomController().displayNewMessage(message.getData()[0]);
                     break;
                 case USERS_IN_ROOM:
-                    client.updateRoomUsers(message.getData());
+                    client.getRoomController().updateUsers(message.getData());
                     break;
                 case CONFIRM_EXIT:
                     System.out.println("Listener ended by server");
@@ -54,7 +54,6 @@ public class ClientListener extends Thread {
                     client.getRoomController().clearCanvas();
                     break;
             }
-            //   System.out.println("Message processed");
         }
         System.out.println("LISTENER ENDED");
     }

@@ -149,13 +149,13 @@ gc.setLineWidth(brushSize);
         canvas.setOnMousePressed(null);
         canvas.setOnMouseDragged(null);
         canvas.setOnMouseReleased(null);
-//        inputTextField.setEditable(true);
-//        inputTextField.setVisible(true);
-//        colourPicker.setEditable(false);
-//        colourPicker.setVisible(false);
-//        sizeSlider.setVisible(false);
-//        guideCircle.setVisible(false);
-//        clearButton.setVisible(false);
+        inputTextField.setEditable(true);
+        inputTextField.setVisible(true);
+        colourPicker.setEditable(false);
+        colourPicker.setVisible(false);
+        sizeSlider.setVisible(false);
+        guideCircle.setVisible(false);
+        clearButton.setVisible(false);
     }
 
     /**
@@ -164,7 +164,7 @@ gc.setLineWidth(brushSize);
      * @param path
      */
     public void draw(ArrayList<Coordinate> path) {
-        System.out.println(brushSize);
+
         if (path.size() == 1) {
             gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
         } else {
@@ -261,7 +261,7 @@ gc.setLineWidth(brushSize);
      * Allows the user to pick the current colour of their drawing.
      */
     public void pickColour() {
-        System.out.println("Changing colour");
+
         guideCircle.setFill(colourPicker.getValue());
         gc.setStroke(colourPicker.getValue());
         colour = colourPicker.getValue();

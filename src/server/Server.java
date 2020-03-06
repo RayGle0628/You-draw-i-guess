@@ -6,19 +6,18 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 public class Server {
-    public static final int PORT = 5000;
+    public static final int PORT = 50000;
     private ArrayList<ServerThread> connectedUsers;
     private TreeMap<String, Room> rooms;
 
     public Server() {
         connectedUsers = new ArrayList<ServerThread>();
         rooms = new TreeMap<>();
-        Room r = new Room("Default");
-        r.start();
-        rooms.put(r.getRoomName(), r);
-        r = new Room("Default2");
-        r.start();
-        rooms.put(r.getRoomName(), r);
+createRoom("Room 1");
+        createRoom("Room 2");
+        createRoom("Room 3");
+        createRoom("Room 4");
+        createRoom("Room 5");
     }
 
     public static void main(String[] args) {
@@ -76,4 +75,12 @@ public class Server {
     public Room getRoom(String roomName) {
         return rooms.get(roomName);
     }
+    public void createRoom(String name){
+        Room r = new Room(name);
+        r.start();
+        rooms.put(r.getRoomName(), r);
+
+    }
 }
+
+

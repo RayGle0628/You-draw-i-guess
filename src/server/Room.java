@@ -222,14 +222,14 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
 //                timer.cancel();
 //                timer = new Timer("Timer");
 //                endRound();
-            } else {
+            } else { // Incorrect guess/general chat message show in chat room
                 text = fromUser.getUsername() + ": " + text;
                 for (ServerThread user : users) {
                     user.outgoingChatMessage(text);
                 }
             }
         }
-        if (fromUser == null) {
+        if (fromUser == null) { // Always send server message to everyone.
             for (ServerThread user : users) {
                 user.outgoingChatMessage(text);
             }

@@ -32,36 +32,25 @@ public class HomeController implements Initializable {
 
     @FXML
     Button getRoomsButton;
-
     @FXML
     VBox roomListVBox;
 
-    public void getRooms() throws Exception {
+    public void getRooms() {
         roomListVBox.getChildren().clear();
-        System.out.println("GEt rooms pressed");
-        System.out.println(client);
         ArrayList<String> rooms = client.getRoomsList(); // EXCEPTION
-        System.out.println("room list retrieved");
         for (String room : rooms) {
             Text roomText = new Text();
             textRoom.put(roomText, room);
             roomText.setOnMouseClicked(e -> {
                 joinRoom(textRoom.get(roomText));
-                try {
-                    roomScene();
-                } catch (Exception ex) {
-                }
+                roomScene();
             });
-            roomText.setText(room.toString());
+            roomText.setText(room);
             roomListVBox.getChildren().add(roomText);
         }
     }
-//    public void setClient(Client client) {
-//        this.client = client;
-//    }
 
     public void joinRoom(String room) {
-        System.out.println("Clicked " + room);
         if (client.joinRoom(room)) { // TRANSITION TO ROOM VIEW IF JOINED
             System.out.println("SUCCESS");
         } else {
@@ -69,8 +58,13 @@ public class HomeController implements Initializable {
         }
     }
 
-    public void roomScene() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("GameRoom.fxml"));
+    public void roomScene() {
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource("GameRoom.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Scene roomScene = new Scene(root);
         stage.setScene(roomScene);
         roomScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
@@ -79,8 +73,6 @@ public class HomeController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        try{
-        getRooms();}
-        catch(Exception e){}
+        getRooms();
     }
 }

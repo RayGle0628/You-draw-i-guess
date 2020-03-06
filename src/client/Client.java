@@ -11,12 +11,17 @@ import messaging.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+//TODO
+//SFX
+//Room Size
+//Data base
+//Server Select
 
 public class Client extends Application {
     private Socket socket;
     private static Client client;
     private static Stage stage;
-    private static final int PORT = 5000;
+    private static final int PORT = 50000;
     private static final String HOST = "127.0.0.1";
     private ClientListener clientListener;
     private ObjectOutputStream output;
@@ -58,7 +63,6 @@ public class Client extends Application {
     }
 
     public boolean login(String username, String password) {
-
         if (connect()) {
             sendMessage(Command.LOGIN, username, password);
         }
@@ -76,8 +80,6 @@ public class Client extends Application {
         }
         return false;
     }
-
-
 
     public void sendMessage(Command command, String... data) {
         Message message = new Message(command, data);
@@ -108,7 +110,6 @@ public class Client extends Application {
             outputData = new DataOutputStream(socket.getOutputStream());
             outputData.flush();
             clientListener.setInput(input);
-            //   System.out.println("Listener updated");
         } catch (Exception e) {
             System.out.println("Unable to connect to " + HOST + ":" + PORT);
             return false;
@@ -116,18 +117,18 @@ public class Client extends Application {
         return true;
     }
 
-    public ArrayList<String> getRoomsList() throws Exception {
+    public ArrayList<String> getRoomsList() {
         sendMessage(Command.GET_ROOMS);
-        return (ArrayList<String>) input.readObject();
+        try {
+            return (ArrayList<String>) input.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
     public DataInputStream getInputData() {
         return inputData;
-    }
-
-    public void updateRoomUsers(String[] currentUsers) {
-        System.out.println(currentUsers[0]);
-        roomController.updateUsers(currentUsers);
     }
 
     public boolean joinRoom(String room) {
@@ -147,15 +148,6 @@ public class Client extends Application {
         this.roomController = roomController;
     }
 
-    public void chatToRoom(String message) {
-        roomController.displayNewMessage(message);
-    }
-
-    @Override
-    public String toString() {
-        return "I am a client lol";
-    }
-
     @Override
     public void stop() {
         try {
@@ -169,7 +161,6 @@ public class Client extends Application {
     public void killThread() {
         clientListener = new ClientListener(this);
         clientListener.setInput(input);
-        System.out.println("listener killed and reset");
     }
 }
 

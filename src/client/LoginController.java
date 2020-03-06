@@ -53,7 +53,7 @@ public class LoginController implements Initializable {
         }
     }
 
-    public void createAccountScene(ActionEvent e) throws IOException {
+    public void createAccountScene() throws IOException {
         Parent createAccountView = FXMLLoader.load(getClass().getResource("CreateAccount.fxml"));
         Scene tableViewScene = new Scene(createAccountView);
         stage.setScene(tableViewScene);
