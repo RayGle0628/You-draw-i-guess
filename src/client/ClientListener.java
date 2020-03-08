@@ -26,7 +26,9 @@ public class ClientListener extends Thread {
             try {
                 message = (Message) input.readObject();
             } catch (Exception e) {
-                System.out.println("Listener failed due to server closure");
+                e.printStackTrace();
+                System.out.println("Socket closed.");
+                client.returnToLogin("");
                 break;
             }
             switch (message.getCommand()) {
@@ -49,10 +51,10 @@ public class ClientListener extends Thread {
                 case INCOMING_PATH:
 //                    client.getRoomController().drawFromMessage(((MessagePath) message).getSize(),
 //                            ((MessagePath) message).getColour(), ((MessagePath) message).getCoordinates());
-                    System.out.println("RECEIVING PATH");
-                    System.out.println(message);
-                    System.out.println(((MessagePath)message).getPath());
-                    System.out.println(client.getRoomController());
+//                    System.out.println("RECEIVING PATH");
+//                    System.out.println(message);
+//                    System.out.println(((MessagePath)message).getPath());
+//                    System.out.println(client.getRoomController());
                     client.getRoomController().drawFromMessage(
 
                    ((MessagePath) message).getPath().getSize(),

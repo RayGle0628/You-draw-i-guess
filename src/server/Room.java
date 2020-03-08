@@ -1,11 +1,9 @@
 package server;
 
-import messaging.Coordinate;
 import messaging.Path;
 
 import java.io.*;
 import java.util.*;
-
 public class Room extends Thread implements Serializable, Comparable<Room> {
     private String roomName;
     private ArrayList<ServerThread> users;
@@ -17,8 +15,8 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     private HashMap<String, Integer> scores;
     private boolean wordGuessed = false;
     private ArrayList<ServerThread> correctlyGuessed = new ArrayList<>();
-    ArrayList<Path> currentImage;
-
+   private ArrayList<Path> currentImage;
+private boolean gameRunning;
     /**
      * Resets all the scores to zero at the start of a new game.
      */
@@ -55,6 +53,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         users = new ArrayList<>();
         timer = new Timer("Timer");
         scores = new HashMap<>();
+        gameRunning=false;
     }
 
     /**
@@ -80,6 +79,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
      * Starts a new game.
      */
     public void beginGame() {
+        gameRunning=true;
         correctlyGuessed = new ArrayList<>();
         scores = new HashMap<>();
         resetScores();
@@ -125,7 +125,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         wordGuessed = false;
         System.out.println(round);
         correctlyGuessed = new ArrayList<>();
-        if (round < 3) {
+        if (round < 11) {
             TimerTask task = new TimerTask() {
                 public void run() {
                     clearCanvas();
@@ -136,7 +136,9 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
             timer.schedule(task, 5000);
         } else {
             disperseMessage(null, "10 rounds completed, game over!");
+            gameRunning=false;
             finalScores();
+            //TODO
         }
     }
 
@@ -236,7 +238,8 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
                 user.outgoingChatMessage(text);
             }
         }
-        if (text.contains("!start")) {
+        if (text.contains("!start")&&!gameRunning) {
+            gameRunning=true;
             beginGame();
             System.out.println("Begining game");
         }

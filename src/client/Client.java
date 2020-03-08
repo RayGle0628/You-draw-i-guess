@@ -67,15 +67,12 @@ public class Client extends Application {
         }
         try {
             return inputData.readBoolean();
-        } catch (IOException e) {
-            System.out.println("No response from server regarding login status");
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("No response from server.");
         }
-        System.out.println("return not received");
         try {
             socket.close();
-        } catch (Exception e) {
-            System.out.println("Error closing socket");
+        } catch (Exception ignored) {
         }
         return false;
     }
@@ -85,7 +82,7 @@ public class Client extends Application {
         try {
             output.writeObject(message);
         } catch (IOException e) {
-            e.printStackTrace();
+            //   e.printStackTrace();
         }
     }
 
@@ -97,7 +94,7 @@ public class Client extends Application {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-        MessagePath message = new MessagePath(command, new Path(coordinates,size,colour));
+        MessagePath message = new MessagePath(command, new Path(coordinates, size, colour));
         try {
             output.reset();
             output.writeObject(message);
@@ -128,7 +125,8 @@ public class Client extends Application {
         try {
             return (ArrayList<String>) input.readObject();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("SERVER DISCONNECT HERE REFRESH CLICKED");
+            returnToLogin("");
         }
         return new ArrayList<>();
     }
@@ -146,7 +144,9 @@ public class Client extends Application {
             }
             return confirmation;
         } catch (IOException e) {
-            e.printStackTrace();
+           e.printStackTrace();
+            System.out.println("DISCONNECT HERE JOIN ROOM");
+            returnToLogin("");
             return false;
         }
     }
@@ -168,6 +168,25 @@ public class Client extends Application {
     public void killThread() {
         clientListener = new ClientListener(this);
         clientListener.setInput(input);
+    }
+
+    public void returnToLogin(String error) {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Platform.runLater(() -> {
+            Parent loginView= null;
+            try {
+                loginView = FXMLLoader.load(getClass().getResource("Login.fxml"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Scene tableViewScene = new Scene(loginView);
+            stage.setScene(tableViewScene);
+            stage.show();
+        });
     }
 }
 

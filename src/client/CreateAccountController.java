@@ -20,6 +20,7 @@ import java.util.ResourceBundle;
 public class CreateAccountController implements Initializable {
     private Client client;
     private Stage stage;
+
     @FXML
     GridPane gridPane;
     @FXML
@@ -45,8 +46,13 @@ public class CreateAccountController implements Initializable {
         Platform.runLater(() -> gridPane.requestFocus());
     }
 
-    public void loginScene() throws IOException {
-        Parent createAccountView = FXMLLoader.load(getClass().getResource("Login.fxml"));
+    public void loginScene()  {
+        Parent createAccountView = null;
+        try {
+            createAccountView = FXMLLoader.load(getClass().getResource("Login.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Scene tableViewScene = new Scene(createAccountView);
         stage.setScene(tableViewScene);
         stage.show();
