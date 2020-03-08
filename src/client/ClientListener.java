@@ -26,9 +26,10 @@ public class ClientListener extends Thread {
             try {
                 message = (Message) input.readObject();
             } catch (Exception e) {
-                e.printStackTrace();
+
                 System.out.println("Socket closed.");
                 client.returnToLogin("");
+                client.killThread();
                 break;
             }
             switch (message.getCommand()) {

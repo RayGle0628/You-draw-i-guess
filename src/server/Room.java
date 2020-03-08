@@ -4,6 +4,7 @@ import messaging.Path;
 
 import java.io.*;
 import java.util.*;
+
 public class Room extends Thread implements Serializable, Comparable<Room> {
     private String roomName;
     private ArrayList<ServerThread> users;
@@ -15,8 +16,9 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     private HashMap<String, Integer> scores;
     private boolean wordGuessed = false;
     private ArrayList<ServerThread> correctlyGuessed = new ArrayList<>();
-   private ArrayList<Path> currentImage;
-private boolean gameRunning;
+    private ArrayList<Path> currentImage;
+    private boolean gameRunning;
+
     /**
      * Resets all the scores to zero at the start of a new game.
      */
@@ -53,7 +55,7 @@ private boolean gameRunning;
         users = new ArrayList<>();
         timer = new Timer("Timer");
         scores = new HashMap<>();
-        gameRunning=false;
+        gameRunning = false;
     }
 
     /**
@@ -79,7 +81,7 @@ private boolean gameRunning;
      * Starts a new game.
      */
     public void beginGame() {
-        gameRunning=true;
+        gameRunning = true;
         correctlyGuessed = new ArrayList<>();
         scores = new HashMap<>();
         resetScores();
@@ -136,7 +138,7 @@ private boolean gameRunning;
             timer.schedule(task, 5000);
         } else {
             disperseMessage(null, "10 rounds completed, game over!");
-            gameRunning=false;
+            gameRunning = false;
             finalScores();
             //TODO
         }
@@ -238,8 +240,8 @@ private boolean gameRunning;
                 user.outgoingChatMessage(text);
             }
         }
-        if (text.contains("!start")&&!gameRunning) {
-            gameRunning=true;
+        if (text.contains("!start") && !gameRunning) {
+            gameRunning = true;
             beginGame();
             System.out.println("Begining game");
         }
@@ -253,9 +255,7 @@ private boolean gameRunning;
      */
     public boolean parseGuess(String text) {
         if (currentWord != null) {
-            if (text.toLowerCase().contains(currentWord.toLowerCase())) {
-                return true;
-            }
+            return text.toLowerCase().matches(".*\\b" + currentWord.toLowerCase() + "\\b.*");
         }
         return false;
     }
