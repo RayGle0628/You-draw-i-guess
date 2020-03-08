@@ -10,14 +10,14 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class ServerThread extends Thread {
-    String username;
+    private String username;
     private Socket socket;
     private Server server;
     private Room room;
-    ObjectInputStream input;
-    ObjectOutputStream output;
-    DataInputStream inputData;
-    DataOutputStream outputData;
+    private ObjectInputStream input;
+    private ObjectOutputStream output;
+    private DataInputStream inputData;
+    private DataOutputStream outputData;
 
     public ServerThread(Server server, Socket socket) {
         System.out.println("ServerThread started for a client.");
@@ -70,8 +70,7 @@ public class ServerThread extends Thread {
 //                    room.disperseStroke(this, ((MessagePath) message).getPath().getSize(),
 //                            ((MessagePath) message).getPath().getColour(),
 //                            ((MessagePath) message).getPath().getCoordinates());
-
-                    room.disperseStroke(this,((MessagePath) message).getPath());
+                    room.disperseStroke(this, ((MessagePath) message).getPath());
                     break;
                 case CLEAR_CANVAS:
                     room.clearCanvas();
@@ -144,12 +143,12 @@ public class ServerThread extends Thread {
             }
             return;
         }
-
         try {
             outputData.writeBoolean(true);
         } catch (Exception e) {
             System.out.println("Could not return room join status.");
-        } room.addUser(this);
+        }
+        room.addUser(this);
     }
 
     /**
@@ -192,14 +191,12 @@ public class ServerThread extends Thread {
 
     /**
      * Sends part of the drawing to the canvas of the user that the room has received from another user.
-     *
-
      */
     public void outgoingStroke(Path path) {
         try {
 //            output.writeObject(new MessagePath(Command.INCOMING_PATH, size, colour, coordinates));
             output.reset();
-            output.writeObject(new MessagePath(Command.INCOMING_PATH,path));
+            output.writeObject(new MessagePath(Command.INCOMING_PATH, path));
         } catch (Exception e) {
         }
     }

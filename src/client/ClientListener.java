@@ -26,9 +26,8 @@ public class ClientListener extends Thread {
             try {
                 message = (Message) input.readObject();
             } catch (Exception e) {
-
                 System.out.println("Socket closed.");
-                client.returnToLogin("");
+                client.returnToLogin("Server unexpectedly closed");
                 client.killThread();
                 break;
             }
@@ -56,15 +55,9 @@ public class ClientListener extends Thread {
 //                    System.out.println(message);
 //                    System.out.println(((MessagePath)message).getPath());
 //                    System.out.println(client.getRoomController());
-                    client.getRoomController().drawFromMessage(
-
-                   ((MessagePath) message).getPath().getSize(),
+                    client.getRoomController().drawFromMessage(((MessagePath) message).getPath().getSize(),
                             ((MessagePath) message).getPath().getColour(),
                             ((MessagePath) message).getPath().getCoordinates());
-
-
-
-
                     break;
                 case CLEAR_CANVAS:
                     client.getRoomController().clearCanvas();

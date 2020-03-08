@@ -154,9 +154,6 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
     }
 
     public void selectNextDrawer() {
-//        Random random = new Random();
-//        int rand = random.nextInt(users.size());
-//        currentDrawer = users.get(rand);
         currentDrawer = users.get((round - 1) % users.size());//Iterates through users in room in order that they
         // joined, repeating until game over.
     }
@@ -205,11 +202,14 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
      * @param text     the text that is to be sent.
      */
     public synchronized void disperseMessage(ServerThread fromUser, String text) {
-        if (correctlyGuessed.contains(fromUser)) return; // Skip chat from guesser
+        if (correctlyGuessed.contains(fromUser)) {
+            fromUser.outgoingChatMessage("You have already guessed correctly.");
+            return;
+        } // Skip chat from guesser with a warning message.
         if (fromUser != null) {
             if (parseGuess(text)) {
                 correctlyGuessed.add(fromUser);
-                disperseMessage(null, fromUser.username + " has guessed correctly.");
+                disperseMessage(null, fromUser.getUsername() + " has guessed correctly.");
                 TimerTask task;
                 if (!wordGuessed) {
                     disperseMessage(null, "You have 10 seconds to make any final guesses.");
@@ -225,9 +225,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
                 wordGuessed = true;
                 scores.merge(fromUser.getUsername(), 1, Integer::sum);
                 scores.merge(currentDrawer.getUsername(), 1, Integer::sum);
-//                timer.cancel();
-//                timer = new Timer("Timer");
-//                endRound();
+
             } else { // Incorrect guess/general chat message show in chat room
                 text = fromUser.getUsername() + ": " + text;
                 for (ServerThread user : users) {
@@ -266,17 +264,8 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
      *
      * @param fromUser is the origin of the drawing.
      */
-//    public synchronized void disperseStroke(ServerThread fromUser, int size, String colour,
-//                                            ArrayList<Coordinate> coordinates) {
-//        if (currentDrawer != null) {
-//            if (currentDrawer.equals(fromUser)) { // prevents other clients sending draw data out of turn.
-//                for (ServerThread user : users) {
-//                    if (user.equals(fromUser)) continue;
-//                    user.outgoingStroke(size, colour, coordinates);
-//                }
-//            }
-//        }
-//    }
+
+
     public synchronized void disperseStroke(ServerThread fromUser, Path path) {
         if (currentImage != null) {
             currentImage.add(path);
