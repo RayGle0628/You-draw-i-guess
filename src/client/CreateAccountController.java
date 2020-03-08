@@ -47,15 +47,16 @@ public class CreateAccountController implements Initializable {
     }
 
     public void loginScene()  {
-        Parent createAccountView = null;
-        try {
-            createAccountView = FXMLLoader.load(getClass().getResource("Login.fxml"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Scene tableViewScene = new Scene(createAccountView);
-        stage.setScene(tableViewScene);
-        stage.show();
+//        Parent createAccountView = null;
+//        try {
+//            createAccountView = FXMLLoader.load(getClass().getResource("Login.fxml"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Scene tableViewScene = new Scene(createAccountView);
+//        stage.setScene(tableViewScene);
+//        stage.show();
+        client.returnToLogin("");
     }
 
     public void createAccount() {

@@ -23,7 +23,6 @@ import javafx.stage.Stage;
 public class LoginController implements Initializable {
     private Client client;
     private Stage stage;
- 
     @FXML
     public TextField usernameField;
     @FXML
@@ -40,16 +39,14 @@ public class LoginController implements Initializable {
     public LoginController() {
         this.client = Client.getClient();
         this.stage = Client.getStage();
+        client.setLoginController(this);
     }
 
-    public void login()  {
+    public void login() {
         String username = usernameField.getText();
         String pass = passwordField.getText();
-         if (client.login(username, pass)) {
+        if (client.login(username, pass)) {
             homeScene();
-        } else {
-            loginWarning.setText("Could not log in");
-            loginWarning.setId("cannotLogin-text");
         }
     }
 
@@ -61,7 +58,7 @@ public class LoginController implements Initializable {
         stage.show();
     }
 
-    public void homeScene()  {
+    public void homeScene() {
         Parent root = null;
         try {
             root = FXMLLoader.load(getClass().getResource("Home.fxml"));
@@ -78,6 +75,7 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Platform.runLater(() -> pane.requestFocus());
+        loginWarning.setId("cannotLogin-text");
     }
 
     public void enterPressed(KeyEvent ke) {
@@ -86,5 +84,10 @@ public class LoginController implements Initializable {
                 login();
             }
         }
+    }
+
+    public void setLoginWarning(String error) {
+        loginWarning.setText(error);
+        loginWarning.setVisible(true);
     }
 }

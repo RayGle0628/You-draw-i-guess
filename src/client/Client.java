@@ -28,6 +28,7 @@ public class Client extends Application {
     private DataInputStream inputData;
     private DataOutputStream outputData;
     private GameRoomController roomController;
+    private LoginController loginController;
 
     public GameRoomController getRoomController() {
         return roomController;
@@ -66,9 +67,12 @@ public class Client extends Application {
             sendMessage(Command.LOGIN, username, password);
         }
         try {
-            return inputData.readBoolean();
+            boolean response = inputData.readBoolean();
+            if (!response) loginController.setLoginWarning("Invalid credentials");
+            return response;
         } catch (Exception e) {
             System.out.println("No response from server.");
+            loginController.setLoginWarning("No response from server");
         }
         try {
             socket.close();
@@ -126,7 +130,7 @@ public class Client extends Application {
             return (ArrayList<String>) input.readObject();
         } catch (Exception e) {
             System.out.println("SERVER DISCONNECT HERE REFRESH CLICKED");
-            returnToLogin("");
+            returnToLogin("Server closed unexpectedly");
         }
         return new ArrayList<>();
     }
@@ -144,9 +148,8 @@ public class Client extends Application {
             }
             return confirmation;
         } catch (IOException e) {
-           e.printStackTrace();
             System.out.println("DISCONNECT HERE JOIN ROOM");
-            returnToLogin("");
+            returnToLogin("Server closed unexpectedly");
             return false;
         }
     }
@@ -172,12 +175,12 @@ public class Client extends Application {
 
     public void returnToLogin(String error) {
         try {
-            socket.close();
+            if (socket!=null) socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         Platform.runLater(() -> {
-            Parent loginView= null;
+            Parent loginView = null;
             try {
                 loginView = FXMLLoader.load(getClass().getResource("Login.fxml"));
             } catch (IOException e) {
@@ -186,7 +189,12 @@ public class Client extends Application {
             Scene tableViewScene = new Scene(loginView);
             stage.setScene(tableViewScene);
             stage.show();
+            loginController.setLoginWarning(error);
         });
+    }
+
+    public void setLoginController(LoginController loginController) {
+        this.loginController = loginController;
     }
 }
 
