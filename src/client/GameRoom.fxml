@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
@@ -14,54 +15,51 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.GameRoomController">
-    <children>
-      <BorderPane prefHeight="200.0" prefWidth="200.0">
-         <top>
-            <Pane prefHeight="59.0" prefWidth="400.0" style="-fx-background-color: #3B9CFF;" BorderPane.alignment="CENTER">
-               <children>
-                        <Button fx:id="clearButton" alignment="CENTER" layoutX="558.0" layoutY="17.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="96.0" text="Clear " />
-                        <Circle fx:id="guideCircle" fill="WHITE" layoutX="533.0" layoutY="29.0" radius="10.0" stroke="TRANSPARENT" strokeType="INSIDE" />
-                          <ColorPicker fx:id="colourPicker" layoutX="346.0" layoutY="18.0" onAction="#pickColour" prefWidth="169.0" />
-                          <Slider fx:id="sizeSlider" blockIncrement="1.0" layoutX="185.0" layoutY="11.0" majorTickUnit="9.0" max="20.0" min="1.0" minorTickCount="10" prefHeight="10.0" prefWidth="140.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" />
-                  <Text fx:id="wordToDraw" fill="WHITE" layoutX="21.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Word To Draw">
-                     <font>
-                        <Font size="21.0" />
-                     </font>
-                  </Text>
-                        <Button fx:id="exitRoomButton" layoutX="665.0" layoutY="17.0" mnemonicParsing="false" onAction="#exitRoom" prefHeight="23.0" prefWidth="106.0" text="Exit Room" />
-               </children>
-            </Pane>
-         </top>
-         <left>
-                <VBox fx:id="userList" prefWidth="100.0" style="-fx-background-color: #E9E9E9;" BorderPane.alignment="CENTER" />
-         </left>
-         <right>
-                <VBox maxWidth="800.0" prefWidth="300.0" style="-fx-background-color: #E9E9E9;" BorderPane.alignment="CENTER">
-                    <children>
-                        <TextArea fx:id="chatTextArea" editable="false" prefHeight="341.0" prefWidth="341.0" wrapText="true">
-                     <VBox.margin>
-                        <Insets left="10.0" right="10.0" top="10.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="12.0" />
-                     </font>
-                  </TextArea>
-                        <TextField fx:id="inputTextField" onKeyPressed="#enterPressed" prefHeight="26.0" prefWidth="248.0" promptText="Enter Message">
-                     <VBox.margin>
-                        <Insets top="20.0" />
-                     </VBox.margin>
-                  </TextField>
-                    </children>
-                </VBox>
-         </right>
-         <center>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <center>
-                      <Canvas fx:id="canvas" height="386.0" width="400.0" BorderPane.alignment="CENTER" />
-               </center>
-            </BorderPane>
-         </center>
-      </BorderPane>
-    </children>
-</VBox>
+
+<BorderPane fx:id="root" prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.GameRoomController">
+   <top>
+      <Pane prefHeight="59.0" prefWidth="400.0" style="-fx-background-color: #3B9CFF;" BorderPane.alignment="CENTER">
+         <children>
+                  <Button fx:id="clearButton" alignment="CENTER" layoutX="558.0" layoutY="17.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="96.0" text="Clear " />
+                  <Circle fx:id="guideCircle" fill="WHITE" layoutX="533.0" layoutY="29.0" radius="10.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                    <ColorPicker fx:id="colourPicker" layoutX="346.0" layoutY="18.0" onAction="#pickColour" prefWidth="169.0" />
+                    <Slider fx:id="sizeSlider" blockIncrement="1.0" layoutX="185.0" layoutY="11.0" majorTickUnit="9.0" max="20.0" min="1.0" minorTickCount="10" prefHeight="10.0" prefWidth="140.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" />
+            <Text fx:id="wordToDraw" fill="WHITE" layoutX="21.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Word To Draw">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Text>
+                  <Button fx:id="exitRoomButton" layoutX="665.0" layoutY="17.0" mnemonicParsing="false" onAction="#exitRoom" prefHeight="23.0" prefWidth="106.0" text="Exit Room" />
+         </children>
+      </Pane>
+   </top>
+   <left>
+          <VBox fx:id="userList" prefWidth="100.0" style="-fx-background-color: #E9E9E9;" BorderPane.alignment="CENTER" />
+   </left>
+   <right>
+          <VBox maxWidth="800.0" prefWidth="300.0" style="-fx-background-color: #E9E9E9;" BorderPane.alignment="CENTER">
+              <children>
+                  <TextArea fx:id="chatTextArea" editable="false" prefHeight="341.0" prefWidth="341.0" wrapText="true">
+               <VBox.margin>
+                  <Insets left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="12.0" />
+               </font>
+            </TextArea>
+                  <TextField fx:id="inputTextField" onKeyPressed="#enterPressed" prefHeight="26.0" prefWidth="248.0" promptText="Enter Message">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </TextField>
+              </children>
+          </VBox>
+   </right>
+   <center>
+      <AnchorPane fx:id="anchorPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+                <Canvas fx:id="canvas" height="386.0" width="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
