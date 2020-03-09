@@ -55,6 +55,7 @@ public class GameRoomController implements Initializable {
     private ArrayList<Coordinate> path;
     private int brushSize;
     private Color colour;
+    private SoundFX soundFX;
 
     /**
      * Constrictor for GameRoomController.
@@ -65,6 +66,7 @@ public class GameRoomController implements Initializable {
         client = Client.getClient();
         stage = Client.getStage();
         client.setRoomController(this);
+        soundFX = new SoundFX();
     }
 
     /**
@@ -135,10 +137,9 @@ public class GameRoomController implements Initializable {
         sizeSlider.setVisible(true);
         guideCircle.setVisible(true);
         clearButton.setVisible(true);
-//        brushSize = (int)sizeSlider.getValue();
-//        colour=colourPicker.getValue();
         gc.setLineWidth(brushSize);
         Platform.runLater(() -> canvas.requestFocus());
+        soundFX.playYouDraw();
     }
 
     /**
@@ -193,6 +194,13 @@ public class GameRoomController implements Initializable {
      * @param message
      */
     public void displayNewMessage(String message) {
+        if (!message.contains(":")) { // Discounts all user messages.
+            if (!message.contains(client.getUsername())) { // If it is this user, different sound is played by enable draw.
+                if (message.contains(" is now drawing for 60 seconds!")) soundFX.playStartRound();
+            }
+            if (message.equals(client.getUsername() + " has guessed correctly.")) soundFX.playGuess2(); // If client guesses correctly play correct sound.
+            else if (message.contains(" has guessed correctly.")) soundFX.playGuess(); // if any other client guesses correctly play different sound.
+        }
         chatTextArea.appendText(message + "\n");
     }
 
@@ -269,6 +277,4 @@ public class GameRoomController implements Initializable {
         gc.setStroke(colourPicker.getValue());
         colour = colourPicker.getValue();
     }
-
-
 }

@@ -29,6 +29,7 @@ public class Client extends Application {
     private DataOutputStream outputData;
     private GameRoomController roomController;
     private LoginController loginController;
+    private String username;
 
     public GameRoomController getRoomController() {
         return roomController;
@@ -51,6 +52,10 @@ public class Client extends Application {
         return stage;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         Client.stage = stage;
@@ -68,7 +73,11 @@ public class Client extends Application {
         }
         try {
             boolean response = inputData.readBoolean();
-            if (!response) loginController.setLoginWarning("Invalid credentials");
+            if (!response) {
+                loginController.setLoginWarning("Invalid credentials");
+            } else {
+                this.username = username;
+            }
             return response;
         } catch (Exception e) {
             System.out.println("No response from server.");
@@ -91,7 +100,6 @@ public class Client extends Application {
     }
 
     public void sendMessagePath(Command command, int size, String colour, ArrayList<Coordinate> coordinates) {
-
         MessagePath message = new MessagePath(command, new Path(coordinates, size, colour));
         try {
             output.reset();
@@ -169,7 +177,7 @@ public class Client extends Application {
 
     public void returnToLogin(String error) {
         try {
-            if (socket!=null) socket.close();
+            if (socket != null) socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

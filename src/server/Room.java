@@ -5,7 +5,7 @@ import messaging.Path;
 import java.io.*;
 import java.util.*;
 
-public class Room extends Thread implements Serializable, Comparable<Room> {
+public class Room extends Thread implements Comparable<Room> {
     private String roomName;
     private ArrayList<ServerThread> users;
     private ServerThread currentDrawer;
@@ -105,6 +105,9 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
         currentWord = words.get(round - 1);
         selectNextDrawer();
         disperseMessage(null, currentDrawer.getUsername() + " is now drawing for 60 seconds!");
+
+
+
         currentDrawer.startDrawing(currentWord);
         //AFTER 10 SECS STOP DRAWING
         TimerTask task = new TimerTask() {
@@ -191,6 +194,7 @@ public class Room extends Thread implements Serializable, Comparable<Room> {
             timer = new Timer("Timer");
             round = 0;
             System.out.println("Not enough players, ending game.");
+            gameRunning=false;
         }
     }
 
