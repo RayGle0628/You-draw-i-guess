@@ -1,3 +1,5 @@
+package server;
+
 import java.sql.*;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -18,7 +20,7 @@ public class Dao {
 	public static Connection conn = null; // the SQL connection
 	public static PreparedStatement preparedStatement;
 	
-	public static void main(String[]args) {// initiate static the Dao class
+	public static void main(String[]args) {// initiate static the server.Dao class
 		try {
 			if(conn == null) {
 				Class.forName(dbClassname).newInstance();// entity the driver of the MySQL database
@@ -82,9 +84,9 @@ public class Dao {
 	
     
 //    public void main(String[]args) {
-//    	Dao Dao = new Dao(); 
+//    	server.Dao server.Dao = new server.Dao();
 //    	String a = "CREATE TABLE User (Username VARCHAR(25), Password VARCHAR(25), E-mail VARCHAR(25))";
-////    	Dao.exec1(a);
+////    	server.Dao.exec1(a);
 //    }
     }
 
