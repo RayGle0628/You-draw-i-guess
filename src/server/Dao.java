@@ -1,14 +1,9 @@
 package server;
 
-import java.sql.*;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.LinkedList;
+import client.CreateAccountController;
 
-import javax.swing.JOptionPane;
-import javax.xml.crypto.Data;
+import javax.swing.*;
+import java.sql.*;
 
 public class Dao {
 	protected static String dbClassname = "org.postgresql.Driver"; // name of the postgreSQL driver
@@ -35,9 +30,31 @@ public class Dao {
 			e.printStackTrace();
 		}
         }
-	//close the SQL database
-	public static void close() {
+     /**
+     * input the data into database area
+     * @throws SQLException
+     */
+	public static void input() throws SQLException{
+	//	String sql = "INSERT INTO userr(username,password,e_mail)values(?,?,?)";
+	//	PreparedStatement ps = conn.prepareStatement(sql);
+        CreateAccountController CreateAccountController = new CreateAccountController();
+//        
+//	    ps.setString(1, usernameField.getText());
+//		ps.setString(2, passwordField.getText());
+//		ps.setString(3, e_mailField.getText);
+		
+		
 		}
+	
+	/**
+	 * query the data from the database
+	 */
+	
+//	public String output(){
+//		String sql = "SELECT ";
+//		
+//		return ;
+//	}
     /**
      * implementation of dynamic operation of database and return the data
      * operate the SQL by calling this method
@@ -82,12 +99,6 @@ public class Dao {
 //		String string = execResult();
 	}
 	
-    
-//    public void main(String[]args) {
-//    	server.Dao server.Dao = new server.Dao();
-//    	String a = "CREATE TABLE User (Username VARCHAR(25), Password VARCHAR(25), E-mail VARCHAR(25))";
-////    	server.Dao.exec1(a);
-//    }
     }
 
 
