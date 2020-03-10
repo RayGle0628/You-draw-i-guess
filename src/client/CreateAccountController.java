@@ -20,7 +20,6 @@ import java.util.ResourceBundle;
 public class CreateAccountController implements Initializable {
     private Client client;
     private Stage stage;
-
     @FXML
     GridPane gridPane;
     @FXML
@@ -46,31 +45,32 @@ public class CreateAccountController implements Initializable {
         Platform.runLater(() -> gridPane.requestFocus());
     }
 
-    public void loginScene()  {
-//        Parent createAccountView = null;
-//        try {
-//            createAccountView = FXMLLoader.load(getClass().getResource("Login.fxml"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Scene tableViewScene = new Scene(createAccountView);
-//        stage.setScene(tableViewScene);
-//        stage.show();
+    public void loginScene() {
         client.returnToLogin("");
     }
 
     public void createAccount() {
-        if (!passwordField.equals(repeatPasswordField)) {
+        if (!passwordField.getText().equals(repeatPasswordField.getText())) {
+            System.out.println("Passwords not equal");
             //TODO add text warnings here
             return;
         }
-        client.sendMessage(Command.CREATE_ACCOUNT, usernameField.getText(), passwordField.getText(),
-                emailField.getText());
-        try {
-            if (client.getInputData().readBoolean()) {//confirm acc creation
-            } else { // rejected by server
+        System.out.println(usernameField.getText());
+        System.out.println(passwordField.getText());
+        System.out.println(emailField.getText());
+        if (client.connect()) {
+            client.sendMessage(Command.CREATE_ACCOUNT, usernameField.getText(), passwordField.getText(),
+                    emailField.getText());
+            try {
+                if (client.getInputData().readBoolean()) {
+                    System.out.println("Account created");
+                } else {
+                    System.out.println("Creation rejected by server");
+                }
+            } catch (Exception e) {
+                System.out.println("No repsonse from server");
             }
-        } catch (Exception e) { // Data could not be read rejection
-        }
+            client.disconnect();
+        }else{ System.out.println("No repsonse from server");}
     }
 }

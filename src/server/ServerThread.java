@@ -2,10 +2,7 @@ package server;
 
 import messaging.*;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -20,7 +17,6 @@ public class ServerThread extends Thread {
     private DataOutputStream outputData;
 
     public ServerThread(Server server, Socket socket) {
-        System.out.println("ServerThread started for a client.");
         this.server = server;
         this.socket = socket;
         try {
@@ -65,15 +61,13 @@ public class ServerThread extends Thread {
                     exitRoom();
                     break;
                 case DRAW_PATH:
-//                    room.disperseStroke(this, ((MessagePath) message).getSize(), ((MessagePath) message).getColour(),
-//                            ((MessagePath) message).getCoordinates());
-//                    room.disperseStroke(this, ((MessagePath) message).getPath().getSize(),
-//                            ((MessagePath) message).getPath().getColour(),
-//                            ((MessagePath) message).getPath().getCoordinates());
                     room.disperseStroke(this, ((MessagePath) message).getPath());
                     break;
                 case CLEAR_CANVAS:
                     room.clearCanvas();
+                    break;
+                case CREATE_ACCOUNT:
+                    createAccount(message.getData());
                     break;
             }
         }
@@ -95,14 +89,29 @@ public class ServerThread extends Thread {
      * @param details
      */
     public void login(String[] details) {
-        System.out.println("A client has tried to log in as " + details[0] + " " + details[1]);
+//        System.out.println("A client has tried to log in as " + details[0] + " " + details[1]);
+//        try {
+//            if (details[0].equals("alex") || details[0].equals("mingrui") || details[0].equals("edward") ||
+//            details[0].equals("lele") || details[0].equals("bowen") || details[0].equals("test")) {
+//                outputData.writeBoolean(true);
+//                this.username = details[0];
+//            } else outputData.writeBoolean(false);
+//        } catch (Exception e) {
+//            System.out.println("Could not return message");
+//     }
         try {
-            if (details[0].equals("alex") || details[0].equals("mingrui") || details[0].equals("edward") || details[0].equals("lele") || details[0].equals("bowen") || details[0].equals("test")) {
-                outputData.writeBoolean(true);
-                this.username = details[0];
-            } else outputData.writeBoolean(false);
-        } catch (Exception e) {
-            System.out.println("Could not return message");
+            outputData.writeBoolean(server.login(details));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.username = details[0];
+    }
+
+    private void createAccount(String[] credentials) {
+        try {
+            outputData.writeBoolean(server.createAccount(credentials));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -121,7 +130,6 @@ public class ServerThread extends Thread {
     public void getAllRooms() {
         try {
             output.writeObject(server.getAllRooms());
-            System.out.println("ROOMS SENT");
         } catch (Exception e) {
             System.out.println("User requested a list of rooms but it failed.");
         }
@@ -194,7 +202,6 @@ public class ServerThread extends Thread {
      */
     public void outgoingStroke(Path path) {
         try {
-//            output.writeObject(new MessagePath(Command.INCOMING_PATH, size, colour, coordinates));
             output.reset();
             output.writeObject(new MessagePath(Command.INCOMING_PATH, path));
         } catch (Exception e) {

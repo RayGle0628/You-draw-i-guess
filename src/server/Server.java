@@ -1,16 +1,19 @@
 package server;
 
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.TreeMap;
 
 public class Server {
     private static final int PORT = 50000;
     private ArrayList<ServerThread> connectedUsers;
     private TreeMap<String, Room> rooms;
+    private DatabaseManager db;
 
     public Server() {
+        System.out.println("Server starting");
         connectedUsers = new ArrayList<>();
         rooms = new TreeMap<>();
         createRoom("Room 1");
@@ -18,6 +21,7 @@ public class Server {
         createRoom("Room 3");
         createRoom("Room 4");
         createRoom("Room 5");
+        db = new DatabaseManager();
     }
 
     public static void main(String[] args) {
@@ -32,7 +36,7 @@ public class Server {
     public void start() {
         try {
             ServerSocket serverSocket = new ServerSocket(PORT);
-            System.out.println("Server starting");
+            getIP();
             while (true) {
                 Socket socket = serverSocket.accept();
                 ServerThread t = new ServerThread(this, socket);
@@ -61,7 +65,7 @@ public class Server {
     public ArrayList<String> getAllRooms() {
         ArrayList<String> roomsList = new ArrayList<>();
         for (String room : rooms.keySet()) {
-            roomsList.add(room+ " ("+rooms.get(room).getPopulation()+"/10)");
+            roomsList.add(room + " (" + rooms.get(room).getPopulation() + "/10)");
         }
         return roomsList;
     }
@@ -82,6 +86,26 @@ public class Server {
         rooms.put(r.getRoomName(), r);
     }
 
+    public void getIP() throws Exception {
+        Enumeration<NetworkInterface> n = NetworkInterface.getNetworkInterfaces();
+        NetworkInterface e = n.nextElement();
+        Enumeration<InetAddress> a = e.getInetAddresses();
+        while (a.hasMoreElements()) {
+            String addr = a.nextElement().getHostAddress();
+            if (addr.contains(":")) continue;
+            System.out.println("Running on local IP: " + addr);
+            System.out.println("Server is ready to accept connections");
+        }
+    }
+
+    public synchronized boolean login(String[] credentials) {
+        return db.login(credentials[0], credentials[1]);
+    }
+
+    public synchronized boolean createAccount(String[] credentials) {
+        return db.createAccount(credentials[0], credentials[1], credentials[2]);
+    }
 }
+
 
 

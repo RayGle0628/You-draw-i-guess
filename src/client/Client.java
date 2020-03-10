@@ -126,6 +126,17 @@ public class Client extends Application {
         return true;
     }
 
+
+    public void disconnect(){
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
     public ArrayList<String> getRoomsList() {
         sendMessage(Command.GET_ROOMS);
         try {
