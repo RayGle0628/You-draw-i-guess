@@ -1,8 +1,10 @@
 package client;
 
+import javafx.application.Platform;
 import messaging.Message;
 import messaging.MessagePath;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 
 /**
@@ -20,12 +22,17 @@ public class ClientListener extends Thread {
 
     @Override
     public void run() {
+
         while (true) {
             if (endFlag) break;
             Message message;
             try {
                 message = (Message) input.readObject();
-            } catch (Exception e) {
+            }
+
+
+            catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("Socket closed.");
                 client.returnToLogin("Server unexpectedly closed");
                 client.killThread();
@@ -33,21 +40,43 @@ public class ClientListener extends Thread {
             }
             //TODO if gamecontrolle rnot null
             switch (message.getCommand()) {
+                case CONFIRM_JOIN_ROOM:
+                    if (client.getHomeController() != null) {
+                        Platform.runLater(() -> {
+                            client.getHomeController().roomScene();
+                            client.setHomeController(null);
+                        });
+                        System.out.println("signal good");
+                    }
+                    break;
+                case GET_ROOMS:
+                    if (client.getHomeController() != null) {
+                        Platform.runLater(() -> client.getHomeController().getRooms(message.getData()));
+                    }
+                    break;
                 case RECEIVE_CHAT_MESSAGE:
-                    client.getRoomController().displayNewMessage(message.getData()[0]);
+                    if (client.getRoomController() != null) {
+                        client.getRoomController().displayNewMessage(message.getData()[0]);
+                    }
                     break;
                 case USERS_IN_ROOM:
-                    client.getRoomController().updateUsers(message.getData());
+                    if (client.getRoomController() != null) {
+                        client.getRoomController().updateUsers(message.getData());
+                    }
                     break;
-                case CONFIRM_EXIT:
+                case LOGOUT:
                     System.out.println("Listener ended by server");
                     endFlag = true;
                     break;
                 case START_DRAWING:
-                    client.getRoomController().enableDraw(message.getData()[0]);
+                    if (client.getRoomController() != null) {
+                        client.getRoomController().enableDraw(message.getData()[0]);
+                    }
                     break;
                 case STOP_DRAWING:
-                    client.getRoomController().disableDraw();
+                    if (client.getRoomController() != null) {
+                        client.getRoomController().disableDraw();
+                    }
                     break;
                 case INCOMING_PATH:
 //                    client.getRoomController().drawFromMessage(((MessagePath) message).getSize(),
@@ -56,15 +85,20 @@ public class ClientListener extends Thread {
 //                    System.out.println(message);
 //                    System.out.println(((MessagePath)message).getPath());
 //                    System.out.println(client.getRoomController());
-                    client.getRoomController().drawFromMessage(((MessagePath) message).getPath().getSize(),
-                            ((MessagePath) message).getPath().getColour(),
-                            ((MessagePath) message).getPath().getCoordinates());
+                    if (client.getRoomController() != null) {
+                        client.getRoomController().drawFromMessage(((MessagePath) message).getPath().getSize(),
+                                ((MessagePath) message).getPath().getColour(),
+                                ((MessagePath) message).getPath().getCoordinates());
+                    }
                     break;
                 case CLEAR_CANVAS:
-                    client.getRoomController().clearCanvas();
+                    if (client.getRoomController() != null) {
+                        client.getRoomController().clearCanvas();
+                    }
                     break;
             }
         }
+        client.returnToLogin("");
         System.out.println("LISTENER ENDED");
     }
 

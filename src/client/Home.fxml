@@ -25,7 +25,7 @@
    <bottom>
       <Pane prefHeight="63.0" prefWidth="598.0" style="-fx-background-color: #3A95FF;" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="getRoomsButton" layoutX="239.0" layoutY="20.0" mnemonicParsing="false" onAction="#getRooms" text="Refresh Rooms" />
+            <Button fx:id="getRoomsButton" layoutX="239.0" layoutY="20.0" mnemonicParsing="false" onAction="#requestUIInfo" text="Refresh Rooms" />
          </children>
       </Pane>
    </bottom>

@@ -3,6 +3,7 @@ package messaging;
 public enum Command {
 
     LOGIN,
+    LOGOUT,
     CREATE_ACCOUNT,
     GET_ROOMS,
     JOIN_ROOM,
@@ -16,6 +17,9 @@ public enum Command {
     DRAW_PATH,
     INCOMING_PATH,
     STOP_DRAWING,
-    CLEAR_CANVAS
+    CLEAR_CANVAS,
+    GET_SCORES,
+    CONFIRM_JOIN_ROOM,
+    REJECT_JOIN_ROOM
 
 }

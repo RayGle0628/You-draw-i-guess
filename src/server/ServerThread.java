@@ -42,12 +42,16 @@ public class ServerThread extends Thread {
                 break;
             }
             switch (message.getCommand()) {
+
                 case LOGIN:
                     login(message.getData());
                     break;
+                case LOGOUT:
+                    sendMessage(Command.LOGOUT);
+                    break;
                 case GET_ROOMS:
                     getAllRooms();
-                    getHighScores();
+            //        getHighScores();
                     break;
                 case JOIN_ROOM:
                     joinRoom(message.getData()[0]);
@@ -89,7 +93,7 @@ public class ServerThread extends Thread {
         room.removeUser(this);
         this.room = null;
         try {
-            output.writeObject(new Message(Command.CONFIRM_EXIT));
+       //     output.writeObject(new Message(Command.CONFIRM_EXIT));
         } catch (Exception e) {
             System.out.println("unable to send message out");
         }
@@ -149,8 +153,11 @@ public class ServerThread extends Thread {
      */
     public void getAllRooms() {
         try {
-            output.writeObject(server.getAllRooms());
+           // output.writeObject(server.getAllRooms());
+output.reset();
+            output.writeObject(new Message(Command.GET_ROOMS,server.getAllRooms()));
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("User requested a list of rooms but it failed.");
         }
     }
@@ -165,14 +172,16 @@ public class ServerThread extends Thread {
         if (room.getPopulation() >= 10) {
             room = null;
             try {
-                outputData.writeBoolean(false);
+               // outputData.writeBoolean(false);
+                output.writeObject(new Message(Command.REJECT_JOIN_ROOM));
             } catch (Exception e) {
                 System.out.println("Could not return room join status.");
             }
             return;
         }
         try {
-            outputData.writeBoolean(true);
+//            outputData.writeBoolean(true);
+            output.writeObject(new Message(Command.CONFIRM_JOIN_ROOM));
         } catch (Exception e) {
             System.out.println("Could not return room join status.");
         }
@@ -252,6 +261,14 @@ public class ServerThread extends Thread {
         }
     }
 
+
+    public void sendMessage(Command command) {
+        try {
+            output.writeObject(new Message(command));
+        } catch (Exception e) {
+            System.out.println("unable to send message out");
+        }
+    }
     /**
      * Tells the client to clear their canvas in between rounds.
      */

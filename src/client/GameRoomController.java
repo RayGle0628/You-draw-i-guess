@@ -70,9 +70,11 @@ public class GameRoomController implements Initializable {
      * Constrictor for GameRoomController.
      */
     public GameRoomController() {
+        client = Client.getClient();
+        client.setHomeController(null);
         colour = Color.web("000000");
         brushSize = 5;
-        client = Client.getClient();
+
         stage = Client.getStage();
         client.setRoomController(this);
         soundFX = new SoundFX();
@@ -228,7 +230,7 @@ public class GameRoomController implements Initializable {
      */
     public void exitRoom() {
         client.sendMessage(Command.EXIT_ROOM);
-        client.killThread();
+      //  client.killThread();
         homeScene();
     }
 

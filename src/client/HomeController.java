@@ -17,6 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import messaging.Command;
 
 public class HomeController implements Initializable {
     @FXML
@@ -26,37 +27,45 @@ public class HomeController implements Initializable {
     private Stage stage;
 
     public HomeController() {
-        textRoom = new HashMap<>();
         client = Client.getClient();
+        client.setRoomController(null);
+        textRoom = new HashMap<>();
+
         stage = Client.getStage();
+        client.setHomeController(this);
     }
 
     @FXML
     VBox roomListVBox;
 
-    public void getRooms() {
+    //TODO
+    public void getRooms(String[] rooms) {
         roomListVBox.getChildren().clear();
-        ArrayList<String> rooms = client.getRoomsList(); // EXCEPTION
+//        ArrayList<String> rooms = client.getRoomsList(); // EXCEPTION
         for (String room : rooms) {
             if (room.matches("[1-9][0-9][/]")) continue;
             Text roomText = new Text();
             textRoom.put(roomText, room);
             roomText.setOnMouseClicked(e -> {
-                joinRoom(textRoom.get(roomText));
+//                joinRoom(textRoom.get(roomText));
+                client.sendMessage(Command.JOIN_ROOM, room.replaceAll("\\([0-9\\/]*\\)", "").trim());
             });
             roomText.setText(room);
             roomListVBox.getChildren().add(roomText);
         }
     }
 
-    public void joinRoom(String room) {
-        room=room.replaceAll("\\([0-9\\/]*\\)","").trim();
-        if (client.joinRoom(room)) { // TRANSITION TO ROOM VIEW IF JOINED
-            roomScene();
-        } else {
-            System.out.println("FAILURE");
-        }
-    }
+    //TODO
+
+//    public void joinRoom(String room) {
+//        room = room.replaceAll("\\([0-9\\/]*\\)", "").trim();
+//        client.sendMessage(Command.JOIN_ROOM, room);
+////        if (client.joinRoom(room)) { // TRANSITION TO ROOM VIEW IF JOINED
+////            roomScene();
+////        } else {
+////            System.out.println("FAILURE");
+////        }
+//    }
 
     public void roomScene() {
         BorderPane root = null;
@@ -65,19 +74,26 @@ public class HomeController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Scene roomScene = new Scene(root);      
+        Scene roomScene = new Scene(root);
         stage.setScene(roomScene);
         roomScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
         stage.setResizable(false);
         stage.show();
     }
 
+    public void requestUIInfo() {
+        client.sendMessage(Command.GET_ROOMS);
+        client.sendMessage(Command.GET_SCORES);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        getRooms();
+        //getRooms();
+        requestUIInfo();
     }
 
     public void logOut(ActionEvent actionEvent) {
-        client.returnToLogin("");
+        client.sendMessage(Command.LOGOUT);
+
     }
 }

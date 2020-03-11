@@ -25,8 +25,17 @@ public class Client extends Application {
     private DataInputStream inputData;
     private DataOutputStream outputData;
     private GameRoomController roomController;
+    private HomeController homeController;
     private LoginController loginController;
     private String username;
+
+    public HomeController getHomeController() {
+        return homeController;
+    }
+
+    public void setHomeController(HomeController homeController) {
+        this.homeController = homeController;
+    }
 
     public GameRoomController getRoomController() {
         return roomController;
@@ -75,9 +84,11 @@ public class Client extends Application {
                 socket.close();
             } else {
                 this.username = username;
+                clientListener.start();
             }
             return response;
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("No response from server.");
             loginController.setLoginWarning("No response from server");
         }
@@ -131,7 +142,8 @@ public class Client extends Application {
             e.printStackTrace();
         }
     }
-
+//TODO
+    @Deprecated
     public ArrayList<String> getRoomsList() {
         sendMessage(Command.GET_ROOMS);
         try {
@@ -147,20 +159,21 @@ public class Client extends Application {
         return inputData;
     }
 //TODO
-    public boolean joinRoom(String room) {
-        sendMessage(Command.JOIN_ROOM, room);
-        try {
-            boolean confirmation = inputData.readBoolean();
-            if (confirmation) {
-                clientListener.start();
-            }
-            return confirmation;
-        } catch (IOException e) {
-            System.out.println("DISCONNECT HERE JOIN ROOM");
-            returnToLogin("Server closed unexpectedly");
-            return false;
-        }
-    }
+    @Deprecated
+//    public boolean joinRoom(String room) {
+//        sendMessage(Command.JOIN_ROOM, room);
+//        try {
+//            boolean confirmation = inputData.readBoolean();
+//            if (confirmation) {
+//
+//            }
+//            return confirmation;
+//        } catch (IOException e) {
+//            System.out.println("DISCONNECT HERE JOIN ROOM");
+//            returnToLogin("Server closed unexpectedly");
+//            return false;
+//        }
+//    }
 
     public void setRoomController(GameRoomController roomController) {
         this.roomController = roomController;
@@ -182,6 +195,8 @@ public class Client extends Application {
     }
 
     public void returnToLogin(String error) {
+        clientListener.interrupt();
+        killThread();
         try {
             if (socket != null) socket.close();
         } catch (IOException e) {

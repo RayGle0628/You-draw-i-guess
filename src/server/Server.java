@@ -69,12 +69,14 @@ public class Server {
      *
      * @return a list of the name of the available rooms.
      */
-    public ArrayList<String> getAllRooms() {
+    public String[] getAllRooms() {
         ArrayList<String> roomsList = new ArrayList<>();
         for (String room : rooms.keySet()) {
             roomsList.add(room + " (" + rooms.get(room).getPopulation() + "/10)");
         }
-        return roomsList;
+       //String[] arrayList= (String[])roomsList.toArray();
+        String[] arrayList = roomsList.toArray(new String[roomsList.size()]);
+        return arrayList;
     }
 
     /**
