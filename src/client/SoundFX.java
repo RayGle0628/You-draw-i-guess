@@ -12,10 +12,10 @@ public class SoundFX {
     AudioClip endGame;
 
     public SoundFX() {
-        correctGuess = new AudioClip("file:b.wav");
-        correctGuess2 = new AudioClip("file:a.wav");
-        yourTurn = new AudioClip("file:c.wav");
-        startRound = new AudioClip("file:d.wav");
+        correctGuess = new AudioClip("file:SoundEffects/b.wav");
+        correctGuess2 = new AudioClip("file:SoundEffects/a.wav");
+        yourTurn = new AudioClip("file:SoundEffects/c.wav");
+        startRound = new AudioClip("file:SoundEffects/d.wav");
     }
 
 

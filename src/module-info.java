@@ -4,7 +4,7 @@ module reading {
     requires javafx.media;
     requires java.sql;
     requires java.desktop;
-    requires java.xml.crypto;
+    requires org.postgresql.jdbc;
     opens client to javafx.fxml;
     exports client;
 }

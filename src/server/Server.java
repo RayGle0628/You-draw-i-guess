@@ -12,8 +12,14 @@ public class Server {
     private TreeMap<String, Room> rooms;
     private DatabaseManager db;
 
+    public DatabaseManager getDb() {
+        return db;
+    }
+
     public Server() {
+
         System.out.println("Server starting");
+        db = new DatabaseManager();
         connectedUsers = new ArrayList<>();
         rooms = new TreeMap<>();
         createRoom("Room 1");
@@ -21,13 +27,15 @@ public class Server {
         createRoom("Room 3");
         createRoom("Room 4");
         createRoom("Room 5");
-        db = new DatabaseManager();
+
     }
 
     public static void main(String[] args) {
         Server server = new Server();
         server.start();
     }
+
+
 
     /**
      * Creates the ServerSocket for the server then enters a loop to accept client connections. Each client is given
@@ -41,7 +49,6 @@ public class Server {
                 Socket socket = serverSocket.accept();
                 ServerThread t = new ServerThread(this, socket);
                 t.start();
-                connectedUsers.add(t);
             }
         } catch (Exception e) {
             System.out.println("Unable to open server on port " + PORT);
@@ -81,7 +88,7 @@ public class Server {
     }
 
     public void createRoom(String name) {
-        Room r = new Room(name);
+        Room r = new Room(name,db);
         r.start();
         rooms.put(r.getRoomName(), r);
     }
@@ -105,6 +112,15 @@ public class Server {
     public synchronized boolean createAccount(String[] credentials) {
         return db.createAccount(credentials[0], credentials[1], credentials[2]);
     }
+
+    public synchronized void addUser(ServerThread user){
+        connectedUsers.add(user);
+
+    }
+
+    public synchronized void updateScores(){}
+
+    public synchronized void updateWins(){}
 }
 
 

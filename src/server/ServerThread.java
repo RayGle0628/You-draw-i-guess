@@ -47,6 +47,7 @@ public class ServerThread extends Thread {
                     break;
                 case GET_ROOMS:
                     getAllRooms();
+                    getHighScores();
                     break;
                 case JOIN_ROOM:
                     joinRoom(message.getData()[0]);
@@ -73,6 +74,17 @@ public class ServerThread extends Thread {
         }
     }
 
+    private void getHighScores() {
+
+        try {
+            output.writeObject(server.getDb().getHighScores());
+        } catch (Exception e) {
+            System.out.println("User requested a list of High but it failed.");
+        }
+
+
+    }
+
     public void exitRoom() {
         room.removeUser(this);
         this.room = null;
@@ -89,18 +101,26 @@ public class ServerThread extends Thread {
      * @param details
      */
     public void login(String[] details) {
-//        System.out.println("A client has tried to log in as " + details[0] + " " + details[1]);
-//        try {
-//            if (details[0].equals("alex") || details[0].equals("mingrui") || details[0].equals("edward") ||
-//            details[0].equals("lele") || details[0].equals("bowen") || details[0].equals("test")) {
-//                outputData.writeBoolean(true);
-//                this.username = details[0];
-//            } else outputData.writeBoolean(false);
-//        } catch (Exception e) {
-//            System.out.println("Could not return message");
-//     }
         try {
-            outputData.writeBoolean(server.login(details));
+            boolean response = server.login(details);
+            if (response) {
+                if (!server.getConnectedUsers().isEmpty()) {
+                    for (ServerThread user : server.getConnectedUsers()) {
+                        if (user.getUsername().toLowerCase().equals(details[0].toLowerCase())) {
+                            try {
+                                outputData.writeBoolean(false);
+                                output.writeObject("You are already logged on.");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return;
+                        }
+                    }
+                }
+            }
+            outputData.writeBoolean(response);
+            if (response) server.addUser(this);
+            else output.writeObject("The details you entered were invalid.");
         } catch (IOException e) {
             e.printStackTrace();
         }

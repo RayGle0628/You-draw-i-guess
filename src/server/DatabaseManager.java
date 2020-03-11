@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.TreeMap;
 
 public class DatabaseManager {
     Connection c = null;
@@ -22,14 +23,11 @@ public class DatabaseManager {
         }
     }
 
-
-
-    public boolean login(String username, String password) {
+    public synchronized boolean login(String username, String password) {
         try {
             stmt = c.createStatement();
-            String sql =
-                    "SELECT COUNT(*) FROM users " + "WHERE LOWER(username)=LOWER('" + username + "')" + "AND " +
-                            "password='" + password + "';";
+            String sql = "SELECT COUNT(*) FROM user_details " + "WHERE LOWER(username)=LOWER('" + username + "')" +
+                    "AND " + "password='" + password + "';";
             ResultSet rs = stmt.executeQuery(sql);
             rs.next();
             int size = rs.getInt("COUNT");
@@ -42,17 +40,69 @@ public class DatabaseManager {
         return false;
     }
 
-    public boolean createAccount(String username, String password, String email) {
+    public synchronized boolean createAccount(String username, String password, String email) {
         try {
             stmt = c.createStatement();
-            String sql =
-                    "INSERT INTO users(USERNAME, PASSWORD, EMAIL) VALUES ('" + username.toLowerCase() + "', '" + password + "', '" + email + "'); ";
-            stmt.executeUpdate(sql);
+            String sql1 = "INSERT INTO user_details(USERNAME, PASSWORD, EMAIL) VALUES ('" + username.toLowerCase() +
+                    "', '" + password + "', '" + email.toLowerCase() + "'); ";
+            String sql2 = "INSERT INTO user_scores(USERNAME) VALUES ('" + username.toLowerCase() + "'); ";
+            stmt.executeUpdate(sql1);
+            stmt.executeUpdate(sql2);
             c.commit();
+            stmt.close();
         } catch (SQLException e) {
             System.out.println("Could not create this account.");
+            try {
+                c.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             return false;
         }
         return true;
+    }
+
+    public synchronized void updateScore(String username, int score) {
+        try {
+            stmt = c.createStatement();
+            String sql =
+                    "UPDATE user_scores SET total_score = total_score+" + score + " WHERE username='" + username.toLowerCase() + "';";
+            stmt.executeUpdate(sql);
+            c.commit();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println("Could not update score.");
+        }
+    }
+
+    public synchronized void updateWin(String username) {
+        try {
+            stmt = c.createStatement();
+            String sql =
+                    "UPDATE user_scores SET total_wins = total_score+1 WHERE username='" + username.toLowerCase() +
+                            "';";
+            stmt.executeUpdate(sql);
+            c.commit();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println("Could not update wins.");
+        }
+    }
+
+    public synchronized TreeMap<String, int[]> getHighScores() {
+        TreeMap<String, int[]> test = new TreeMap<>();
+        try {
+            stmt = c.createStatement();
+            String sql = "";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                test.put(rs.getString("username"), new int[]{rs.getInt("total_score"), rs.getInt("total_wins")});
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return test;
     }
 }

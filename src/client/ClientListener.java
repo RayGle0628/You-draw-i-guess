@@ -31,6 +31,7 @@ public class ClientListener extends Thread {
                 client.killThread();
                 break;
             }
+            //TODO if gamecontrolle rnot null
             switch (message.getCommand()) {
                 case RECEIVE_CHAT_MESSAGE:
                     client.getRoomController().displayNewMessage(message.getData()[0]);

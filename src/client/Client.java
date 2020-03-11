@@ -11,10 +11,7 @@ import messaging.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-//TODO
-//SFX
-//Data base
-//Server Select
+
 
 public class Client extends Application {
     private Socket socket;
@@ -63,7 +60,6 @@ public class Client extends Application {
         stage.setTitle("Sketcher");
         stage.setResizable(false);
         stage.setScene(new Scene(root));
-        root.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
         stage.show();
     }
 
@@ -74,7 +70,9 @@ public class Client extends Application {
         try {
             boolean response = inputData.readBoolean();
             if (!response) {
-                loginController.setLoginWarning("Invalid credentials");
+               String error =(String) input.readObject();
+                loginController.setLoginWarning(error);
+                socket.close();
             } else {
                 this.username = username;
             }
@@ -126,16 +124,13 @@ public class Client extends Application {
         return true;
     }
 
-
-    public void disconnect(){
+    public void disconnect() {
         try {
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
 
     public ArrayList<String> getRoomsList() {
         sendMessage(Command.GET_ROOMS);
@@ -151,7 +146,7 @@ public class Client extends Application {
     public DataInputStream getInputData() {
         return inputData;
     }
-
+//TODO
     public boolean joinRoom(String room) {
         sendMessage(Command.JOIN_ROOM, room);
         try {

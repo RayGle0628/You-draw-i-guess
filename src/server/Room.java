@@ -18,6 +18,8 @@ public class Room extends Thread implements Comparable<Room> {
     private ArrayList<ServerThread> correctlyGuessed = new ArrayList<>();
     private ArrayList<Path> currentImage;
     private boolean gameRunning;
+    private int currentReward;
+    private DatabaseManager db;
 
     /**
      * Resets all the scores to zero at the start of a new game.
@@ -32,16 +34,25 @@ public class Room extends Thread implements Comparable<Room> {
      * Displays the final scores at the end of the game in the users chat areas.
      */
     public void finalScores() {
+//        disperseMessage(null, "The final scores are:");
+//        while (!scores.isEmpty()) {
+//            int score = Collections.max(scores.values());
+//            for (String key : scores.keySet()) {
+//                if (scores.get(key) == score) {
+//                    disperseMessage(null, key + " : " + score);
+//                    scores.remove(key);
+//                    break;
+//                }
+//            }
+//        }
+        List<Map.Entry<String, Integer>> list = new LinkedList<>(scores.entrySet());
+        list.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+        disperseMessage(null, "The winner is "+list.get(0).getKey()+"!");
+        db.updateWin(list.get(0).getKey());
         disperseMessage(null, "The final scores are:");
-        while (!scores.isEmpty()) {
-            int score = Collections.max(scores.values());
-            for (String key : scores.keySet()) {
-                if (scores.get(key) == score) {
-                    disperseMessage(null, key + " : " + score);
-                    scores.remove(key);
-                    break;
-                }
-            }
+        for (Map.Entry<String, Integer> score : list) {
+            disperseMessage(null, score.getKey() + " : " + score.getValue());
+            db.updateScore(score.getKey(), score.getValue());
         }
     }
 
@@ -50,12 +61,13 @@ public class Room extends Thread implements Comparable<Room> {
      *
      * @param name is the name of the room being created.
      */
-    public Room(String name) {
+    public Room(String name, DatabaseManager db) {
         roomName = name;
         users = new ArrayList<>();
         timer = new Timer("Timer");
         scores = new HashMap<>();
         gameRunning = false;
+        this.db = db;
     }
 
     /**
@@ -101,13 +113,11 @@ public class Room extends Thread implements Comparable<Room> {
      * Starts a round of a game.
      */
     public void startRound() {
+        currentReward = 10;
         currentImage = new ArrayList<>();
         currentWord = words.get(round - 1);
         selectNextDrawer();
         disperseMessage(null, currentDrawer.getUsername() + " is now drawing for 60 seconds!");
-
-
-
         currentDrawer.startDrawing(currentWord);
         //AFTER 10 SECS STOP DRAWING
         TimerTask task = new TimerTask() {
@@ -130,7 +140,7 @@ public class Room extends Thread implements Comparable<Room> {
         wordGuessed = false;
         System.out.println(round);
         correctlyGuessed = new ArrayList<>();
-        if (round < 11) {
+        if (round < 2) {
             TimerTask task = new TimerTask() {
                 public void run() {
                     clearCanvas();
@@ -143,7 +153,6 @@ public class Room extends Thread implements Comparable<Room> {
             disperseMessage(null, "10 rounds completed, game over!");
             gameRunning = false;
             finalScores();
-            //TODO
         }
     }
 
@@ -194,7 +203,7 @@ public class Room extends Thread implements Comparable<Room> {
             timer = new Timer("Timer");
             round = 0;
             System.out.println("Not enough players, ending game.");
-            gameRunning=false;
+            gameRunning = false;
         }
     }
 
@@ -216,6 +225,8 @@ public class Room extends Thread implements Comparable<Room> {
                 disperseMessage(null, fromUser.getUsername() + " has guessed correctly.");
                 TimerTask task;
                 if (!wordGuessed) {
+                    scores.merge(currentDrawer.getUsername(), 10, Integer::sum); // First correct guess gives drawer
+                    // 10 points
                     disperseMessage(null, "You have 10 seconds to make any final guesses.");
                     timer.cancel();
                     timer = new Timer("Timer");
@@ -225,11 +236,13 @@ public class Room extends Thread implements Comparable<Room> {
                         }
                     };
                     timer.schedule(task, 10000);
-                }
-                wordGuessed = true;
-                scores.merge(fromUser.getUsername(), 1, Integer::sum);
-                scores.merge(currentDrawer.getUsername(), 1, Integer::sum);
-
+                    wordGuessed = true;
+                } else {
+                    scores.merge(currentDrawer.getUsername(), 1, Integer::sum);
+                }// Gives one point for each subsequent correct guess to drawer.
+                scores.merge(fromUser.getUsername(), currentReward, Integer::sum);// Gives first correct guesser 10
+                // points then each subsequent one less.
+                currentReward--;
             } else { // Incorrect guess/general chat message show in chat room
                 text = fromUser.getUsername() + ": " + text;
                 for (ServerThread user : users) {
@@ -268,8 +281,6 @@ public class Room extends Thread implements Comparable<Room> {
      *
      * @param fromUser is the origin of the drawing.
      */
-
-
     public synchronized void disperseStroke(ServerThread fromUser, Path path) {
         if (currentImage != null) {
             currentImage.add(path);

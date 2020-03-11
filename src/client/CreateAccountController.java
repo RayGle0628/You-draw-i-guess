@@ -2,18 +2,16 @@ package client;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import messaging.Command;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -34,6 +32,8 @@ public class CreateAccountController implements Initializable {
     Button createAccountButton;
     @FXML
     Button returnButton;
+    @FXML
+    Text warningText;
 
     public CreateAccountController() {
         this.client = Client.getClient();
@@ -50,7 +50,6 @@ public class CreateAccountController implements Initializable {
     }
 
     public void createAccount() {
-
         System.out.println(usernameField.getText());
         System.out.println(passwordField.getText());
         System.out.println(repeatPasswordField.getText());
@@ -62,36 +61,48 @@ public class CreateAccountController implements Initializable {
                         emailField.getText());
                 try {
                     if (client.getInputData().readBoolean()) {
-                        System.out.println("Account created");
+                        warningText.setFill(Color.GREEN);
+                        warningText.setText("Account Created");
+                        usernameField.clear();
+                        emailField.clear();
                     } else {
-                        System.out.println("Creation rejected by server");
+                        warningText.setFill(Color.RED);
+                        warningText.setText("This username is unavailable");
                     }
                 } catch (Exception e) {
-                    System.out.println("No repsonse from server");
+                    warningText.setFill(Color.RED);
+                    warningText.setText("No response from server");
                 }
                 client.disconnect();
             } else {
-                System.out.println("No repsonse from server");
+                warningText.setFill(Color.RED);
+                warningText.setText("No response from server");
             }
         }
+        passwordField.clear();
+        repeatPasswordField.clear();
     }
 
     public boolean validateDetails(String username, String email, String password, String repeatPassword) {
         if (!password.equals(repeatPassword)) {
-            System.out.println("password mismatch");
-            return false; // REJECT FOR MISMATCH PASSWORD
+            warningText.setFill(Color.RED);
+            warningText.setText("Passwords do not match");
+            return false;
         }
         if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z!\\d]{8,}$")) {
-            System.out.println("password not complicated enough");
-            return false; // Reject for not minimum requirements. 8 chars including at least 1 number and capital
+            warningText.setFill(Color.RED);
+            warningText.setText("Password must contain at least 8 characters including 1 capital letter and 1 number.");
+            return false;
         }
-        if (username.length() < 4) {
-            System.out.println("username not long enough");
-            return false; // Reject not long enough username
+        if (username.length() < 4|| username.length()>10) {
+            warningText.setFill(Color.RED);
+            warningText.setText("Username must be 4-10 characters in length");
+            return false;
         }
         if (!email.matches("^([a-zA-Z0-9_\\-.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$")) {
-            System.out.println("invalid email");
-            return false; // reject invalid email
+            warningText.setFill(Color.RED);
+            warningText.setText("Invalid email address");
+            return false;
         }
         return true;
     }
