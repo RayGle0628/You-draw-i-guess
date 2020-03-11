@@ -159,7 +159,7 @@ public class Client extends Application {
         return inputData;
     }
 //TODO
-    @Deprecated
+
 //    public boolean joinRoom(String room) {
 //        sendMessage(Command.JOIN_ROOM, room);
 //        try {

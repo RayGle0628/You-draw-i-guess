@@ -69,7 +69,8 @@ public class ServerThread extends Thread {
                     room.disperseStroke(this, ((MessagePath) message).getPath());
                     break;
                 case CLEAR_CANVAS:
-                    room.clearCanvas();
+                    sendMessage(Command.CLEAR_CANVAS);
+                    //room.clearCanvas();
                     break;
                 case CREATE_ACCOUNT:
                     createAccount(message.getData());
@@ -151,6 +152,7 @@ public class ServerThread extends Thread {
     /**
      * Gets a list of rooms and sends to the client.
      */
+    @Deprecated
     public void getAllRooms() {
         try {
            // output.writeObject(server.getAllRooms());
@@ -193,6 +195,7 @@ output.reset();
      *
      * @param playersInRoom is a list of names from the room to be sent to the client.
      */
+    @Deprecated
     public void pushNames(String[] playersInRoom) {
         try {
             output.writeObject(new Message(Command.USERS_IN_ROOM, playersInRoom));
@@ -218,6 +221,7 @@ output.reset();
      *
      * @param text is the text to be displayed to the client.
      */
+    @Deprecated
     public void outgoingChatMessage(String text) {
         try {
             output.writeObject(new Message(Command.RECEIVE_CHAT_MESSAGE, text));
@@ -242,6 +246,7 @@ output.reset();
      *
      * @param word is the picture that is to be drawn.
      */
+    @Deprecated
     public void startDrawing(String word) {
         try {
             output.writeObject(new Message(Command.START_DRAWING, word));
@@ -253,6 +258,7 @@ output.reset();
     /**
      * Tells the client that their turn to draw has ended and locks the related features in the GameRoomController.
      */
+    @Deprecated
     public void stopDrawing() {
         try {
             output.writeObject(new Message(Command.STOP_DRAWING));
@@ -262,9 +268,10 @@ output.reset();
     }
 
 
-    public void sendMessage(Command command) {
+    public void sendMessage(Command command, String... data) {
         try {
-            output.writeObject(new Message(command));
+            output.reset();
+            output.writeObject(new Message(command,data));
         } catch (Exception e) {
             System.out.println("unable to send message out");
         }
@@ -272,6 +279,7 @@ output.reset();
     /**
      * Tells the client to clear their canvas in between rounds.
      */
+    @Deprecated
     public void clearCanvas() {
         try {
             output.writeObject(new Message(Command.CLEAR_CANVAS));

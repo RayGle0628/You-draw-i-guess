@@ -1,5 +1,6 @@
 package server;
 
+import messaging.Command;
 import messaging.Path;
 
 import java.io.*;
@@ -46,8 +47,14 @@ public class Room extends Thread implements Comparable<Room> {
 //            }
 //        }
         List<Map.Entry<String, Integer>> list = new LinkedList<>(scores.entrySet());
-        list.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
-        disperseMessage(null, "The winner is "+list.get(0).getKey()+"!");
+        // list.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+        Collections.sort(list, (user1, user2) -> {
+            if (user1.getValue().equals(user2.getValue())) {
+                return user1.getKey().compareTo(user2.getKey());
+            }
+            return user2.getValue().compareTo(user1.getValue());
+        });
+        disperseMessage(null, "The winner is " + list.get(0).getKey() + "!");
         db.updateWin(list.get(0).getKey());
         disperseMessage(null, "The final scores are:");
         for (Map.Entry<String, Integer> score : list) {
@@ -118,7 +125,8 @@ public class Room extends Thread implements Comparable<Room> {
         currentWord = words.get(round - 1);
         selectNextDrawer();
         disperseMessage(null, currentDrawer.getUsername() + " is now drawing for 60 seconds!");
-        currentDrawer.startDrawing(currentWord);
+        //currentDrawer.startDrawing(currentWord);
+        currentDrawer.sendMessage(Command.START_DRAWING, currentWord);
         //AFTER 10 SECS STOP DRAWING
         TimerTask task = new TimerTask() {
             public void run() {
@@ -134,13 +142,14 @@ public class Room extends Thread implements Comparable<Room> {
     public void endRound() {
         disperseMessage(null, "Round " + round + " has ended, the word was " + currentWord + "!");
         round++;
-        currentDrawer.stopDrawing();
+//        currentDrawer.stopDrawing();
+        currentDrawer.sendMessage(Command.STOP_DRAWING);
         currentDrawer = null;
         currentWord = null;
         wordGuessed = false;
         System.out.println(round);
         correctlyGuessed = new ArrayList<>();
-        if (round < 2) {
+        if (round < 11) {
             TimerTask task = new TimerTask() {
                 public void run() {
                     clearCanvas();
@@ -161,7 +170,8 @@ public class Room extends Thread implements Comparable<Room> {
      */
     public void clearCanvas() {
         for (ServerThread user : users) {
-            user.clearCanvas();
+//            user.clearCanvas();
+            user.sendMessage(Command.CLEAR_CANVAS);
         }
     }
 
@@ -216,7 +226,8 @@ public class Room extends Thread implements Comparable<Room> {
      */
     public synchronized void disperseMessage(ServerThread fromUser, String text) {
         if (correctlyGuessed.contains(fromUser)) {
-            fromUser.outgoingChatMessage("You have already guessed correctly.");
+//              fromUser.outgoingChatMessage("You have already guessed correctly.");
+            fromUser.sendMessage(Command.RECEIVE_CHAT_MESSAGE, "You have already guessed correctly.");
             return;
         } // Skip chat from guesser with a warning message.
         if (fromUser != null) {
@@ -246,19 +257,21 @@ public class Room extends Thread implements Comparable<Room> {
             } else { // Incorrect guess/general chat message show in chat room
                 text = fromUser.getUsername() + ": " + text;
                 for (ServerThread user : users) {
-                    user.outgoingChatMessage(text);
+//                     user.outgoingChatMessage(text);
+                    user.sendMessage(Command.RECEIVE_CHAT_MESSAGE, text);
                 }
             }
         }
         if (fromUser == null) { // Always send server message to everyone.
             for (ServerThread user : users) {
-                user.outgoingChatMessage(text);
+//                  user.outgoingChatMessage(text);
+                user.sendMessage(Command.RECEIVE_CHAT_MESSAGE, text);
             }
         }
         if (text.contains("!start") && !gameRunning) {
             gameRunning = true;
             beginGame();
-            System.out.println("Begining game");
+            System.out.println("Beginning game");
         }
     }
 
@@ -304,7 +317,8 @@ public class Room extends Thread implements Comparable<Room> {
             playersInRoom[i] = users.get(i).getUsername();
         }
         for (ServerThread user : users) {
-            user.pushNames(playersInRoom);
+//              user.pushNames(playersInRoom);
+            user.sendMessage(Command.USERS_IN_ROOM, playersInRoom);
         }
         if (currentImage != null && userImage != null) {
             for (Path path : currentImage) {

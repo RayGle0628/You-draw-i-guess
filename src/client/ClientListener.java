@@ -32,7 +32,7 @@ public class ClientListener extends Thread {
 
 
             catch (Exception e) {
-                e.printStackTrace();
+
                 System.out.println("Socket closed.");
                 client.returnToLogin("Server unexpectedly closed");
                 client.killThread();
