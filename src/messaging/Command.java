@@ -7,21 +7,14 @@ public enum Command {
     CREATE_ACCOUNT,
     CHAT_MESSAGE_TO_ALL,
     CHAT_MESSAGE_FROM_CLIENT,
-
-
     USERS_IN_ROOM,
     REQUEST_USERS,
     EXIT_ROOM,
-
     DRAW_PATH_TO_ALL,
     DRAW_PATH_FROM_CLIENT,
     START_DRAWING,
     STOP_DRAWING,
     CLEAR_CANVAS,
-
-
-
-
     GET_SCORES,
     RETURN_SCORES,
     GET_MY_SCORE,
@@ -29,8 +22,6 @@ public enum Command {
     GET_ROOMS,
     RETURN_ROOMS,
     JOIN_ROOM,
-
-
     CONFIRM_JOIN_ROOM,
     REJECT_JOIN_ROOM
 

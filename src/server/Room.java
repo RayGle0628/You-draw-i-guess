@@ -36,8 +36,7 @@ public class Room extends Thread implements Comparable<Room> {
      */
     public void finalScores() {
         List<Map.Entry<String, Integer>> list = new LinkedList<>(scores.entrySet());
-        // list.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
-        Collections.sort(list, (user1, user2) -> {
+        list.sort((user1, user2) -> {
             if (user1.getValue().equals(user2.getValue())) {
                 return user1.getKey().compareTo(user2.getKey());
             }
@@ -92,7 +91,6 @@ public class Room extends Thread implements Comparable<Room> {
      */
     public void beginGame() {
         if (users.size() > 1) {
-            gameRunning = true;
             gameRunning = true;
             correctlyGuessed = new ArrayList<>();
             scores = new HashMap<>();

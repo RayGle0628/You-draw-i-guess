@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -65,6 +64,7 @@ public class LoginController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        assert root != null;
         Scene homeScene = new Scene(root);
         stage.setScene(homeScene);
         stage.setResizable(true);

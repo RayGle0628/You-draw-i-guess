@@ -54,10 +54,6 @@ public class GameRoomController implements Initializable {
     private Button clearButton;
     @FXML
     private Text wordToDraw;
-    @FXML
-    private AnchorPane anchorPane;
-    @FXML
-    private BorderPane root;
     private Client client;
     private Stage stage;
     private GraphicsContext gc;
@@ -74,7 +70,6 @@ public class GameRoomController implements Initializable {
         client.setHomeController(null);
         colour = Color.web("000000");
         brushSize = 5;
-
         stage = Client.getStage();
         client.setRoomController(this);
         soundFX = new SoundFX();
@@ -116,7 +111,6 @@ public class GameRoomController implements Initializable {
         });
         clearCanvas();
         client.sendMessage(Command.REQUEST_USERS);
-  
     }
 
     /**
@@ -207,11 +201,14 @@ public class GameRoomController implements Initializable {
      */
     public void displayNewMessage(String message) {
         if (!message.contains(":")) { // Discounts all user messages.
-            if (!message.contains(client.getUsername())) { // If it is this user, different sound is played by enable draw.
+            if (!message.contains(client.getUsername())) { // If it is this user, different sound is played by enable
+                // draw.
                 if (message.contains(" is now drawing for 60 seconds!")) soundFX.playStartRound();
             }
-            if (message.equals(client.getUsername() + " has guessed correctly.")) soundFX.playGuess2(); // If client guesses correctly play correct sound.
-            else if (message.contains(" has guessed correctly.")) soundFX.playGuess(); // if any other client guesses correctly play different sound.
+            if (message.equals(client.getUsername() + " has guessed correctly."))
+                soundFX.playGuess2(); // If client guesses correctly play correct sound.
+            else if (message.contains(" has guessed correctly."))
+                soundFX.playGuess(); // if any other client guesses correctly play different sound.
         }
         chatTextArea.appendText(message + "\n");
     }
@@ -230,7 +227,7 @@ public class GameRoomController implements Initializable {
      */
     public void exitRoom() {
         client.sendMessage(Command.EXIT_ROOM);
-      //  client.killThread();
+        //  client.killThread();
         homeScene();
     }
 

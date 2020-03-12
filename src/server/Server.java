@@ -119,8 +119,9 @@ public class Server {
 
     public synchronized void updateAllRooms() {
         for (ServerThread user : connectedUsers) {
-            if (user.getRoom()==null){
-            user.sendMessage(Command.RETURN_ROOMS, getAllRooms());}
+            if (user.getRoom() == null) {
+                user.sendMessage(Command.RETURN_ROOMS, getAllRooms());
+            }
         }
     }
 }

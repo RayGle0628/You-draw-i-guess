@@ -22,7 +22,6 @@ public class Client extends Application {
     private ObjectOutputStream output;
     private ObjectInputStream input;
     private DataInputStream inputData;
-    private DataOutputStream outputData;
     private GameRoomController roomController;
     private HomeController homeController;
     private LoginController loginController;
@@ -124,8 +123,6 @@ public class Client extends Application {
             output = new ObjectOutputStream(socket.getOutputStream());
             output.flush();
             inputData = new DataInputStream(socket.getInputStream());
-            outputData = new DataOutputStream(socket.getOutputStream());
-            outputData.flush();
             clientListener.setInput(input);
         } catch (Exception e) {
             System.out.println("Unable to connect to " + HOST + ":" + PORT);
@@ -140,19 +137,6 @@ public class Client extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    //TODO
-    @Deprecated
-    public ArrayList<String> getRoomsList() {
-        sendMessage(Command.GET_ROOMS);
-        try {
-            return (ArrayList<String>) input.readObject();
-        } catch (Exception e) {
-            System.out.println("SERVER DISCONNECT HERE REFRESH CLICKED");
-            returnToLogin("Server closed unexpectedly");
-        }
-        return new ArrayList<>();
     }
 
     public DataInputStream getInputData() {
@@ -179,7 +163,6 @@ public class Client extends Application {
     }
 
     public void returnToLogin(String error) {
-        clientListener.interrupt();
         renewListener();
         try {
             if (socket != null) socket.close();
@@ -193,6 +176,7 @@ public class Client extends Application {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            assert loginView != null;
             Scene tableViewScene = new Scene(loginView);
             stage.setScene(tableViewScene);
             stage.show();

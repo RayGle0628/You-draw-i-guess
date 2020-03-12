@@ -9,7 +9,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import messaging.Command;
 
 import java.net.URL;
@@ -17,7 +16,6 @@ import java.util.ResourceBundle;
 
 public class CreateAccountController implements Initializable {
     private Client client;
-    private Stage stage;
     @FXML
     GridPane gridPane;
     @FXML
@@ -37,7 +35,6 @@ public class CreateAccountController implements Initializable {
 
     public CreateAccountController() {
         this.client = Client.getClient();
-        this.stage = Client.getStage();
     }
 
     @Override
@@ -94,7 +91,7 @@ public class CreateAccountController implements Initializable {
             warningText.setText("Password must contain at least 8 characters including 1 capital letter and 1 number.");
             return false;
         }
-        if (username.length() < 4|| username.length()>10) {
+        if (username.length() < 4 || username.length() > 10) {
             warningText.setFill(Color.RED);
             warningText.setText("Username must be 4-10 characters in length");
             return false;

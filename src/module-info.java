@@ -7,4 +7,5 @@ module reading {
     requires org.postgresql.jdbc;
     opens client to javafx.fxml;
     exports client;
+    exports messaging;
 }
