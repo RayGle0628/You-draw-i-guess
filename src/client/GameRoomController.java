@@ -174,7 +174,6 @@ public class GameRoomController implements Initializable {
      */
     public synchronized void draw(ArrayList<Coordinate> path) {
         Platform.runLater(() -> {
-            System.out.println("drawing");
             if (path.size() == 1) {
                 gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
             } else {
@@ -245,7 +244,7 @@ public class GameRoomController implements Initializable {
             stage.setScene(homeScene);
             homeScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
             stage.show();
-            stage.getIcons().add(new Image("/Resources/pen.gif"));
+            stage.getIcons().add(new Image("file:/Resources/pen.gif"));
         } catch (Exception e) {
             System.out.println("Couldn't move back to home scene");
             e.printStackTrace();
@@ -277,8 +276,10 @@ public class GameRoomController implements Initializable {
      * drawing.
      */
     public void clearCanvas() {
-        //      gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        Platform.runLater(() -> {
+            gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        });
     }
 
     /**

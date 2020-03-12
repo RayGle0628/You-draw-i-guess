@@ -56,7 +56,7 @@ public class LoginController implements Initializable {
         stage.setScene(tableViewScene);
         tableViewScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
         stage.show();
-        stage.getIcons().add(new Image("/Resources/pen.gif"));
+        stage.getIcons().add(new Image("file:/Resources/pen.gif"));
     }
 
     public void homeScene() {
@@ -72,7 +72,7 @@ public class LoginController implements Initializable {
         stage.setResizable(true);
         homeScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
         stage.show();
-        stage.getIcons().add(new Image("/Resources/pen.gif"));
+        stage.getIcons().add(new Image("file:/Resources/pen.gif"));
     }
 
     @Override

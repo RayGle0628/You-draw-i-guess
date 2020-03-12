@@ -62,7 +62,7 @@ public class ServerThread extends Thread {
                     room.disperseStroke(this, ((MessagePath) message).getPath());
                     break;
                 case CLEAR_CANVAS:
-                    sendMessage(Command.CLEAR_CANVAS);
+                    room.clearCanvas();
                     break;
                 case CREATE_ACCOUNT:
                     createAccount(message.getData());
