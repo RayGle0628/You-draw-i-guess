@@ -2,7 +2,7 @@
 
 .root {
     -fx-font-family: "微软雅黑";
-    -fx-font-size: 16px;
+    -fx-font-size: 13px;
     /*-fx-background-image: url("../bg_1.jpg");*/
     -fx-background-size: stretch stretch;
     -fx-background-position: center center;
@@ -40,6 +40,9 @@
 #loginButton {
  
 }
+
+
+
 #createAccountButton {
  
 }

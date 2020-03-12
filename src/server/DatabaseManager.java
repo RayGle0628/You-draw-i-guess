@@ -89,20 +89,45 @@ public class DatabaseManager {
         }
     }
 
-    public synchronized TreeMap<String, int[]> getHighScores() {
-        TreeMap<String, int[]> test = new TreeMap<>();
+    public synchronized String[] getHighScores() {
+        String[] highScores = new String[10];
+        int index = 0;
         try {
             stmt = c.createStatement();
-            String sql = "";
+            String sql =
+                    "SELECT  *, row_number() OVER (ORDER BY total_score DESC, total_wins DESC, username ASC) " +
+                            "FROM user_scores LIMIT 10;";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                test.put(rs.getString("username"), new int[]{rs.getInt("total_score"), rs.getInt("total_wins")});
+                System.out.println(rs.getString("username"));
+                highScores[index] = rs.getInt("row_number") + ":" + rs.getString("username") + ":" + rs.getInt(
+                        "total_score") + ":" + rs.getInt("total_wins");
+                index++;
             }
             rs.close();
             stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return test;
+        return highScores;
+    }
+
+    public synchronized String getMyScore(String username) {
+        String myRank = null;
+        try {
+            stmt = c.createStatement();
+            String sql =
+                    "SELECT * FROM (SELECT *, row_number() OVER (ORDER BY total_score DESC, total_wins DESC, " +
+                            "username ASC) FROM user_scores) AS A WHERE username = '" + username.toLowerCase() + "';";
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            myRank =
+                    rs.getInt("row_number") + ":" + rs.getString("username") + ":" + rs.getInt("total_score") + ":" + rs.getInt("total_wins");
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return myRank;
     }
 }

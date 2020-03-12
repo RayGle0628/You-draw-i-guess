@@ -12,7 +12,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
-
 public class Client extends Application {
     private Socket socket;
     private static Client client;
@@ -79,7 +78,7 @@ public class Client extends Application {
         try {
             boolean response = inputData.readBoolean();
             if (!response) {
-               String error =(String) input.readObject();
+                String error = (String) input.readObject();
                 loginController.setLoginWarning(error);
                 socket.close();
             } else {
@@ -142,7 +141,8 @@ public class Client extends Application {
             e.printStackTrace();
         }
     }
-//TODO
+
+    //TODO
     @Deprecated
     public ArrayList<String> getRoomsList() {
         sendMessage(Command.GET_ROOMS);
@@ -158,22 +158,6 @@ public class Client extends Application {
     public DataInputStream getInputData() {
         return inputData;
     }
-//TODO
-
-//    public boolean joinRoom(String room) {
-//        sendMessage(Command.JOIN_ROOM, room);
-//        try {
-//            boolean confirmation = inputData.readBoolean();
-//            if (confirmation) {
-//
-//            }
-//            return confirmation;
-//        } catch (IOException e) {
-//            System.out.println("DISCONNECT HERE JOIN ROOM");
-//            returnToLogin("Server closed unexpectedly");
-//            return false;
-//        }
-//    }
 
     public void setRoomController(GameRoomController roomController) {
         this.roomController = roomController;
@@ -189,14 +173,14 @@ public class Client extends Application {
         Platform.exit();
     }
 
-    public void killThread() {
+    public void renewListener() {
         clientListener = new ClientListener(this);
         clientListener.setInput(input);
     }
 
     public void returnToLogin(String error) {
         clientListener.interrupt();
-        killThread();
+        renewListener();
         try {
             if (socket != null) socket.close();
         } catch (IOException e) {

@@ -135,12 +135,12 @@ public class GameRoomController implements Initializable {
         canvas.setOnMouseDragged(event -> {
             path.add(new Coordinate(event.getX(), event.getY()));
             draw(path);
-            client.sendMessagePath(Command.DRAW_PATH, brushSize, colour.toString(),
+            client.sendMessagePath(Command.DRAW_PATH_FROM_CLIENT, brushSize, colour.toString(),
                     new ArrayList<>(path.subList(path.size() - 2, path.size())));
         });
         canvas.setOnMouseReleased(event -> {
             this.draw(path);
-            client.sendMessagePath(Command.DRAW_PATH, brushSize, colour.toString(), path);
+            client.sendMessagePath(Command.DRAW_PATH_FROM_CLIENT, brushSize, colour.toString(), path);
         });
         inputTextField.setEditable(false);
         inputTextField.setVisible(false);
@@ -194,7 +194,7 @@ public class GameRoomController implements Initializable {
     public void enterPressed(KeyEvent ke) {
         if (ke.getCode().equals(KeyCode.ENTER)) {
             if (inputTextField.getText().length() > 0) {
-                client.sendMessage(Command.SEND_CHAT_MESSAGE, inputTextField.getText());
+                client.sendMessage(Command.CHAT_MESSAGE_TO_ALL, inputTextField.getText());
                 inputTextField.clear();
             }
         }

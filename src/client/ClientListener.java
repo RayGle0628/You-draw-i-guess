@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import messaging.Message;
 import messaging.MessagePath;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 
 /**
@@ -22,23 +21,16 @@ public class ClientListener extends Thread {
 
     @Override
     public void run() {
-
         while (true) {
             if (endFlag) break;
             Message message;
             try {
                 message = (Message) input.readObject();
-            }
-
-
-            catch (Exception e) {
-
-                System.out.println("Socket closed.");
-                client.returnToLogin("Server unexpectedly closed");
-                client.killThread();
+            } catch (Exception e) {
+                client.returnToLogin("Disconnected from server");
+                client.renewListener();
                 break;
             }
-            //TODO if gamecontrolle rnot null
             switch (message.getCommand()) {
                 case CONFIRM_JOIN_ROOM:
                     if (client.getHomeController() != null) {
@@ -46,15 +38,14 @@ public class ClientListener extends Thread {
                             client.getHomeController().roomScene();
                             client.setHomeController(null);
                         });
-                        System.out.println("signal good");
                     }
                     break;
-                case GET_ROOMS:
+                case RETURN_ROOMS:
                     if (client.getHomeController() != null) {
                         Platform.runLater(() -> client.getHomeController().getRooms(message.getData()));
                     }
                     break;
-                case RECEIVE_CHAT_MESSAGE:
+                case CHAT_MESSAGE_FROM_CLIENT:
                     if (client.getRoomController() != null) {
                         client.getRoomController().displayNewMessage(message.getData()[0]);
                     }
@@ -78,13 +69,7 @@ public class ClientListener extends Thread {
                         client.getRoomController().disableDraw();
                     }
                     break;
-                case INCOMING_PATH:
-//                    client.getRoomController().drawFromMessage(((MessagePath) message).getSize(),
-//                            ((MessagePath) message).getColour(), ((MessagePath) message).getCoordinates());
-//                    System.out.println("RECEIVING PATH");
-//                    System.out.println(message);
-//                    System.out.println(((MessagePath)message).getPath());
-//                    System.out.println(client.getRoomController());
+                case DRAW_PATH_TO_ALL:
                     if (client.getRoomController() != null) {
                         client.getRoomController().drawFromMessage(((MessagePath) message).getPath().getSize(),
                                 ((MessagePath) message).getPath().getColour(),
@@ -96,10 +81,31 @@ public class ClientListener extends Thread {
                         client.getRoomController().clearCanvas();
                     }
                     break;
+                case RETURN_SCORES:
+                    if (client.getHomeController() != null) {
+                        String[] data = message.getData();
+                        for (String s : data) {
+                            if (s != null) {
+                                client.getHomeController().addRows(s);
+                            }
+                        }
+                    }
+                    break;
+                case RETURN_MY_SCORE:
+                    System.out.println("SCORE RETURNED");
+                    if (client.getHomeController() != null) {
+                        String[] data = message.getData();
+                        if (data[0] != null) {
+                            if (Integer.parseInt(data[0].split(":")[0]) > 10) {
+                                client.getHomeController().addRows(data[0]);
+                            }
+                            break;
+                        }
+                    }
+
             }
         }
         client.returnToLogin("");
-        System.out.println("LISTENER ENDED");
     }
 
     public void setInput(ObjectInputStream input) {

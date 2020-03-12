@@ -125,7 +125,6 @@ public class Room extends Thread implements Comparable<Room> {
         currentWord = words.get(round - 1);
         selectNextDrawer();
         disperseMessage(null, currentDrawer.getUsername() + " is now drawing for 60 seconds!");
-        //currentDrawer.startDrawing(currentWord);
         currentDrawer.sendMessage(Command.START_DRAWING, currentWord);
         //AFTER 10 SECS STOP DRAWING
         TimerTask task = new TimerTask() {
@@ -142,8 +141,7 @@ public class Room extends Thread implements Comparable<Room> {
     public void endRound() {
         disperseMessage(null, "Round " + round + " has ended, the word was " + currentWord + "!");
         round++;
-//        currentDrawer.stopDrawing();
-        currentDrawer.sendMessage(Command.STOP_DRAWING);
+        if (currentDrawer != null) currentDrawer.sendMessage(Command.STOP_DRAWING);
         currentDrawer = null;
         currentWord = null;
         wordGuessed = false;
@@ -170,7 +168,6 @@ public class Room extends Thread implements Comparable<Room> {
      */
     public void clearCanvas() {
         for (ServerThread user : users) {
-//            user.clearCanvas();
             user.sendMessage(Command.CLEAR_CANVAS);
         }
     }
@@ -213,6 +210,8 @@ public class Room extends Thread implements Comparable<Room> {
             timer = new Timer("Timer");
             round = 0;
             System.out.println("Not enough players, ending game.");
+            round = 20;
+            endRound();
             gameRunning = false;
         }
     }
@@ -227,7 +226,7 @@ public class Room extends Thread implements Comparable<Room> {
     public synchronized void disperseMessage(ServerThread fromUser, String text) {
         if (correctlyGuessed.contains(fromUser)) {
 //              fromUser.outgoingChatMessage("You have already guessed correctly.");
-            fromUser.sendMessage(Command.RECEIVE_CHAT_MESSAGE, "You have already guessed correctly.");
+            fromUser.sendMessage(Command.CHAT_MESSAGE_FROM_CLIENT, "You have already guessed correctly.");
             return;
         } // Skip chat from guesser with a warning message.
         if (fromUser != null) {
@@ -257,15 +256,13 @@ public class Room extends Thread implements Comparable<Room> {
             } else { // Incorrect guess/general chat message show in chat room
                 text = fromUser.getUsername() + ": " + text;
                 for (ServerThread user : users) {
-//                     user.outgoingChatMessage(text);
-                    user.sendMessage(Command.RECEIVE_CHAT_MESSAGE, text);
+                    user.sendMessage(Command.CHAT_MESSAGE_FROM_CLIENT, text);
                 }
             }
         }
         if (fromUser == null) { // Always send server message to everyone.
             for (ServerThread user : users) {
-//                  user.outgoingChatMessage(text);
-                user.sendMessage(Command.RECEIVE_CHAT_MESSAGE, text);
+                user.sendMessage(Command.CHAT_MESSAGE_FROM_CLIENT, text);
             }
         }
         if (text.contains("!start") && !gameRunning) {
@@ -317,7 +314,6 @@ public class Room extends Thread implements Comparable<Room> {
             playersInRoom[i] = users.get(i).getUsername();
         }
         for (ServerThread user : users) {
-//              user.pushNames(playersInRoom);
             user.sendMessage(Command.USERS_IN_ROOM, playersInRoom);
         }
         if (currentImage != null && userImage != null) {
