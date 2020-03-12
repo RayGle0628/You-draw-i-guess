@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import messaging.*;
 
@@ -67,6 +68,7 @@ public class Client extends Application {
         stage.setTitle("Sketcher");
         stage.setResizable(false);
         stage.setScene(new Scene(root));
+        stage.getIcons().add(new Image("/Resources/pen.gif"));
         stage.show();
     }
 

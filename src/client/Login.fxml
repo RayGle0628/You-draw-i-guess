@@ -13,7 +13,7 @@
    <top>
       <Pane prefHeight="103.0" prefWidth="600.0" style="-fx-background-color: #3982FF;" BorderPane.alignment="CENTER">
          <children>
-            <Label layoutX="238.0" layoutY="35.0" prefHeight="34.0" prefWidth="125.0" text="Sketcher" textAlignment="CENTER" textFill="WHITE">
+            <Label fx:id="label"  layoutX="238.0" layoutY="35.0" prefHeight="34.0" prefWidth="125.0" text="Sketcher" textAlignment="CENTER" textFill="#00bfff">
                <font>
                   <Font size="27.0" />
                </font>
