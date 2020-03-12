@@ -5,11 +5,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.TreeMap;
 
 public class DatabaseManager {
-    Connection c = null;
-    Statement stmt = null;
+    private Connection c = null;
+    private Statement stmt = null;
 
     public DatabaseManager() {
         try {
@@ -77,10 +76,10 @@ public class DatabaseManager {
 
     public synchronized void updateWin(String username) {
         try {
+            System.out.println("Called");
             stmt = c.createStatement();
             String sql =
-                    "UPDATE user_scores SET total_wins = total_score+1 WHERE username='" + username.toLowerCase() +
-                            "';";
+                    "UPDATE user_scores SET total_wins = total_wins+1 WHERE username='" + username.toLowerCase() + "';";
             stmt.executeUpdate(sql);
             c.commit();
             stmt.close();

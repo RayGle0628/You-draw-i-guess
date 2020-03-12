@@ -86,10 +86,10 @@ public class Client extends Application {
                 clientListener.start();
             }
             return response;
-        } catch (Exception e) {
+        } catch (IOException e) {
+            loginController.setLoginWarning("Unable to connect to the server");
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            System.out.println("No response from server.");
-            loginController.setLoginWarning("No response from server");
         }
         try {
             socket.close();

@@ -86,8 +86,7 @@ public class HomeController implements Initializable {
         client.sendMessage(Command.LOGOUT);
     }
 
-    public void requestUIInfo() {
-    }
+
 
     public void addRows(String rankingString) {
         Ranking ranking = new Ranking(rankingString.split(":"));

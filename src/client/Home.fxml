@@ -30,11 +30,7 @@
       </Pane>
    </top>
    <bottom>
-      <Pane prefHeight="63.0" prefWidth="598.0" style="-fx-background-color: #3A95FF;" BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="getRoomsButton" layoutX="342.0" layoutY="19.0" mnemonicParsing="false" onAction="#requestUIInfo" text="Refresh Rooms" />
-         </children>
-      </Pane>
+      <Pane prefHeight="63.0" prefWidth="598.0" style="-fx-background-color: #3A95FF;" BorderPane.alignment="CENTER" />
    </bottom>
    <left>
       <ScrollPane fx:id="scrollPaneForRooms" hbarPolicy="NEVER" prefHeight="298.0" prefWidth="209.0" vbarPolicy="ALWAYS" BorderPane.alignment="CENTER">
@@ -52,10 +48,10 @@
          <children>
             <TableView id="scoretable" fx:id="scoreTable" layoutX="-203.0" prefHeight="316.0" prefWidth="590.0">
               <columns>
-                  <TableColumn id="tablecolumn" fx:id="rankColumn" prefWidth="72.0" style="-fx-alignment: CENTER;" text="Rank" />
-                <TableColumn id="usernamecolumn" fx:id="usernameColumn" prefWidth="226.0" style="-fx-alignment: CENTER;" text="Username" />
-                <TableColumn id="scorecolumn" fx:id="scoreColumn" maxWidth="180.0" minWidth="-1.0" prefWidth="130.0" style="-fx-alignment: CENTER;" text="Total Score" />
-                  <TableColumn id="winscolumn" fx:id="winsColumn" prefWidth="159.0" style="-fx-alignment: CENTER;" text="Total Wins" />
+                  <TableColumn id="tablecolumn" fx:id="rankColumn" editable="false" prefWidth="72.0" sortable="false" style="-fx-alignment: CENTER;" text="Rank" />
+                <TableColumn id="usernamecolumn" fx:id="usernameColumn" editable="false" prefWidth="226.0" sortable="false" style="-fx-alignment: CENTER;" text="Username" />
+                <TableColumn id="scorecolumn" fx:id="scoreColumn" editable="false" maxWidth="180.0" minWidth="-1.0" prefWidth="130.0" sortable="false" style="-fx-alignment: CENTER;" text="Total Score" />
+                  <TableColumn id="winscolumn" fx:id="winsColumn" editable="false" prefWidth="159.0" sortable="false" style="-fx-alignment: CENTER;" text="Total Wins" />
               </columns>
             </TableView>
          </children>

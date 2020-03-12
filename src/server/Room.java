@@ -35,17 +35,6 @@ public class Room extends Thread implements Comparable<Room> {
      * Displays the final scores at the end of the game in the users chat areas.
      */
     public void finalScores() {
-//        disperseMessage(null, "The final scores are:");
-//        while (!scores.isEmpty()) {
-//            int score = Collections.max(scores.values());
-//            for (String key : scores.keySet()) {
-//                if (scores.get(key) == score) {
-//                    disperseMessage(null, key + " : " + score);
-//                    scores.remove(key);
-//                    break;
-//                }
-//            }
-//        }
         List<Map.Entry<String, Integer>> list = new LinkedList<>(scores.entrySet());
         // list.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
         Collections.sort(list, (user1, user2) -> {
@@ -54,12 +43,14 @@ public class Room extends Thread implements Comparable<Room> {
             }
             return user2.getValue().compareTo(user1.getValue());
         });
-        disperseMessage(null, "The winner is " + list.get(0).getKey() + "!");
-        db.updateWin(list.get(0).getKey());
-        disperseMessage(null, "The final scores are:");
-        for (Map.Entry<String, Integer> score : list) {
-            disperseMessage(null, score.getKey() + " : " + score.getValue());
-            db.updateScore(score.getKey(), score.getValue());
+        if (list.get(0).getValue() > 0) {
+            disperseMessage(null, "The winner is " + list.get(0).getKey() + "!");
+            db.updateWin(list.get(0).getKey());
+            disperseMessage(null, "The final scores are:");
+            for (Map.Entry<String, Integer> score : list) {
+                disperseMessage(null, score.getKey() + " : " + score.getValue());
+                db.updateScore(score.getKey(), score.getValue());
+            }
         }
     }
 
@@ -100,20 +91,23 @@ public class Room extends Thread implements Comparable<Room> {
      * Starts a new game.
      */
     public void beginGame() {
-        gameRunning = true;
-        correctlyGuessed = new ArrayList<>();
-        scores = new HashMap<>();
-        resetScores();
-        round = 1;
-        wordList();
-        disperseMessage(null, "A game is starting in 5 seconds!");
-        TimerTask task = new TimerTask() {
-            public void run() {
-                clearCanvas();
-                startRound();
-            }
-        };
-        timer.schedule(task, 5000);
+        if (users.size() > 1) {
+            gameRunning = true;
+            gameRunning = true;
+            correctlyGuessed = new ArrayList<>();
+            scores = new HashMap<>();
+            resetScores();
+            round = 1;
+            wordList();
+            disperseMessage(null, "A game is starting in 5 seconds!");
+            TimerTask task = new TimerTask() {
+                public void run() {
+                    clearCanvas();
+                    startRound();
+                }
+            };
+            timer.schedule(task, 5000);
+        } else disperseMessage(null, "There are not enough users to start a game.");
     }
 
     /**
@@ -145,9 +139,8 @@ public class Room extends Thread implements Comparable<Room> {
         currentDrawer = null;
         currentWord = null;
         wordGuessed = false;
-        System.out.println(round);
         correctlyGuessed = new ArrayList<>();
-        if (round < 11) {
+        if (round < 11 && gameRunning) {
             TimerTask task = new TimerTask() {
                 public void run() {
                     clearCanvas();
@@ -205,14 +198,13 @@ public class Room extends Thread implements Comparable<Room> {
         users.remove(user);
         System.out.println("Removed " + user);
         currentUserList(null);
-        if (users.size() == 0) {
+        if (users.size() < 2) {
             timer.cancel();
             timer = new Timer("Timer");
             round = 0;
-            System.out.println("Not enough players, ending game.");
-            round = 20;
-            endRound();
+            disperseMessage(null, "Not enough players, ending game.");
             gameRunning = false;
+            endRound();
         }
     }
 
@@ -266,9 +258,7 @@ public class Room extends Thread implements Comparable<Room> {
             }
         }
         if (text.contains("!start") && !gameRunning) {
-            gameRunning = true;
             beginGame();
-            System.out.println("Beginning game");
         }
     }
 

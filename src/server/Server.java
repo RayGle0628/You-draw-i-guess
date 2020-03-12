@@ -1,5 +1,7 @@
 package server;
 
+import messaging.Command;
+
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +19,6 @@ public class Server {
     }
 
     public Server() {
-
         System.out.println("Server starting");
         db = new DatabaseManager();
         connectedUsers = new ArrayList<>();
@@ -27,15 +28,12 @@ public class Server {
         createRoom("Room 3");
         createRoom("Room 4");
         createRoom("Room 5");
-
     }
 
     public static void main(String[] args) {
         Server server = new Server();
         server.start();
     }
-
-
 
     /**
      * Creates the ServerSocket for the server then enters a loop to accept client connections. Each client is given
@@ -74,7 +72,7 @@ public class Server {
         for (String room : rooms.keySet()) {
             roomsList.add(room + " (" + rooms.get(room).getPopulation() + "/10)");
         }
-       //String[] arrayList= (String[])roomsList.toArray();
+        //String[] arrayList= (String[])roomsList.toArray();
         String[] arrayList = roomsList.toArray(new String[roomsList.size()]);
         return arrayList;
     }
@@ -90,7 +88,7 @@ public class Server {
     }
 
     public void createRoom(String name) {
-        Room r = new Room(name,db);
+        Room r = new Room(name, db);
         r.start();
         rooms.put(r.getRoomName(), r);
     }
@@ -115,14 +113,16 @@ public class Server {
         return db.createAccount(credentials[0], credentials[1], credentials[2]);
     }
 
-    public synchronized void addUser(ServerThread user){
+    public synchronized void addUser(ServerThread user) {
         connectedUsers.add(user);
-
     }
 
-    public synchronized void updateScores(){}
-
-    public synchronized void updateWins(){}
+    public synchronized void updateAllRooms() {
+        for (ServerThread user : connectedUsers) {
+            if (user.getRoom()==null){
+            user.sendMessage(Command.RETURN_ROOMS, getAllRooms());}
+        }
+    }
 }
 
 

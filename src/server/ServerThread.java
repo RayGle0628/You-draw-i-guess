@@ -82,13 +82,7 @@ public class ServerThread extends Thread {
         }
     }
 
-    private void getHighScores() {
-        try {
-            output.writeObject(server.getDb().getHighScores());
-        } catch (Exception e) {
-            System.out.println("User requested a list of High but it failed.");
-        }
-    }
+
 
     public void exitRoom() {
         room.removeUser(this);
@@ -98,6 +92,7 @@ public class ServerThread extends Thread {
         } catch (Exception e) {
             System.out.println("unable to send message out");
         }
+        server.updateAllRooms();
     }
 
     /**
@@ -140,6 +135,10 @@ public class ServerThread extends Thread {
         }
     }
 
+    public Room getRoom() {
+        return room;
+    }
+
     /**
      * Gets the username of the client associated with this ServerThread.
      *
@@ -168,10 +167,12 @@ public class ServerThread extends Thread {
         }
         try {
             output.writeObject(new Message(Command.CONFIRM_JOIN_ROOM));
+
         } catch (Exception e) {
             System.out.println("Could not return room join status.");
         }
         room.addUser(this);
+        server.updateAllRooms();
     }
 
     /**
@@ -181,6 +182,7 @@ public class ServerThread extends Thread {
         server.getConnectedUsers().remove(this);
         try {
             room.removeUser(this);
+            server.updateAllRooms();
         } catch (Exception e) {
         }
         System.out.println(username + " disconnected");

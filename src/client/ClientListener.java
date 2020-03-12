@@ -42,7 +42,12 @@ public class ClientListener extends Thread {
                     break;
                 case RETURN_ROOMS:
                     if (client.getHomeController() != null) {
-                        Platform.runLater(() -> client.getHomeController().getRooms(message.getData()));
+                        System.out.println(message.getData());
+                        try{
+                        Platform.runLater(() -> client.getHomeController().getRooms(message.getData()));}
+                        catch (NullPointerException e){
+                            System.out.println("left room");
+                        }
                     }
                     break;
                 case CHAT_MESSAGE_FROM_CLIENT:
@@ -92,7 +97,7 @@ public class ClientListener extends Thread {
                     }
                     break;
                 case RETURN_MY_SCORE:
-                    System.out.println("SCORE RETURNED");
+
                     if (client.getHomeController() != null) {
                         String[] data = message.getData();
                         if (data[0] != null) {
@@ -105,7 +110,8 @@ public class ClientListener extends Thread {
 
             }
         }
-        client.returnToLogin("");
+        if(endFlag){
+        client.returnToLogin("");}
     }
 
     public void setInput(ObjectInputStream input) {
