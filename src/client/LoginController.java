@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -55,6 +56,7 @@ public class LoginController implements Initializable {
         stage.setScene(tableViewScene);
         tableViewScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
         stage.show();
+        stage.getIcons().add(new Image("/Resources/pen.gif"));
     }
 
     public void homeScene() {
@@ -70,6 +72,7 @@ public class LoginController implements Initializable {
         stage.setResizable(true);
         homeScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
         stage.show();
+        stage.getIcons().add(new Image("/Resources/pen.gif"));
     }
 
     @Override

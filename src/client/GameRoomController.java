@@ -19,6 +19,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -241,6 +242,7 @@ public class GameRoomController implements Initializable {
             stage.setScene(homeScene);
             homeScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
             stage.show();
+            stage.getIcons().add(new Image("/Resources/pen.gif"));
         } catch (Exception e) {
             System.out.println("Couldn't move back to home scene");
             e.printStackTrace();
