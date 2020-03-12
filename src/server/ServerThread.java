@@ -7,24 +7,20 @@ import java.net.Socket;
 
 public class ServerThread extends Thread {
     private String username;
-    private Socket socket;
     private Server server;
     private Room room;
     private ObjectInputStream input;
     private ObjectOutputStream output;
-    private DataInputStream inputData;
     private DataOutputStream outputData;
 
     public ServerThread(Server server, Socket socket) {
         this.server = server;
-        this.socket = socket;
         try {
             output = new ObjectOutputStream(socket.getOutputStream());
             output.flush();
             outputData = new DataOutputStream(socket.getOutputStream());
             outputData.flush();
             input = new ObjectInputStream(socket.getInputStream());
-            inputData = new DataInputStream(socket.getInputStream());
         } catch (Exception e) {
             System.out.println("Couldn't get input/output streams");
         }
@@ -75,23 +71,15 @@ public class ServerThread extends Thread {
                     sendMessage(Command.RETURN_SCORES, server.getDb().getHighScores());
                     break;
                 case GET_MY_SCORE:
-                    System.out.println("OK HERE");
                     sendMessage(Command.RETURN_MY_SCORE, server.getDb().getMyScore(username));
                     break;
             }
         }
     }
 
-
-
     public void exitRoom() {
         room.removeUser(this);
         this.room = null;
-        try {
-            //     output.writeObject(new Message(Command.CONFIRM_EXIT));
-        } catch (Exception e) {
-            System.out.println("unable to send message out");
-        }
         server.updateAllRooms();
     }
 
@@ -167,7 +155,6 @@ public class ServerThread extends Thread {
         }
         try {
             output.writeObject(new Message(Command.CONFIRM_JOIN_ROOM));
-
         } catch (Exception e) {
             System.out.println("Could not return room join status.");
         }

@@ -171,13 +171,16 @@ public class GameRoomController implements Initializable {
      *
      * @param path
      */
-    public void draw(ArrayList<Coordinate> path) {
-        if (path.size() == 1) {
-            gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
-        } else {
-            gc.strokeLine(path.get(path.size() - 1).getX(), path.get(path.size() - 1).getY(),
-                    path.get(path.size() - 2).getX(), path.get(path.size() - 2).getY());
-        }
+    public synchronized void draw(ArrayList<Coordinate> path) {
+        Platform.runLater(() -> {
+            System.out.println("drawing");
+            if (path.size() == 1) {
+                gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
+            } else {
+                gc.strokeLine(path.get(path.size() - 1).getX(), path.get(path.size() - 1).getY(),
+                        path.get(path.size() - 2).getX(), path.get(path.size() - 2).getY());
+            }
+        });
     }
 
     /**
@@ -254,15 +257,17 @@ public class GameRoomController implements Initializable {
      * @param colour
      * @param path
      */
-    public void drawFromMessage(int size, String colour, ArrayList<Coordinate> path) {
-        gc.setLineWidth(size);
-        gc.setStroke(Color.web(colour));
-        if (path.size() == 1) {
-            gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
-        } else {
-            gc.strokeLine(path.get(path.size() - 2).getX(), path.get(path.size() - 2).getY(),
-                    path.get(path.size() - 1).getX(), path.get(path.size() - 1).getY());
-        }
+    public synchronized void drawFromMessage(int size, String colour, ArrayList<Coordinate> path) {
+        Platform.runLater(() -> {
+            gc.setLineWidth(size);
+            gc.setStroke(Color.web(colour));
+            if (path.size() == 1) {
+                gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
+            } else {
+                gc.strokeLine(path.get(path.size() - 2).getX(), path.get(path.size() - 2).getY(),
+                        path.get(path.size() - 1).getX(), path.get(path.size() - 1).getY());
+            }
+        });
     }
 
     /**

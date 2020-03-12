@@ -47,10 +47,6 @@ public class CreateAccountController implements Initializable {
     }
 
     public void createAccount() {
-        System.out.println(usernameField.getText());
-        System.out.println(passwordField.getText());
-        System.out.println(repeatPasswordField.getText());
-        System.out.println(emailField.getText());
         if (validateDetails(usernameField.getText(), emailField.getText(), passwordField.getText(),
                 repeatPasswordField.getText())) {
             if (client.connect()) {
@@ -86,17 +82,18 @@ public class CreateAccountController implements Initializable {
             warningText.setText("Passwords do not match");
             return false;
         }
-        if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z!\\d]{8,}$")) {
+        if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z!\\d]{8,}$") || password.length() > 16) {
             warningText.setFill(Color.RED);
-            warningText.setText("Password must contain at least 8 characters including 1 capital letter and 1 number.");
+            warningText.setText("Password must be 8-16 characters including 1 capital letter and 1 number");
             return false;
         }
-        if (username.length() < 4 || username.length() > 10) {
+        if (username.length() < 4 || username.length() > 10 || !username.matches("^[a-zA-Z0-9_-]*$")) {
             warningText.setFill(Color.RED);
-            warningText.setText("Username must be 4-10 characters in length");
+            warningText.setText("Username must be 4-10 characters in length and must only contain a-z,A-Z,0-9,_,- "
+                    + "characters");
             return false;
         }
-        if (!email.matches("^([a-zA-Z0-9_\\-.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$")) {
+        if (!email.matches("^([a-zA-Z0-9_\\-.]+)@([a-zA-Z0-9_\\-.]+)\\.([a-zA-Z]{2,5})$")) {
             warningText.setFill(Color.RED);
             warningText.setText("Invalid email address");
             return false;

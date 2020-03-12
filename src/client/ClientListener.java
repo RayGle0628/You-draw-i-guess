@@ -56,12 +56,14 @@ public class ClientListener extends Thread {
                     }
                     break;
                 case LOGOUT:
-                    System.out.println("Listener ended by server");
+                    System.out.println("Successfully logged out");
                     endFlag = true;
                     break;
                 case START_DRAWING:
                     if (client.getRoomController() != null) {
-                        client.getRoomController().enableDraw(message.getData()[0]);
+                        Platform.runLater(() -> {
+                            client.getRoomController().enableDraw(message.getData()[0]);
+                        });
                     }
                     break;
                 case STOP_DRAWING:

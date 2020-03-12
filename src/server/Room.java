@@ -131,13 +131,25 @@ public class Room extends Thread implements Comparable<Room> {
      * Ends the current round and prepares for the next round.
      */
     public void endRound() {
-        disperseMessage(null, "Round " + round + " has ended, the word was " + currentWord + "!");
+        if (currentWord != null) {
+            disperseMessage(null, "Round " + round + " has ended, the word was " + currentWord + "!");
+        }
         round++;
         if (currentDrawer != null) currentDrawer.sendMessage(Command.STOP_DRAWING);
         currentDrawer = null;
         currentWord = null;
         wordGuessed = false;
         correctlyGuessed = new ArrayList<>();
+        if (users.size() == 1) {
+            timer.cancel();
+            timer = new Timer("Timer");
+            round = 0;
+            disperseMessage(null, "Not enough players, ending game.");
+            gameRunning = false;
+            finalScores();
+            return;
+            //endRound();
+        }
         if (round < 11 && gameRunning) {
             TimerTask task = new TimerTask() {
                 public void run() {
@@ -151,6 +163,7 @@ public class Room extends Thread implements Comparable<Room> {
             disperseMessage(null, "10 rounds completed, game over!");
             gameRunning = false;
             finalScores();
+            if (!gameRunning && users.size() > 2) beginGame();
         }
     }
 
@@ -185,6 +198,9 @@ public class Room extends Thread implements Comparable<Room> {
     public synchronized void addUser(ServerThread user) {
         users.add(user);
         scores.putIfAbsent(user.getUsername(), 0);
+//        if (currentDrawer!=null && currentDrawer.getUsername().equals(user.getUsername()))
+//            user.sendMessage(Command.START_DRAWING, currentWord);
+//        if (!gameRunning && users.size() >= 2) beginGame();
     }
 
     /**
@@ -196,13 +212,13 @@ public class Room extends Thread implements Comparable<Room> {
         users.remove(user);
         System.out.println("Removed " + user);
         currentUserList(null);
-        if (users.size() < 2) {
+        if (users.size() ==0) {
             timer.cancel();
             timer = new Timer("Timer");
             round = 0;
-            disperseMessage(null, "Not enough players, ending game.");
             gameRunning = false;
             endRound();
+            finalScores();
         }
     }
 
@@ -307,8 +323,11 @@ public class Room extends Thread implements Comparable<Room> {
         if (currentImage != null && userImage != null) {
             for (Path path : currentImage) {
                 userImage.outgoingStroke(path);
+                if (currentDrawer != null && currentDrawer.getUsername().equals(userImage.getUsername()))
+                    userImage.sendMessage(Command.START_DRAWING, currentWord);
             }
         }
+        if (!gameRunning && users.size() >= 2) beginGame();
     }
 
     /**

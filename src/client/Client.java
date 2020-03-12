@@ -73,7 +73,7 @@ public class Client extends Application {
     public boolean login(String username, String password) {
         if (connect()) {
             sendMessage(Command.LOGIN, username, password);
-        }
+
         try {
             boolean response = inputData.readBoolean();
             if (!response) {
@@ -93,7 +93,7 @@ public class Client extends Application {
         try {
             socket.close();
         } catch (Exception ignored) {
-        }
+        }}
         return false;
     }
 
@@ -102,7 +102,7 @@ public class Client extends Application {
         try {
             output.writeObject(message);
         } catch (IOException e) {
-            //   e.printStackTrace();
+
         }
     }
 
@@ -125,6 +125,7 @@ public class Client extends Application {
             inputData = new DataInputStream(socket.getInputStream());
             clientListener.setInput(input);
         } catch (Exception e) {
+            loginController.setLoginWarning("Unable to connect to the server");
             System.out.println("Unable to connect to " + HOST + ":" + PORT);
             return false;
         }

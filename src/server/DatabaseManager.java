@@ -98,7 +98,6 @@ public class DatabaseManager {
                             "FROM user_scores LIMIT 10;";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                System.out.println(rs.getString("username"));
                 highScores[index] = rs.getInt("row_number") + ":" + rs.getString("username") + ":" + rs.getInt(
                         "total_score") + ":" + rs.getInt("total_wins");
                 index++;
