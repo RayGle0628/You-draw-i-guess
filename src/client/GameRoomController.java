@@ -244,7 +244,7 @@ public class GameRoomController implements Initializable {
             stage.setScene(homeScene);
             homeScene.getStylesheets().add(getClass().getResource("CreatAccountStyle" + ".css").toExternalForm());
             stage.show();
-            stage.getIcons().add(new Image("file:/Resources/pen.gif"));
+//            stage.getIcons().add(new Image("file:/Resources/pen.gif"));
         } catch (Exception e) {
             System.out.println("Couldn't move back to home scene");
             e.printStackTrace();

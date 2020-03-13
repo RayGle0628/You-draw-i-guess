@@ -13,16 +13,16 @@
    <top>
       <Pane prefHeight="103.0" prefWidth="600.0" style="-fx-background-color: #3982FF;" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="label"  layoutX="238.0" layoutY="35.0" prefHeight="34.0" prefWidth="125.0" text="Sketcher" textAlignment="CENTER" textFill="#00bfff">
+            <Label fx:id="label"  layoutX="238.0" layoutY="35.0" prefHeight="34.0" prefWidth="125.0" text="Sketcher" textAlignment="CENTER" textFill="#800080">
                <font>
-                  <Font size="27.0" />
+                  <Font size="27.0"/>
                </font>
             </Label>
          </children>
       </Pane>
    </top>
    <center>
-      <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f0f8ff;" BorderPane.alignment="CENTER">
          <children>
             <TextField fx:id="usernameField" alignment="CENTER" layoutX="213.0" layoutY="79.0" onKeyPressed="#enterPressed" promptText="User Name" />
             <PasswordField fx:id="passwordField" alignment="CENTER" layoutX="214.0" layoutY="123.0" onKeyPressed="#enterPressed" promptText="Password" />
