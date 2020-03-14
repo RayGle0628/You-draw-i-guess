@@ -14,7 +14,15 @@ public class Room extends Thread implements Comparable<Room> {
     private Timer timer;
     private int round;
     private ArrayList<String> words;
-    private HashMap<String, Integer> scores;
+    public ArrayList<String> getWords() {
+		return words;
+	}
+
+	public void setWords(ArrayList<String> words) {
+		this.words = words;
+	}
+
+	private HashMap<String, Integer> scores;
     private boolean wordGuessed = false;
     private ArrayList<ServerThread> correctlyGuessed = new ArrayList<>();
     private ArrayList<Path> currentImage;
@@ -168,7 +176,15 @@ public class Room extends Thread implements Comparable<Room> {
         }
     }
 
-    /**
+    public String getCurrentWord() {
+		return currentWord;
+	}
+
+	public void setCurrentWord(String currentWord) {
+		this.currentWord = currentWord;
+	}
+
+	/**
      * Tells all users in the room to clear their canvas.
      */
     public void clearCanvas() {
