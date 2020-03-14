@@ -11,15 +11,15 @@ public class ServerThread extends Thread {
     private Room room;
     private ObjectInputStream input;
     private ObjectOutputStream output;
-    private DataOutputStream outputData;
+   // private DataOutputStream outputData;
 
     public ServerThread(Server server, Socket socket) {
         this.server = server;
         try {
             output = new ObjectOutputStream(socket.getOutputStream());
             output.flush();
-            outputData = new DataOutputStream(socket.getOutputStream());
-            outputData.flush();
+    //        outputData = new DataOutputStream(socket.getOutputStream());
+      //      outputData.flush();
             input = new ObjectInputStream(socket.getInputStream());
         } catch (Exception e) {
             System.out.println("Couldn't get input/output streams");
@@ -96,7 +96,9 @@ public class ServerThread extends Thread {
                     for (ServerThread user : server.getConnectedUsers()) {
                         if (user.getUsername().toLowerCase().equals(details[0].toLowerCase())) {
                             try {
-                                outputData.writeBoolean(false);
+                               // outputData.writeBoolean(false);
+                                output.writeBoolean(false);
+                                output.flush();
                                 output.writeObject("You are already logged on.");
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -106,7 +108,9 @@ public class ServerThread extends Thread {
                     }
                 }
             }
-            outputData.writeBoolean(response);
+          //  outputData.writeBoolean(response);
+            output.writeBoolean(response);
+            output.flush();
             if (response) server.addUser(this);
             else output.writeObject("The details you entered were invalid.");
         } catch (IOException e) {
@@ -117,7 +121,9 @@ public class ServerThread extends Thread {
 
     private void createAccount(String[] credentials) {
         try {
-            outputData.writeBoolean(server.createAccount(credentials));
+          //  outputData.writeBoolean(server.createAccount(credentials));
+            output.writeBoolean(server.createAccount(credentials));
+            output.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

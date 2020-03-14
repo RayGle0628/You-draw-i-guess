@@ -53,7 +53,7 @@ public class CreateAccountController implements Initializable {
                 client.sendMessage(Command.CREATE_ACCOUNT, usernameField.getText(), passwordField.getText(),
                         emailField.getText());
                 try {
-                    if (client.getInputData().readBoolean()) {
+                    if (client.getInput().readBoolean()) {
                         warningText.setFill(Color.GREEN);
                         warningText.setText("Account Created");
                         usernameField.clear();

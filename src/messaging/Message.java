@@ -1,6 +1,7 @@
 package messaging;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * Message is a class used for the communication protocol between clients and the server. Messages are made up of two
@@ -23,5 +24,10 @@ public class Message implements Serializable {
 
     public String[] getData() {
         return data;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" + "command=" + command + ", data=" + Arrays.toString(data) + '}';
     }
 }

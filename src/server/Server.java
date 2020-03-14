@@ -9,6 +9,7 @@ import java.util.Enumeration;
 import java.util.TreeMap;
 
 public class Server {
+
     private static final int PORT = 50000;
     private ArrayList<ServerThread> connectedUsers;
     private TreeMap<String, Room> rooms;
