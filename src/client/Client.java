@@ -68,7 +68,7 @@ public class Client extends Application {
         stage.setTitle("Sketcher");
         stage.setResizable(false);
         stage.setScene(new Scene(root));
-        stage.getIcons().add(new Image("Resources/pen.gif"));//set all panes icon
+        stage.getIcons().add(new Image(new File("Resources/pen.gif").toURI().toString()));//set all panes icon
         stage.show();
     }
 

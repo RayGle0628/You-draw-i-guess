@@ -75,6 +75,7 @@ public class ServerThread extends Thread {
                     break;
             }
         }
+        cleanup();
     }
 
     public void exitRoom() {
@@ -192,6 +193,7 @@ public class ServerThread extends Thread {
             output.writeObject(new Message(command, data));
         } catch (Exception e) {
             System.out.println("unable to send message out");
+
         }
     }
 }

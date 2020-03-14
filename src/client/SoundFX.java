@@ -7,15 +7,14 @@ public class SoundFX {
     AudioClip correctGuess;
     AudioClip correctGuess2;
     AudioClip startRound;
-    AudioClip endRound;
-    AudioClip startGame;
-    AudioClip endGame;
 
     public SoundFX() {
-        correctGuess = new AudioClip("file:SoundEffects/b.wav");
-        correctGuess2 = new AudioClip("file:SoundEffects/a.wav");
-        yourTurn = new AudioClip("file:SoundEffects/c.wav");
-        startRound = new AudioClip("file:SoundEffects/d.wav");
+
+
+        correctGuess = new AudioClip(this.getClass().getResource("/Resources/SoundEffects/b.wav").toString());
+        correctGuess2 = new AudioClip(this.getClass().getResource("/Resources/SoundEffects/a.wav").toString());
+        yourTurn = new AudioClip(this.getClass().getResource("/Resources/SoundEffects/c.wav").toString());
+        startRound = new AudioClip(this.getClass().getResource("/Resources/SoundEffects/d.wav").toString());
     }
 
 
