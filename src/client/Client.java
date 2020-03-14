@@ -44,6 +44,7 @@ public class Client extends Application {
             BufferedReader in = new BufferedReader(new FileReader(file));
             host = in.readLine();
             port = Integer.parseInt(in.readLine());
+            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
