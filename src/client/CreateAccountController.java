@@ -82,15 +82,15 @@ public class CreateAccountController implements Initializable {
             warningText.setText("Passwords do not match");
             return false;
         }
-        if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z!\\d]{8,}$") || password.length() > 16) {
+        if (!password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$")) {
             warningText.setFill(Color.RED);
-            warningText.setText("Password must be 8-16 characters including 1 capital letter and 1 number");
+            warningText.setText("Password must be 8-16 characters including 1 upper and lower case letter and 1 "
+                    + "number");
             return false;
         }
         if (username.length() < 4 || username.length() > 10 || !username.matches("^[a-zA-Z0-9_-]*$")) {
             warningText.setFill(Color.RED);
-            warningText.setText("Username must be 4-10 characters in length and must only contain a-z,A-Z,0-9,_,- "
-                    + "characters");
+            warningText.setText("Username must be 4-10 characters in length and must only contain a-z,A-Z,0-9,_,- " + "characters");
             return false;
         }
         if (!email.matches("^([a-zA-Z0-9_\\-.]+)@([a-zA-Z0-9_\\-.]+)\\.([a-zA-Z]{2,5})$")) {
