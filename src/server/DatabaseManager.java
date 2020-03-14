@@ -8,7 +8,6 @@ import java.sql.Statement;
 
 public class DatabaseManager {
     private Connection c = null;
-    private Statement stmt = null;
 
     public DatabaseManager() {
         try {
@@ -24,14 +23,15 @@ public class DatabaseManager {
 
     public synchronized boolean login(String username, String password) {
         try {
-            stmt = c.createStatement();
-            String sql = "SELECT COUNT(*) FROM user_details " + "WHERE LOWER(username)=LOWER('" + username + "')" +
-                    "AND " + "password='" + password + "';";
-            ResultSet rs = stmt.executeQuery(sql);
+            String sql = "SELECT COUNT(*) FROM user_details WHERE LOWER(username)=LOWER(?) AND  password=?;";
+            PreparedStatement preparedStatement = c.prepareStatement(sql);
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            ResultSet rs = preparedStatement.executeQuery();
             rs.next();
             int size = rs.getInt("COUNT");
             rs.close();
-            stmt.close();
+            preparedStatement.close();
             if (size == 1) return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -41,14 +41,19 @@ public class DatabaseManager {
 
     public synchronized boolean createAccount(String username, String password, String email) {
         try {
-            stmt = c.createStatement();
-            String sql1 = "INSERT INTO user_details(USERNAME, PASSWORD, EMAIL) VALUES ('" + username.toLowerCase() +
-                    "', '" + password + "', '" + email.toLowerCase() + "'); ";
-            String sql2 = "INSERT INTO user_scores(USERNAME) VALUES ('" + username.toLowerCase() + "'); ";
-            stmt.executeUpdate(sql1);
-            stmt.executeUpdate(sql2);
+            String sql1 = "INSERT INTO user_details(USERNAME, PASSWORD, EMAIL) VALUES (?,?,?); ";
+            String sql2 = "INSERT INTO user_scores(USERNAME) VALUES (?); ";
+            PreparedStatement preparedStatement1 = c.prepareStatement(sql1);
+            preparedStatement1.setString(1, username.toLowerCase());
+            preparedStatement1.setString(2, password);
+            preparedStatement1.setString(3, email);
+            PreparedStatement preparedStatement2 = c.prepareStatement(sql2);
+            preparedStatement2.setString(1, username.toLowerCase());
+            preparedStatement1.executeUpdate();
+            preparedStatement2.executeUpdate();
             c.commit();
-            stmt.close();
+            preparedStatement1.close();
+            preparedStatement2.close();
         } catch (SQLException e) {
             System.out.println("Could not create this account.");
             try {
@@ -63,12 +68,13 @@ public class DatabaseManager {
 
     public synchronized void updateScore(String username, int score) {
         try {
-            stmt = c.createStatement();
-            String sql =
-                    "UPDATE user_scores SET total_score = total_score+" + score + " WHERE username='" + username.toLowerCase() + "';";
-            stmt.executeUpdate(sql);
+            String sql = "UPDATE user_scores SET total_score = total_score+? WHERE username=?;";
+            PreparedStatement preparedStatement = c.prepareStatement(sql);
+            preparedStatement.setInt(1, score);
+            preparedStatement.setString(2, username.toLowerCase());
+            preparedStatement.executeUpdate();
             c.commit();
-            stmt.close();
+            preparedStatement.close();
         } catch (SQLException e) {
             System.out.println("Could not update score.");
         }
@@ -76,13 +82,11 @@ public class DatabaseManager {
 
     public synchronized void updateWin(String username) {
         try {
-            System.out.println("Called");
-            stmt = c.createStatement();
-            String sql =
-                    "UPDATE user_scores SET total_wins = total_wins+1 WHERE username='" + username.toLowerCase() + "';";
-            stmt.executeUpdate(sql);
+            String sql = "UPDATE user_scores SET total_wins = total_wins+1 WHERE username=?;";
+            PreparedStatement preparedStatement = c.prepareStatement(sql);
+            preparedStatement.setString(1, username.toLowerCase());
             c.commit();
-            stmt.close();
+            preparedStatement.close();
         } catch (SQLException e) {
             System.out.println("Could not update wins.");
         }
@@ -92,18 +96,18 @@ public class DatabaseManager {
         String[] highScores = new String[10];
         int index = 0;
         try {
-            stmt = c.createStatement();
             String sql =
                     "SELECT  *, row_number() OVER (ORDER BY total_score DESC, total_wins DESC, username ASC) " +
                             "FROM user_scores LIMIT 10;";
-            ResultSet rs = stmt.executeQuery(sql);
+            PreparedStatement preparedStatement = c.prepareStatement(sql);
+            ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 highScores[index] = rs.getInt("row_number") + ":" + rs.getString("username") + ":" + rs.getInt(
                         "total_score") + ":" + rs.getInt("total_wins");
                 index++;
             }
             rs.close();
-            stmt.close();
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -113,16 +117,17 @@ public class DatabaseManager {
     public synchronized String getMyScore(String username) {
         String myRank = null;
         try {
-            stmt = c.createStatement();
             String sql =
                     "SELECT * FROM (SELECT *, row_number() OVER (ORDER BY total_score DESC, total_wins DESC, " +
-                            "username ASC) FROM user_scores) AS A WHERE username = '" + username.toLowerCase() + "';";
-            ResultSet rs = stmt.executeQuery(sql);
+                            "username ASC) FROM user_scores) AS A WHERE username = ?;";
+            PreparedStatement preparedStatement = c.prepareStatement(sql);
+            preparedStatement.setString(1, username);
+            ResultSet rs = preparedStatement.executeQuery(sql);
             rs.next();
             myRank =
                     rs.getInt("row_number") + ":" + rs.getString("username") + ":" + rs.getInt("total_score") + ":" + rs.getInt("total_wins");
             rs.close();
-            stmt.close();
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
