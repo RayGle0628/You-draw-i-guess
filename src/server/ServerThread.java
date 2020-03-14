@@ -169,9 +169,9 @@ public class ServerThread extends Thread {
         server.getConnectedUsers().remove(this);
         try {
             room.removeUser(this);
-            server.updateAllRooms();
-        } catch (Exception e) {
+        } catch (NullPointerException ignored) {
         }
+        server.updateAllRooms();
         System.out.println(username + " disconnected");
     }
 
