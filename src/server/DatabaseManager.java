@@ -120,8 +120,8 @@ public class DatabaseManager {
                     "SELECT * FROM (SELECT *, row_number() OVER (ORDER BY total_score DESC, total_wins DESC, " +
                             "username ASC) FROM user_scores) AS A WHERE username = ?;";
             PreparedStatement preparedStatement = c.prepareStatement(sql);
-            preparedStatement.setString(1, username);
-            ResultSet rs = preparedStatement.executeQuery(sql);
+            preparedStatement.setString(1, username.toLowerCase());
+            ResultSet rs = preparedStatement.executeQuery();
             rs.next();
             myRank =
                     rs.getInt("row_number") + ":" + rs.getString("username") + ":" + rs.getInt("total_score") + ":" + rs.getInt("total_wins");

@@ -13,12 +13,16 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
+/**
+ * java --module-path /home/alex/IdeaProjects/javafx-sdk-11.0.2/lib --add-modules javafx.controls,javafx.fxml,javafx
+ * .media client.Client
+ */
 public class Client extends Application {
     private Socket socket;
     private static Client client;
     private static Stage stage;
-    private static final int PORT = 50000;
-    private static final String HOST = "127.0.0.1";
+    private static int port;
+    private static String host;
     private ClientListener clientListener;
     private ObjectOutputStream output;
     private ObjectInputStream input;
@@ -28,37 +32,25 @@ public class Client extends Application {
     private LoginController loginController;
     private String username;
 
-    public HomeController getHomeController() {
-        return homeController;
-    }
-
-    public void setHomeController(HomeController homeController) {
-        this.homeController = homeController;
-    }
-
-    public GameRoomController getRoomController() {
-        return roomController;
-    }
-
     public Client() {
         Client.client = this;
         clientListener = new ClientListener(this);
+        readConfig();
+    }
+
+    public void readConfig() {
+        File file = new File(this.getClass().getResource("/Resources/config").getFile());
+        try {
+            BufferedReader in = new BufferedReader(new FileReader(file));
+            host = in.readLine();
+            port = Integer.parseInt(in.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    public static Client getClient() {
-        return client;
-    }
-
-    public static Stage getStage() {
-        return stage;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     @Override
@@ -75,27 +67,27 @@ public class Client extends Application {
     public boolean login(String username, String password) {
         if (connect()) {
             sendMessage(Command.LOGIN, username, password);
-
-        try {
-            boolean response = inputData.readBoolean();
-            if (!response) {
-                String error = (String) input.readObject();
-                loginController.setLoginWarning(error);
-                socket.close();
-            } else {
-                this.username = username;
-                clientListener.start();
+            try {
+                boolean response = inputData.readBoolean();
+                if (!response) {
+                    String error = (String) input.readObject();
+                    loginController.setLoginWarning(error);
+                    socket.close();
+                } else {
+                    this.username = username;
+                    clientListener.start();
+                }
+                return response;
+            } catch (IOException e) {
+                loginController.setLoginWarning("Unable to connect to the server");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
-            return response;
-        } catch (IOException e) {
-            loginController.setLoginWarning("Unable to connect to the server");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            try {
+                socket.close();
+            } catch (Exception ignored) {
+            }
         }
-        try {
-            socket.close();
-        } catch (Exception ignored) {
-        }}
         return false;
     }
 
@@ -104,7 +96,6 @@ public class Client extends Application {
         try {
             output.writeObject(message);
         } catch (IOException e) {
-
         }
     }
 
@@ -120,7 +111,7 @@ public class Client extends Application {
 
     public boolean connect() {
         try {
-            socket = new Socket(HOST, PORT);
+            socket = new Socket(host, port);
             input = new ObjectInputStream(socket.getInputStream());
             output = new ObjectOutputStream(socket.getOutputStream());
             output.flush();
@@ -128,7 +119,7 @@ public class Client extends Application {
             clientListener.setInput(input);
         } catch (Exception e) {
             loginController.setLoginWarning("Unable to connect to the server");
-            System.out.println("Unable to connect to " + HOST + ":" + PORT);
+            System.out.println("Unable to connect to " + host + ":" + port);
             return false;
         }
         return true;
@@ -140,14 +131,6 @@ public class Client extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public DataInputStream getInputData() {
-        return inputData;
-    }
-
-    public void setRoomController(GameRoomController roomController) {
-        this.roomController = roomController;
     }
 
     @Override
@@ -185,6 +168,38 @@ public class Client extends Application {
             stage.show();
             loginController.setLoginWarning(error);
         });
+    }
+
+    public DataInputStream getInputData() {
+        return inputData;
+    }
+
+    public static Client getClient() {
+        return client;
+    }
+
+    public static Stage getStage() {
+        return stage;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public HomeController getHomeController() {
+        return homeController;
+    }
+
+    public void setHomeController(HomeController homeController) {
+        this.homeController = homeController;
+    }
+
+    public GameRoomController getRoomController() {
+        return roomController;
+    }
+
+    public void setRoomController(GameRoomController roomController) {
+        this.roomController = roomController;
     }
 
     public void setLoginController(LoginController loginController) {

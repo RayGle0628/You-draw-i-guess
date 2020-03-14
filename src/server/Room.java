@@ -72,7 +72,8 @@ public class Room extends Thread implements Comparable<Room> {
      */
     public void wordList() {
         words = new ArrayList<>();
-        File wordList = new File("WordList");
+       // File wordList = new File("WordList");
+        File wordList = new File(this.getClass().getResource("WordList").getFile());
         try {
             BufferedReader in = new BufferedReader(new FileReader(wordList));
             String word;
@@ -198,9 +199,7 @@ public class Room extends Thread implements Comparable<Room> {
     public synchronized void addUser(ServerThread user) {
         users.add(user);
         scores.putIfAbsent(user.getUsername(), 0);
-//        if (currentDrawer!=null && currentDrawer.getUsername().equals(user.getUsername()))
-//            user.sendMessage(Command.START_DRAWING, currentWord);
-//        if (!gameRunning && users.size() >= 2) beginGame();
+
     }
 
     /**

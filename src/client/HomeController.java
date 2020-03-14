@@ -42,7 +42,8 @@ public class HomeController implements Initializable {
     public void getRooms(String[] rooms) {
         roomListVBox.getChildren().clear();
         for (String room : rooms) {
-            if (room.matches("[1-9][0-9][/]")) continue;
+
+            if (room.matches(".*[1-9][0-9][/].*")) continue;
             Text roomText = new Text();
             roomText.setOnMouseClicked(e -> client.sendMessage(Command.JOIN_ROOM, room.replaceAll("\\([0-9/]*\\)",
                     "").trim()));

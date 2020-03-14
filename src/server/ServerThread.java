@@ -33,7 +33,6 @@ public class ServerThread extends Thread {
             try {
                 message = (Message) input.readObject();
             } catch (Exception e) {
-                cleanup();
                 break;
             }
             switch (message.getCommand()) {
