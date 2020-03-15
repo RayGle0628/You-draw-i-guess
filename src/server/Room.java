@@ -15,7 +15,15 @@ public class Room extends Thread implements Comparable<Room> {
     private Timer timer;
     private int round;
     private ArrayList<String> words;
+    private Server server;
+    private HashMap<String, Integer> scores;
+    private boolean wordGuessed = false;
+    private ArrayList<ServerThread> correctlyGuessed = new ArrayList<>();
+    private ArrayList<Path> currentImage;
+    private boolean gameRunning;
+    private int currentReward;
 
+    //private DatabaseManager db;
     public ArrayList<String> getWords() {
         return words;
     }
@@ -23,14 +31,6 @@ public class Room extends Thread implements Comparable<Room> {
     public void setWords(ArrayList<String> words) {
         this.words = words;
     }
-
-    private HashMap<String, Integer> scores;
-    private boolean wordGuessed = false;
-    private ArrayList<ServerThread> correctlyGuessed = new ArrayList<>();
-    private ArrayList<Path> currentImage;
-    private boolean gameRunning;
-    private int currentReward;
-    private DatabaseManager db;
 
     /**
      * Resets all the scores to zero at the start of a new game.
@@ -54,11 +54,11 @@ public class Room extends Thread implements Comparable<Room> {
         });
         if (list.get(0).getValue() > 0) {
             disperseMessage(null, "The winner is " + list.get(0).getKey() + "!");
-            db.updateWin(list.get(0).getKey());
+            server.getDb().updateWin(list.get(0).getKey());
             disperseMessage(null, "The final scores are:");
             for (Map.Entry<String, Integer> score : list) {
                 disperseMessage(null, score.getKey() + " : " + score.getValue());
-                db.updateScore(score.getKey(), score.getValue());
+                server.getDb().updateScore(score.getKey(), score.getValue());
             }
         }
     }
@@ -68,13 +68,13 @@ public class Room extends Thread implements Comparable<Room> {
      *
      * @param name is the name of the room being created.
      */
-    public Room(String name, DatabaseManager db) {
+    public Room(String name, Server server) {
         roomName = name;
+        this.server = server;
         users = new ArrayList<>();
         timer = new Timer("Timer");
         scores = new HashMap<>();
         gameRunning = false;
-        this.db = db;
     }
 
     /**

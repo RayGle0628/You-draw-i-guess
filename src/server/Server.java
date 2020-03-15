@@ -89,7 +89,7 @@ public class Server {
     }
 
     public void createRoom(String name) {
-        Room r = new Room(name, db);
+        Room r = new Room(name, this);
         r.start();
         rooms.put(r.getRoomName(), r);
     }
