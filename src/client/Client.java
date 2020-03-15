@@ -98,6 +98,7 @@ public class Client extends Application {
         try {
             output.writeObject(message);
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

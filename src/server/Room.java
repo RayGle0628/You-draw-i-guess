@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.*;
 
 public class Room extends Thread implements Comparable<Room> {
+
     private String roomName;
     private ArrayList<ServerThread> users;
     private ServerThread currentDrawer;
@@ -14,15 +15,16 @@ public class Room extends Thread implements Comparable<Room> {
     private Timer timer;
     private int round;
     private ArrayList<String> words;
+
     public ArrayList<String> getWords() {
-		return words;
-	}
+        return words;
+    }
 
-	public void setWords(ArrayList<String> words) {
-		this.words = words;
-	}
+    public void setWords(ArrayList<String> words) {
+        this.words = words;
+    }
 
-	private HashMap<String, Integer> scores;
+    private HashMap<String, Integer> scores;
     private boolean wordGuessed = false;
     private ArrayList<ServerThread> correctlyGuessed = new ArrayList<>();
     private ArrayList<Path> currentImage;
@@ -80,7 +82,7 @@ public class Room extends Thread implements Comparable<Room> {
      */
     public void wordList() {
         words = new ArrayList<>();
-       // File wordList = new File("WordList");
+        // File wordList = new File("WordList");
         File wordList = new File(this.getClass().getResource("WordList").getFile());
         try {
             BufferedReader in = new BufferedReader(new FileReader(wordList));
@@ -157,7 +159,6 @@ public class Room extends Thread implements Comparable<Room> {
             gameRunning = false;
             finalScores();
             return;
-            //endRound();
         }
         if (round < 11 && gameRunning) {
             TimerTask task = new TimerTask() {
@@ -177,14 +178,14 @@ public class Room extends Thread implements Comparable<Room> {
     }
 
     public String getCurrentWord() {
-		return currentWord;
-	}
+        return currentWord;
+    }
 
-	public void setCurrentWord(String currentWord) {
-		this.currentWord = currentWord;
-	}
+    public void setCurrentWord(String currentWord) {
+        this.currentWord = currentWord;
+    }
 
-	/**
+    /**
      * Tells all users in the room to clear their canvas.
      */
     public void clearCanvas() {
@@ -215,7 +216,6 @@ public class Room extends Thread implements Comparable<Room> {
     public synchronized void addUser(ServerThread user) {
         users.add(user);
         scores.putIfAbsent(user.getUsername(), 0);
-
     }
 
     /**
@@ -227,13 +227,12 @@ public class Room extends Thread implements Comparable<Room> {
         users.remove(user);
         System.out.println("Removed " + user);
         currentUserList(null);
-        if (users.size() ==0) {
+        if (users.size() == 0 && gameRunning) {
             timer.cancel();
             timer = new Timer("Timer");
             round = 0;
             gameRunning = false;
             endRound();
-            finalScores();
         }
     }
 

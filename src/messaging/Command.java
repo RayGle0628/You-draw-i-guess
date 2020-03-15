@@ -1,6 +1,6 @@
 package messaging;
 
-public enum Command {
+ public enum Command {
 
     LOGIN,
     LOGOUT,

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DatabaseManager {
+
     private Connection c = null;
 
     public DatabaseManager() {
@@ -84,6 +85,7 @@ public class DatabaseManager {
             String sql = "UPDATE user_scores SET total_wins = total_wins+1 WHERE username=?;";
             PreparedStatement preparedStatement = c.prepareStatement(sql);
             preparedStatement.setString(1, username.toLowerCase());
+            preparedStatement.executeUpdate();
             c.commit();
             preparedStatement.close();
         } catch (SQLException e) {
