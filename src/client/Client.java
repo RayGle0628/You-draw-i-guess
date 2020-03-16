@@ -21,9 +21,27 @@ public class Client extends Application {
     private Socket socket;
     private static Client client;
     private static Stage stage;
-    private static int port;
-    private static String host;
-    private ClientListener clientListener;
+    private  int port;
+    
+
+	private  String host;
+    public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	private ClientListener clientListener;
     private ObjectOutputStream output;
     private ObjectInputStream input;
     //private DataInputStream inputData;
