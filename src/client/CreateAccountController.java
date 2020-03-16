@@ -6,6 +6,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -100,4 +102,15 @@ public class CreateAccountController implements Initializable {
         }
         return true;
     }
+
+
+
+    public void enterPressed(KeyEvent ke) {
+        if (ke.getCode().equals(KeyCode.ENTER)) {
+
+                createAccount();
+
+        }
+    }
+
 }

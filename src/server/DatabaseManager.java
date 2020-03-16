@@ -1,5 +1,7 @@
 package server;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -26,7 +28,7 @@ public class DatabaseManager {
             String sql = "SELECT COUNT(*) FROM user_details WHERE LOWER(username)=LOWER(?) AND  password=?;";
             PreparedStatement preparedStatement = c.prepareStatement(sql);
             preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password);
+            preparedStatement.setString(2, encryptPassword(password));
             ResultSet rs = preparedStatement.executeQuery();
             rs.next();
             int size = rs.getInt("COUNT");
@@ -45,7 +47,7 @@ public class DatabaseManager {
             String sql2 = "INSERT INTO user_scores(USERNAME) VALUES (?); ";
             PreparedStatement preparedStatement1 = c.prepareStatement(sql1);
             preparedStatement1.setString(1, username.toLowerCase());
-            preparedStatement1.setString(2, password);
+            preparedStatement1.setString(2, encryptPassword(password));
             preparedStatement1.setString(3, email);
             PreparedStatement preparedStatement2 = c.prepareStatement(sql2);
             preparedStatement2.setString(1, username.toLowerCase());
@@ -133,5 +135,24 @@ public class DatabaseManager {
             e.printStackTrace();
         }
         return myRank;
+    }
+
+    public static String encryptPassword(String password) {
+        MessageDigest messageDigest= null;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        assert messageDigest != null;
+        byte[] digestBytes = messageDigest.digest(password.getBytes());
+        return byteToHex(digestBytes);
+    }
+
+    public static String byteToHex(byte[] digestBytes) {
+        StringBuilder hex = new StringBuilder(digestBytes.length*2);
+        for (byte b:digestBytes) hex.append(String.format("%02x",b));
+        return hex.toString();
+
     }
 }

@@ -18,6 +18,7 @@ import java.util.ArrayList;
  * .media client.Client
  */
 public class Client extends Application {
+
     private Socket socket;
     private static Client client;
     private static Stage stage;
@@ -26,7 +27,6 @@ public class Client extends Application {
     private ClientListener clientListener;
     private ObjectOutputStream output;
     private ObjectInputStream input;
-    //private DataInputStream inputData;
     private GameRoomController roomController;
     private HomeController homeController;
     private LoginController loginController;
@@ -69,7 +69,6 @@ public class Client extends Application {
         if (connect()) {
             sendMessage(Command.LOGIN, username, password);
             try {
-             //   boolean response = inputData.readBoolean();
                 boolean response = input.readBoolean();
                 if (!response) {
                     String error = (String) input.readObject();
@@ -118,7 +117,6 @@ public class Client extends Application {
             input = new ObjectInputStream(socket.getInputStream());
             output = new ObjectOutputStream(socket.getOutputStream());
             output.flush();
-//            inputData = new DataInputStream(socket.getInputStream());
             clientListener.setInput(input);
         } catch (Exception e) {
             loginController.setLoginWarning("Unable to connect to the server");
@@ -168,13 +166,11 @@ public class Client extends Application {
             assert loginView != null;
             Scene tableViewScene = new Scene(loginView);
             stage.setScene(tableViewScene);
+            stage.setResizable(false);
             stage.show();
             loginController.setLoginWarning(error);
         });
     }
-//    public DataInputStream getInputData() {
-//        return inputData;
-//    }
 
     public static Client getClient() {
         return client;
