@@ -225,7 +225,6 @@ public class Room extends Thread implements Comparable<Room> {
      */
     public synchronized void removeUser(ServerThread user) {
         users.remove(user);
-        System.out.println("Removed " + user);
         currentUserList(null);
         if (users.size() == 0 && gameRunning) {
             timer.cancel();

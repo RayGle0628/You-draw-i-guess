@@ -26,10 +26,10 @@
     <RowConstraints maxHeight="87.0" minHeight="10.0" prefHeight="69.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TextField fx:id="usernameField" promptText="Username" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-      <TextField fx:id="emailField" promptText="Email Address" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-      <PasswordField fx:id="passwordField" promptText="Password" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-      <PasswordField fx:id="repeatPasswordField" promptText="Repeat Password" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+      <TextField fx:id="usernameField" onKeyPressed="#enterPressed" promptText="Username" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+      <TextField fx:id="emailField" onKeyPressed="#enterPressed" promptText="Email Address" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+      <PasswordField fx:id="passwordField" onKeyPressed="#enterPressed" promptText="Password" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+      <PasswordField fx:id="repeatPasswordField" onKeyPressed="#enterPressed" promptText="Repeat Password" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
       <Button fx:id="createAccountButton" mnemonicParsing="false" onAction="#createAccount" text="Create Account" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
       <Button fx:id="returnButton" mnemonicParsing="false" onAction="#loginScene" text="Return" GridPane.halignment="LEFT" GridPane.rowIndex="7" GridPane.valignment="BOTTOM">
          <GridPane.margin>
