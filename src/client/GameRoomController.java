@@ -126,6 +126,9 @@ public class GameRoomController implements Initializable {
             // starts adding.
             path = new ArrayList<>();
             path.add(new Coordinate(event.getX(), event.getY()));
+            this.draw(path); // This initial point is drawn onto the canvas
+            client.sendMessagePath(Command.DRAW_PATH_FROM_CLIENT, brushSize, colour.toString(), path); // And is sent
+            // to the server for others to see.
         });
         canvas.setOnMouseDragged(event -> {
             path.add(new Coordinate(event.getX(), event.getY()));// Adds more coordinates as the mouse is dragged.
@@ -133,11 +136,6 @@ public class GameRoomController implements Initializable {
             client.sendMessagePath(Command.DRAW_PATH_FROM_CLIENT, brushSize, colour.toString(),
                     new ArrayList<>(path.subList(path.size() - 2, path.size()))); // Sends the latest two coordinates
             // to the server to be drawn for everyone.
-        });
-        canvas.setOnMouseReleased(event -> {
-            this.draw(path); // When mouse is released, draws the point in the event of a click
-            client.sendMessagePath(Command.DRAW_PATH_FROM_CLIENT, brushSize, colour.toString(), path); // Sends the
-            // final path to the server to be drawn for everyone.
         });
         inputTextField.setEditable(false); // Disables outgoing chat while drawing.
         inputTextField.setVisible(false);
@@ -159,7 +157,6 @@ public class GameRoomController implements Initializable {
         wordToDraw.setText("");
         canvas.setOnMousePressed(null);
         canvas.setOnMouseDragged(null);
-        canvas.setOnMouseReleased(null);
         inputTextField.setEditable(true);
         inputTextField.setVisible(true);
         colourPicker.setEditable(false);
@@ -275,13 +272,6 @@ public class GameRoomController implements Initializable {
         Platform.runLater(() -> { // Called form outside the application thread again.
             gc.setLineWidth(size); // Colour and size are set.
             gc.setStroke(Color.web(colour));
-//            if (path.size() == 1) {
-//                gc.strokeLine(path.get(0).getX(), path.get(0).getY(), path.get(0).getX(), path.get(0).getY());
-//            } else {
-//                gc.strokeLine(path.get(path.size() - 2).getX(), path.get(path.size() - 2).getY(),
-//                        path.get(path.size() - 1).getX(), path.get(path.size() - 1).getY());
-//            }
-//
             draw(path); // Incoming path is then drawn to canvas.
         });
     }
@@ -291,7 +281,8 @@ public class GameRoomController implements Initializable {
      * drawing.
      */
     public void clearCanvas() {
-        Platform.runLater(() -> gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight())); // Fills the canvas with a white rectangle to clear.
+        Platform.runLater(() -> gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight())); // Fills the canvas with a
+        // white rectangle to clear.
     }
 
     /**
