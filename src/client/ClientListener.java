@@ -10,15 +10,25 @@ import java.io.ObjectInputStream;
  * ClientListener listens for messages from the server and executes them as required.
  */
 public class ClientListener extends Thread {
+
     private ObjectInputStream input;
     private Client client;
     private boolean endFlag;
 
+    /**
+     * Constructor for the ClientListener class.
+     *
+     * @param client - The origin client class.
+     */
     public ClientListener(Client client) {
         this.client = client;
         endFlag = false;
     }
 
+    /**
+     * Starts the loop of continuously listening for inputs incoming from the server and using the message headers to
+     * decide what action to take.
+     */
     @Override
     public void run() {
         while (true) {
@@ -61,9 +71,7 @@ public class ClientListener extends Thread {
                     break;
                 case START_DRAWING:
                     if (client.getRoomController() != null) {
-                        Platform.runLater(() -> {
-                            client.getRoomController().enableDraw(message.getData()[0]);
-                        });
+                        Platform.runLater(() -> client.getRoomController().enableDraw(message.getData()[0]));
                     }
                     break;
                 case STOP_DRAWING:
@@ -110,6 +118,11 @@ public class ClientListener extends Thread {
         }
     }
 
+    /**
+     * Sets the ObjectInputStream on which the ClientListener is to monitor for messages.
+     *
+     * @param input - The ObjectInputSteam to listen on.
+     */
     public void setInput(ObjectInputStream input) {
         this.input = input;
     }
