@@ -3,31 +3,47 @@ package client;
 import javafx.scene.media.AudioClip;
 
 public class SoundFX {
-    AudioClip yourTurn;
-    AudioClip correctGuess;
-    AudioClip correctGuess2;
-    AudioClip startRound;
 
+    private AudioClip yourTurn;
+    private AudioClip correctGuess;
+    private AudioClip correctGuess2;
+    private AudioClip startRound;
+
+    /**
+     * Constructor for the SoundFX class. Points AudioCLip objects to the correct resource path.
+     */
     public SoundFX() {
-
-
         correctGuess = new AudioClip(this.getClass().getResource("/Resources/SoundEffects/b.wav").toString());
         correctGuess2 = new AudioClip(this.getClass().getResource("/Resources/SoundEffects/a.wav").toString());
         yourTurn = new AudioClip(this.getClass().getResource("/Resources/SoundEffects/c.wav").toString());
         startRound = new AudioClip(this.getClass().getResource("/Resources/SoundEffects/d.wav").toString());
     }
 
-
-    public void playGuess(){
-      correctGuess.play();
+    /**
+     * Played when a user other than this one guesses a word correctly.
+     */
+    public void playGuess() {
+        correctGuess.play();
     }
-  public void playGuess2(){
-    correctGuess2.play();
-  }
-  public void playYouDraw(){
-    yourTurn.play();
-  }
-  public void playStartRound(){
-    startRound.play();
-  }
+
+    /**
+     * Played when the user guesses a word correctly.
+     */
+    public void playGuess2() {
+        correctGuess2.play();
+    }
+
+    /**
+     * Played to a single user when it is their turn to draw.
+     */
+    public void playYouDraw() {
+        yourTurn.play();
+    }
+
+    /**
+     * Played at the start of a new round.
+     */
+    public void playStartRound() {
+        startRound.play();
+    }
 }

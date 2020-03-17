@@ -237,46 +237,101 @@ public class Client extends Application {
         });
     }
 
+    /**
+     * Static getter for the client object.
+     *
+     * @return client
+     */
     public static Client getClient() {
         return client;
     }
 
+    /**
+     * Getter for the stage object.
+     *
+     * @return stage
+     */
     public static Stage getStage() {
         return stage;
     }
 
+    /**
+     * Getter for the username variable.
+     *
+     * @return username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Getter for the HomeController object.
+     *
+     * @return homeController
+     */
     public HomeController getHomeController() {
         return homeController;
     }
 
+    /**
+     * Setter for the HomeController object.
+     *
+     * @param homeController the new HomeController
+     */
     public void setHomeController(HomeController homeController) {
         this.homeController = homeController;
     }
 
+    /**
+     * Getter for the RoomController object.
+     *
+     * @return roomController
+     */
     public GameRoomController getRoomController() {
         return roomController;
     }
 
+    /**
+     * Setter for the RoomController object.
+     *
+     * @param roomController the new RoomController
+     */
     public void setRoomController(GameRoomController roomController) {
         this.roomController = roomController;
     }
 
+    /**
+     * Getter for the ObjectInputStream object.
+     *
+     * @return input
+     */
     public ObjectInputStream getInput() {
         return input;
     }
 
+    /**
+     * Setter for the LoginController object.
+     *
+     * @param loginController the new LoginController
+     */
     public void setLoginController(LoginController loginController) {
         this.loginController = loginController;
     }
 
+    /**
+     * Getter for the port variable.
+     *
+     * @return port
+     */
     public int getPort() {
         return port;
     }
 
+    /**
+     * Getter for the host variable.
+     *
+     * @return host
+     */
     public String getHost() {
         return host;
     }
