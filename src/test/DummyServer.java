@@ -1,4 +1,4 @@
-package server;
+package test;
 
 import messaging.Command;
 import messaging.Message;
@@ -7,7 +7,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class DummyServer {
+public class DummyServer extends Thread {
 
     ServerSocket serverSocket;
     Socket socket;
@@ -18,9 +18,15 @@ public class DummyServer {
     Message message;
     String username;
     String room;
-    static boolean open=true;
+    boolean open = true;
 
-    public DummyServer() {
+    public static void main(String[] args) {
+        DummyServer server = new DummyServer();
+        server.run();
+    }
+
+    @Override
+    public void run() {
         System.out.println("Dummy server starting and waiting for connection.");
         try {
             serverSocket = new ServerSocket(50000);
@@ -32,28 +38,23 @@ public class DummyServer {
             input = new ObjectInputStream(socket.getInputStream());
             inputData = new DataInputStream(socket.getInputStream());
             System.out.println("Dummy server connected to client.");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            System.exit(1);
+            //   System.exit(1);
         }
-    }
-
-    public static void main(String[] args) {
-        DummyServer server = new DummyServer();
-        System.out.println("Starting message loop");
         while (open) {
-            server.start();
+            start2();
         }
     }
 
-    public Message start() {
+    public Message start2() {
         try {
             message = (Message) input.readObject();
             System.out.println();
             System.out.println("Received: " + message);
         } catch (Exception e) {
-            System.out.println("Client disconnected");
-            open=false;
+            e.printStackTrace();
+            open = false;
             return null;
         }
         switch (message.getCommand()) {
@@ -124,5 +125,15 @@ public class DummyServer {
 
     public Message getMessage() {
         return message;
+    }
+
+    public void closeServer() {
+        System.out.println("Closed server");
+        try {
+            serverSocket.close();
+            socket.close();
+        } catch (Exception e) {
+            // e.printStackTrace();
+        }
     }
 }

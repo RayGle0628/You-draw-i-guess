@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class CreateAccountController implements Initializable {
+
     private Client client;
     @FXML
     GridPane gridPane;
@@ -56,22 +57,18 @@ public class CreateAccountController implements Initializable {
                         emailField.getText());
                 try {
                     if (client.getInput().readBoolean()) {
-                        warningText.setFill(Color.GREEN);
-                        warningText.setText("Account Created");
+                        setWarningText(Color.RED, "Account Created");
                         usernameField.clear();
                         emailField.clear();
                     } else {
-                        warningText.setFill(Color.RED);
-                        warningText.setText("This username is unavailable");
+                        setWarningText(Color.RED, "This username is unavailable");
                     }
                 } catch (Exception e) {
-                    warningText.setFill(Color.RED);
-                    warningText.setText("No response from server");
+                    setWarningText(Color.RED, "No response from server");
                 }
                 client.disconnect();
             } else {
-                warningText.setFill(Color.RED);
-                warningText.setText("No response from server");
+                setWarningText(Color.RED, "No response from server");
             }
         }
         passwordField.clear();
@@ -80,37 +77,35 @@ public class CreateAccountController implements Initializable {
 
     public boolean validateDetails(String username, String email, String password, String repeatPassword) {
         if (!password.equals(repeatPassword)) {
-            warningText.setFill(Color.RED);
-            warningText.setText("Passwords do not match");
+            setWarningText(Color.RED, "Passwords do not match");
             return false;
         }
         if (!password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$")) {
-            warningText.setFill(Color.RED);
-            warningText.setText("Password must be 8-16 characters including 1 upper and lower case letter and 1 "
+            setWarningText(Color.RED, "Password must be 8-16 characters including 1 upper and lower case letter and 1 "
                     + "number");
             return false;
         }
         if (username.length() < 4 || username.length() > 10 || !username.matches("^[a-zA-Z0-9_-]*$")) {
-            warningText.setFill(Color.RED);
-            warningText.setText("Username must be 4-10 characters in length and must only contain a-z,A-Z,0-9,_,- " + "characters");
+            setWarningText(Color.RED, "Username must be 4-10 characters in length and must only contain a-z,A-Z,0-9,_,- " + "characters");
             return false;
         }
         if (!email.matches("^([a-zA-Z0-9_\\-.]+)@([a-zA-Z0-9_\\-.]+)\\.([a-zA-Z]{2,5})$")) {
-            warningText.setFill(Color.RED);
-            warningText.setText("Invalid email address");
+            setWarningText(Color.RED, "Invalid email address");
             return false;
         }
         return true;
     }
 
-
-
     public void enterPressed(KeyEvent ke) {
         if (ke.getCode().equals(KeyCode.ENTER)) {
-
-                createAccount();
-
+            createAccount();
         }
     }
 
+    public void setWarningText(Color colour, String message) {
+        if (warningText != null) {
+            warningText.setFill(colour);
+            warningText.setText(message);
+        }
+    }
 }

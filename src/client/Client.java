@@ -86,8 +86,10 @@ public class Client extends Application {
     public boolean login(String username, String password) {
         if (connect()) {
             sendMessage(Command.LOGIN, username, password);
+
             try {
                 boolean response = input.readBoolean();
+
                 if (!response) {
                     String error = (String) input.readObject();
                     loginController.setLoginWarning(error);
@@ -141,6 +143,7 @@ public class Client extends Application {
             System.out.println("Unable to connect to " + host + ":" + port);
             return false;
         }
+
         return true;
     }
 
