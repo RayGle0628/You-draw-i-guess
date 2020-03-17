@@ -66,7 +66,7 @@ public class DummyServer extends Thread {
                 returnMessage(Command.LOGOUT);
                 break;
             case GET_ROOMS:
-                returnMessage(Command.RETURN_ROOMS, "Room 1 (5/10)", "Room 2 (0/10)");
+                returnMessage(Command.RETURN_ROOMS, "Room 1 (5/10)", "Room 2 (10/10)", "Room 3 (0/10)");
                 break;
             case JOIN_ROOM:
                 returnMessage(Command.CONFIRM_JOIN_ROOM);

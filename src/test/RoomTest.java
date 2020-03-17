@@ -84,6 +84,11 @@ public class RoomTest {
     public void testParseGuess() {
         room.setCurrentWord("Dog");
 		assertTrue(room.parseGuess("Dog"));
+        assertTrue(room.parseGuess(" Dog "));
+        assertTrue(room.parseGuess("Cat Dog Man"));
+        assertFalse(room.parseGuess("CatDog"));
+        assertFalse(room.parseGuess("Dogman"));
+        assertFalse(room.parseGuess("CatDogman"));
     }
 
     @Test
