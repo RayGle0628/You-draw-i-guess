@@ -1,5 +1,6 @@
 package test;
 
+import client.Client;
 import client.CreateAccountController;
 import client.Ranking;
 import messaging.Command;
@@ -7,8 +8,6 @@ import messaging.Message;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import client.Client;
 
 import static org.junit.jupiter.api.Assertions.*;
 

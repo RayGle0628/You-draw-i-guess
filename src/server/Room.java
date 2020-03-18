@@ -3,7 +3,9 @@ package server;
 import messaging.Command;
 import messaging.Path;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.*;
 
 public class Room extends Thread implements Comparable<Room> {
@@ -23,13 +25,8 @@ public class Room extends Thread implements Comparable<Room> {
     private boolean gameRunning;
     private int currentReward;
 
-    //private DatabaseManager db;
     public ArrayList<String> getWords() {
         return words;
-    }
-
-    public void setWords(ArrayList<String> words) {
-        this.words = words;
     }
 
     /**
@@ -175,10 +172,6 @@ public class Room extends Thread implements Comparable<Room> {
             finalScores();
             if (!gameRunning && users.size() > 2) beginGame();
         }
-    }
-
-    public String getCurrentWord() {
-        return currentWord;
     }
 
     public void setCurrentWord(String currentWord) {
