@@ -14,8 +14,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 /**
- * java --module-path /home/alex/IdeaProjects/javafx-sdk-11.0.2/lib --add-modules javafx.controls,javafx.fxml,javafx
- * .media client.Client
+ * Client is the main runnable class of the client portion of our program and acts as the model. It can be run with:
+ * java --module-path %PATH_TO_JAVAFX% --add-modules javafx.controls,javafx.fxml,javafx.media client.Client
+ * Client also requires the messaging package and resources folder in the same directory as the client package to run.
  */
 public class Client extends Application {
 
@@ -84,7 +85,7 @@ public class Client extends Application {
         stage.setResizable(false);
         assert root != null;
         stage.setScene(new Scene(root));
-        stage.getIcons().add(new Image(new File("Resources/Images/pen.gif").toURI().toString()));//set all panes icon
+        stage.getIcons().add(new Image(new File("Resources/Images/pen.gif").toURI().toString()));// Set all panes icon.
         stage.show();
     }
 

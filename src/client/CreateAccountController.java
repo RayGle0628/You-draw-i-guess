@@ -15,6 +15,10 @@ import messaging.Command;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * CreateAccountController is the controller class for the account creation scene and is initialised from the
+ * CreateAccount.fxml file.
+ */
 public class CreateAccountController implements Initializable {
 
     private Client client;

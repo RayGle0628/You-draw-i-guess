@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * HomeController is the controller class for the home scene and is initialised from the Home.fxml file.
+ */
 public class HomeController implements Initializable {
 
     @FXML

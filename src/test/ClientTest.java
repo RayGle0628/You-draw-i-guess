@@ -49,9 +49,9 @@ class ClientTest {
 
     @Test
     void testSendMessage() {
-        client.sendMessage(Command.CHAT_MESSAGE_FROM_CLIENT, "Hello World");
+        client.sendMessage(Command.CHAT_MESSAGE_TO_CLIENT, "Hello World");
         Message m = ((DummyServer) server).getMessage();
-        assertEquals(m.getCommand(), Command.CHAT_MESSAGE_FROM_CLIENT);
+        assertEquals(m.getCommand(), Command.CHAT_MESSAGE_TO_CLIENT);
         assertArrayEquals(m.getData(), new String[]{"Hello World"});
     }
 

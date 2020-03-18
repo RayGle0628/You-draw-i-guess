@@ -31,6 +31,9 @@ import javafx.stage.Stage;
 import messaging.Command;
 import messaging.Coordinate;
 
+/**
+ * GameRoomController is the controller class for the game room scene and is initialised from the GameRoom.fxml file.
+ */
 public class GameRoomController implements Initializable {
 
     @FXML
@@ -109,7 +112,7 @@ public class GameRoomController implements Initializable {
             client.sendMessage(Command.CLEAR_CANVAS);
         });
         clearCanvas(); // Ensures canvas is cleared.
-        client.sendMessage(Command.REQUEST_USERS); // At the end of initialisation, request all the info about the
+        client.sendMessage(Command.REQUEST_GAME_INFO); // At the end of initialisation, request all the info about the
         // game room and state to populate the GUI.
     }
 
@@ -193,7 +196,7 @@ public class GameRoomController implements Initializable {
         if (ke.getCode().equals(KeyCode.ENTER)) {// If the key event is an enter, try to submit message and clear the
             // text field, otherwise do nothing.
             if (inputTextField.getText().length() > 0) {
-                client.sendMessage(Command.CHAT_MESSAGE_TO_ALL, inputTextField.getText());
+                client.sendMessage(Command.CHAT_MESSAGE_FROM_CLIENT, inputTextField.getText());
                 inputTextField.clear();
             }
         }

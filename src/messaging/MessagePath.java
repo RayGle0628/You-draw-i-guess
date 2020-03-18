@@ -7,13 +7,25 @@ package messaging;
  * the location of a drawn path alongside its size and colour.
  */
 public class MessagePath extends Message {
+
     private Path path;
 
+    /**
+     * Constructor for the MessagePath object.
+     *
+     * @param command the Command header of the message.
+     * @param path    the path object to be sent.
+     */
     public MessagePath(Command command, Path path) {
         super(command);
         this.path = path;
     }
 
+    /**
+     * Getter for the Path object.
+     *
+     * @return the path object.
+     */
     public Path getPath() {
         return path;
     }

@@ -7,7 +7,8 @@ import messaging.MessagePath;
 import java.io.ObjectInputStream;
 
 /**
- * ClientListener listens for messages from the server and executes them as required.
+ * ClientListener listens for messages from the server and executes them as required. It is started when a client has
+ * logged in and ends when the client logs out.
  */
 public class ClientListener extends Thread {
 
@@ -55,7 +56,7 @@ public class ClientListener extends Thread {
                         Platform.runLater(() -> client.getHomeController().getRooms(message.getData()));
                     }
                     break;
-                case CHAT_MESSAGE_FROM_CLIENT:
+                case CHAT_MESSAGE_TO_CLIENT:
                     if (client.getRoomController() != null) {
                         client.getRoomController().displayNewMessage(message.getData()[0]);
                     }
@@ -79,7 +80,7 @@ public class ClientListener extends Thread {
                         client.getRoomController().disableDraw();
                     }
                     break;
-                case DRAW_PATH_TO_ALL:
+                case DRAW_PATH_TO_CLIENT:
                     if (client.getRoomController() != null) {
                         client.getRoomController().drawFromMessage(((MessagePath) message).getPath().getSize(),
                                 ((MessagePath) message).getPath().getColour(),

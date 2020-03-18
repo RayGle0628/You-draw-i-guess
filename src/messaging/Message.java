@@ -10,22 +10,44 @@ import java.util.Arrays;
  * operation specified in the message.
  */
 public class Message implements Serializable {
+
     Command command;
     String[] data;
 
+    /**
+     * Constructor for the message object.
+     *
+     * @param command the Command header for the message.
+     * @param data    the string data to be sent in the message object.
+     */
     public Message(Command command, String... data) {
         this.command = command;
         this.data = data;
     }
 
+    /**
+     * Getter for the command header
+     *
+     * @return the Command header.
+     */
     public Command getCommand() {
         return command;
     }
 
+    /**
+     * getter for the message data.
+     *
+     * @return the data.
+     */
     public String[] getData() {
         return data;
     }
 
+    /**
+     * Represents the message as a human-readable string.
+     *
+     * @return the message is its string representation.
+     */
     @Override
     public String toString() {
         return "Message{" + "command=" + command + ", data=" + Arrays.toString(data) + '}';

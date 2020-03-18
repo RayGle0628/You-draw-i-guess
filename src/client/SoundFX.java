@@ -2,6 +2,9 @@ package client;
 
 import javafx.scene.media.AudioClip;
 
+/**
+ * SoundFX is the class that deals with playing sounds to the client to indicate events happening in a game.
+ */
 public class SoundFX {
 
     private AudioClip yourTurn;

@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * LoginController is the controller class for the login scene and is initialised from the Login.fxml file.
+ */
 public class LoginController implements Initializable {
 
     private Client client;

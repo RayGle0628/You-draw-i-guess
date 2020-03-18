@@ -245,7 +245,7 @@ public class Room extends Thread implements Comparable<Room> {
     public synchronized void disperseMessage(ServerThread fromUser, String text) {
         if (correctlyGuessed.contains(fromUser)) {
 //              fromUser.outgoingChatMessage("You have already guessed correctly.");
-            fromUser.sendMessage(Command.CHAT_MESSAGE_FROM_CLIENT, "You have already guessed correctly.");
+            fromUser.sendMessage(Command.CHAT_MESSAGE_TO_CLIENT, "You have already guessed correctly.");
             return;
         } // Skip chat from guesser with a warning message.
         if (fromUser != null) {
@@ -275,13 +275,13 @@ public class Room extends Thread implements Comparable<Room> {
             } else { // Incorrect guess/general chat message show in chat room
                 text = fromUser.getUsername() + ": " + text;
                 for (ServerThread user : users) {
-                    user.sendMessage(Command.CHAT_MESSAGE_FROM_CLIENT, text);
+                    user.sendMessage(Command.CHAT_MESSAGE_TO_CLIENT, text);
                 }
             }
         }
         if (fromUser == null) { // Always send server message to everyone.
             for (ServerThread user : users) {
-                user.sendMessage(Command.CHAT_MESSAGE_FROM_CLIENT, text);
+                user.sendMessage(Command.CHAT_MESSAGE_TO_CLIENT, text);
             }
         }
         if (text.contains("!start") && !gameRunning) {

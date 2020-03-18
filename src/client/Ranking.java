@@ -1,5 +1,8 @@
 package client;
 
+/**
+ * Ranking is an object that contains ranking information. It is used to populate the leader board in the home scene.
+ */
 public class Ranking {
 
     private String username;
@@ -21,6 +24,7 @@ public class Ranking {
 
     /**
      * Getter for the username field variable.
+     *
      * @return username
      */
     public String getUsername() {
@@ -29,20 +33,25 @@ public class Ranking {
 
     /**
      * Getter for the rank field variable.
+     *
      * @return rank
      */
     public int getRank() {
         return rank;
     }
+
     /**
      * Getter for the score field variable.
+     *
      * @return score
      */
     public int getScore() {
         return score;
     }
+
     /**
      * Getter for the wins field variable.
+     *
      * @return wins
      */
     public int getWins() {

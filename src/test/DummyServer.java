@@ -72,11 +72,11 @@ public class DummyServer extends Thread {
                 returnMessage(Command.CONFIRM_JOIN_ROOM);
                 room = message.getData()[0];
                 break;
-            case CHAT_MESSAGE_TO_ALL:
-                returnMessage(Command.CHAT_MESSAGE_FROM_CLIENT, username + ": " + message.getData()[0]);
+            case CHAT_MESSAGE_FROM_CLIENT:
+                returnMessage(Command.CHAT_MESSAGE_TO_CLIENT, username + ": " + message.getData()[0]);
                 if (message.getData()[0].equals("!start")) returnMessage(Command.START_DRAWING, "Testing");
                 break;
-            case REQUEST_USERS:
+            case REQUEST_GAME_INFO:
                 if (room.equals("Room 1"))
                     returnMessage(Command.USERS_IN_ROOM, "user1", "user2", "user3", "user4", "user5", username);
                 if (room.equals("Room 2")) returnMessage(Command.USERS_IN_ROOM, username);

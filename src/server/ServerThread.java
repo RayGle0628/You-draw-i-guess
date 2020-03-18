@@ -48,10 +48,10 @@ public class ServerThread extends Thread {
                 case JOIN_ROOM:
                     joinRoom(message.getData()[0]);
                     break;
-                case CHAT_MESSAGE_TO_ALL:
+                case CHAT_MESSAGE_FROM_CLIENT:
                     room.disperseMessage(this, message.getData()[0]);
                     break;
-                case REQUEST_USERS:
+                case REQUEST_GAME_INFO:
                     room.currentUserList(this);
                     break;
                 case EXIT_ROOM:
@@ -187,7 +187,7 @@ public class ServerThread extends Thread {
     public void outgoingStroke(Path path) {
         try {
             output.reset();
-            output.writeObject(new MessagePath(Command.DRAW_PATH_TO_ALL, path));
+            output.writeObject(new MessagePath(Command.DRAW_PATH_TO_CLIENT, path));
         } catch (Exception e) {
         }
     }
