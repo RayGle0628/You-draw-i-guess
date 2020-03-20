@@ -3,6 +3,7 @@ package server;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.util.Arrays;
 
 /**
  * DatabaseManager is a class that manages access and queries relating to our game. This class is initialised by and
@@ -194,6 +195,14 @@ public class DatabaseManager {
             e.printStackTrace();
         }
         return myRank;
+    }
+
+    /**
+     * Return sql connection.
+     * @return Sql connection
+     */
+    public Connection getConnection() {
+        return this.c;
     }
 
     /**
